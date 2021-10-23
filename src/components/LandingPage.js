@@ -4,7 +4,7 @@ import Fit from '../images/fit.jpeg';
 import Logo from '../images/logo.png';
 import Facebook from '../images/facebook.png';
 import Google from '../images/google.png';
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 import Popup from 'reactjs-popup';
 import firebase from '../utils/firebase';
 // import 'firebase/auth ';
@@ -28,8 +28,8 @@ const StyledLogo = styled.img`
 const StyledSlogan = styled.div`
   width: 50%;
   color: white;
-  font-weight: bold;
-  font-size: 25px;
+  font-weight: bolder;
+  font-size: 35px;
   position: absolute;
   text-align: center;
   top: 55%;
@@ -43,13 +43,13 @@ const StyledLoginBtn = styled.button`
   height: 40px;
   width: 10%;
   border-radius: 20px;
-  border: solid 3px #006ed7;
-  top: 70%;
+  border: solid 3px #1face1;
+  top: 75%;
   left: 45%;
   background-color: transparent;
   cursor: pointer;
   &:hover {
-    background-color: #006ed7;
+    background-color: #1face1;
   }
 `;
 
@@ -72,6 +72,23 @@ const StyledInput = styled.input`
   height: 40px;
 `;
 
+const anvil = keyframes`
+  0% {
+    transform: scale(1) translateY(0px);
+    opacity: 0;
+    box-shadow: 0 0 0 rgba(241, 241, 241, 0);
+  }
+  1% {
+    transform: scale(0.96) translateY(10px);
+    opacity: 0;
+    box-shadow: 0 0 0 rgba(241, 241, 241, 0);
+  }
+  100% {
+    transform: scale(1) translateY(0px);
+    opacity: 1;
+    box-shadow: 0 0 500px rgba(241, 241, 241, 0);
+  }
+`
 const StyledPopup = styled(Popup)`
   &-overlay {
     background: rgba(0, 0, 0, 0.6);
@@ -83,6 +100,7 @@ const StyledPopup = styled(Popup)`
     width: 700px;
     display: flex;
     height: 550px;
+    animation: ${anvil} 0.6s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
   }
 `;
 
@@ -240,7 +258,7 @@ export default function LandingPage() {
     <>
       <StyledBackGround src={HomePageBackground} />
       <StyledLogo src={Logo} />
-      <StyledSlogan>Commit To Be Fit / Too Unique To Quit</StyledSlogan>
+      <StyledSlogan>COMMIT TO BE FIT <br/><br/> TOO UNIQUE TO QUIT</StyledSlogan>
       <StyledPopup
         trigger={<StyledLoginBtn>Join Now</StyledLoginBtn>}
         modal
@@ -262,7 +280,9 @@ export default function LandingPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     type={'password'}
                   />
-                  {errorMessage && <StyledMessage>{errorMessage}</StyledMessage>}
+                  {errorMessage && (
+                    <StyledMessage>{errorMessage}</StyledMessage>
+                  )}
                   <StyledSignInBtn onClick={onSubmit}>Sign In</StyledSignInBtn>
                   <StyledSeparator>OR</StyledSeparator>
                   <StyledSignInMediaBtn
@@ -279,7 +299,7 @@ export default function LandingPage() {
                   </StyledSignInMediaBtn>
                   <StyledCreateAccountBtn
                     onClick={() => {
-                      setErrorMessage('')
+                      setErrorMessage('');
                       setIsSigningIn(false);
                     }}
                   >
@@ -309,11 +329,13 @@ export default function LandingPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     type={'password'}
                   />
-                  {errorMessage && <StyledMessage>{errorMessage}</StyledMessage>}
+                  {errorMessage && (
+                    <StyledMessage>{errorMessage}</StyledMessage>
+                  )}
                   <StyledSignInBtn onClick={onSubmit}>Sign Up</StyledSignInBtn>
                   <StyledCreateAccountBtn
                     onClick={() => {
-                      setErrorMessage('')
+                      setErrorMessage('');
                       setIsSigningIn(true);
                     }}
                   >

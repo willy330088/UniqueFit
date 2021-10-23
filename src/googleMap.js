@@ -5,6 +5,31 @@ import {
   Marker,
   InfoWindow,
 } from "@react-google-maps/api";
+import Muscle from './images/muscle.png'
+import styled from 'styled-components';
+
+const StyledInfoHeader = styled.h2`
+  color: #3264a8;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-align: center;
+  font-size: 15px;
+`;
+
+const StyledInfoRating = styled.h3`
+  color: #b31010;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-align: center;
+`;
+
+const StyledInfoOpening = styled.h2`
+  color: black;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-align: center;
+  font-size: 15px;
+`;
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -25,6 +50,7 @@ export default function App() {
 
   const [isNavigating, setIsNavigating] = useState(true)
   const [isFetching, setIsFetching] = useState(false)
+  const [selected, setSelected] = React.useState(null);
   const [nearby, setNearyby] = useState([])
   // const mapRef = useRef();
   // const onMapLoad = useCallback((map) => {
@@ -68,7 +94,6 @@ export default function App() {
     <div>
       <Locate setCurrentLocation={setCurrentLocation} setIsNavigating={setIsNavigating}/>
 
-
       <GoogleMap
         id="map"
         mapContainerStyle={mapContainerStyle}
@@ -83,8 +108,35 @@ export default function App() {
           <Marker
             key={marker.place_id}
             position={{ lat: marker.geometry.location.lat, lng: marker.geometry.location.lng }}
+            onClick={() => {
+              setSelected(marker);
+            }}
+            icon={{
+              url: Muscle,
+              origin: new window.google.maps.Point(0, 0),
+              anchor: new window.google.maps.Point(20, 20),
+              scaledSize: new window.google.maps.Size(40, 40),
+            }}
           />
-        ))}  
+        ))}
+
+        {selected ? (
+          <InfoWindow
+            position={{ lat: selected.geometry.location.lat, lng: selected.geometry.location.lng }}
+            onCloseClick={() => {
+              setSelected(null);
+            }}
+          >
+            <div>
+                <StyledInfoHeader>{selected.name}</StyledInfoHeader>
+                <StyledInfoRating> ⭐ {selected.rating} 📍 {selected.vicinity}</StyledInfoRating>
+                {selected.opening_hours.open_now ? (
+                  <StyledInfoOpening>🏠 Now Open</StyledInfoOpening>
+                ) : ( null
+                )}
+            </div>
+          </InfoWindow>
+        ) : null}  
       </GoogleMap>
     </div>
   );
