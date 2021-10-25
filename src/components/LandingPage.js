@@ -317,10 +317,6 @@ export default function LandingPage() {
                 <>
                   <StyledSignInTitle>Sign Up</StyledSignInTitle>
                   <StyledInput
-                    placeholder={'User Name'}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                  <StyledInput
                     placeholder={'Email'}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -328,6 +324,10 @@ export default function LandingPage() {
                     placeholder={'Password'}
                     onChange={(e) => setPassword(e.target.value)}
                     type={'password'}
+                  />
+                  <StyledInput
+                    placeholder={'User Name'}
+                    onChange={(e) => setName(e.target.value)}
                   />
                   {errorMessage && (
                     <StyledMessage>{errorMessage}</StyledMessage>

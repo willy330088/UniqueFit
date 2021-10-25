@@ -10,7 +10,7 @@ const StyledPath = styled.path`
   }
 `;
 
-export default function BackMuscle() {
+export default function BackMuscle(props) {
   const [selectedMuscleGroup, setSelectedMuscleGroup] = useState([]);
 
   function toggleMuscleClick(name) {
@@ -29,7 +29,7 @@ export default function BackMuscle() {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 471.48 783.75"
-      width="400px"
+      width={props.width}
     >
       <path
         fill="#272b2f"

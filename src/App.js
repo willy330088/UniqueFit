@@ -6,6 +6,9 @@ import BackMuscle from './components/BackMuscle';
 import VideoInput from './components/VideoInput';
 import ExercisePopup from './components/ExercisePopup';
 import Header from './components/Header';
+import CreatePlanPage from './components/CreatePlanPage';
+import GymWorkoutPage from './components/GymWorkoutPage';
+import GoogleMap from './components/GoogleMap'
 
 function App() {
   return (
@@ -19,13 +22,20 @@ function App() {
           <BackMuscle />
         </Route>
         <Route path='/gymworkout'>
-          <Header/>
+          <GymWorkoutPage/>
         </Route>
         <Route path='/homeworkout'>
           <Header/>
         </Route>
         <Route path='/createplan'>
+          <CreatePlanPage/>
+        </Route>
+        <Route path='/createworkout'>
           <Header/>
+        </Route>
+        <Route path='/profile'>
+          <Header />
+          <GoogleMap />
         </Route>
       </Switch>
     </Router>
