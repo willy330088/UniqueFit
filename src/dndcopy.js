@@ -1,9 +1,10 @@
 import { v4 as uuid } from 'uuid';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import RemoveIcon from '../images/remove.png';
+import AbsImage from '../images/muscle group/abs.png';
 
-// a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
@@ -11,29 +12,33 @@ const reorder = (list, startIndex, endIndex) => {
 
   return result;
 };
-/**
- * Moves an item from one list to another list.
- */
+
 const copy = (source, destination, droppableSource, droppableDestination) => {
   const sourceClone = Array.from(source);
   const destClone = Array.from(destination);
   const item = sourceClone[droppableSource.index];
-  console.log('hi')
 
-  destClone.splice(droppableDestination.index, 0, { ...item, id: uuid() });
+  destClone.splice(droppableDestination.index, 0, {
+    ...item,
+    id: uuid(),
+    exercise_id: item.id,
+  });
   return destClone;
 };
 
 const Content = styled.div`
-  margin-right: 200px;
+  margin-right: 400px;
+  padding: 30px 15% 200px;
 `;
 
 const Item = styled.div`
   display: flex;
+  height: 70px;
   user-select: none;
   padding: 0.5rem;
   margin: 0 0 0.5rem 0;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
   align-content: flex-start;
   line-height: 1.5;
   border-radius: 3px;
@@ -67,20 +72,25 @@ const List = styled.div`
   background: #fff;
   padding: 0.5rem 0.5rem 0;
   border-radius: 3px;
-  flex: 0 0 150px;
-  font-family: sans-serif;
+  /* flex: 0 0 150px; */
 `;
 
 const Kiosk = styled(List)`
   position: absolute;
-  top: 0;
+  top: 430px;
   right: 0;
   bottom: 0;
-  width: 200px;
+  width: 400px;
+  overflow-y: scroll;
+  background: #ddd;
+  border: none;
+  border-radius: 0;
+  height: 100vh;
 `;
 
 const Container = styled(List)`
-  margin: 0.5rem 0.5rem 1.5rem;
+  width: 100%;
+  margin: auto;
 `;
 
 const Notice = styled.div`
@@ -95,33 +105,60 @@ const Notice = styled.div`
   color: #aaa;
 `;
 
+const StyledRemoveIcon = styled.img`
+  width: 50px;
+  cursor: pointer;
+  margin-left: auto;
+`;
+
+const StyledExerciseTitle = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const StyledExerciseName = styled.div`
+  margin-left: 20px;
+  font-size: 30px;
+`;
+
+const StyledMuscleGroupIcon = styled.img`
+  width: 50px;
+`;
+
+const StyledCollectionTitle = styled.div`
+  color:#222d35;
+  font-size: 30px;
+  text-align:center;
+`;
+
 const ITEMS = [
   {
-    id: uuid(),
-    content: 'Headline',
+    id: '1',
+    content: 'Push up',
   },
   {
-    id: uuid(),
-    content: 'Copy',
+    id: '2',
+    content: 'Dumbell curl',
   },
   {
-    id: uuid(),
-    content: 'Image',
+    id: '3',
+    content: 'Biceps',
   },
   {
-    id: uuid(),
-    content: 'Slideshow',
+    id: '4',
+    content: 'Triceps',
   },
   {
-    id: uuid(),
-    content: 'Quote',
+    id: '5',
+    content: 'Back',
   },
 ];
 
-function App () {
+function DragAndDrop() {
+  const [items, setItems] = useState(ITEMS);
   const [plan, setPlan] = useState({
-    plan: []
-  })
+    order: [],
+  });
   const onDragEnd = (result) => {
     const { source, destination } = result;
 
@@ -131,29 +168,19 @@ function App () {
 
     if (source.droppableId === destination.droppableId) {
       setPlan({
-        plan: reorder(
+        order: reorder(
           plan[source.droppableId],
           source.index,
           destination.index
-        )
-      })
+        ),
+      });
     } else {
-      console.log(ITEMS)
-      console.log(plan)
-      console.log(plan)
       setPlan({
-        plan: copy(
-          ITEMS,
-          plan[destination.droppableId],
-          source,
-          destination
-        )
-      })
+        order: copy(items, plan[destination.droppableId], source, destination),
+      });
     }
   };
 
-  // Normally you would want to split things out into separate components.
-  // But in this example everything is just done in one place for simplicity
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="ITEMS" isDropDisabled={true}>
@@ -162,21 +189,45 @@ function App () {
             ref={provided.innerRef}
             isDraggingOver={snapshot.isDraggingOver}
           >
-            {ITEMS.map((item, index) => (
+            <StyledCollectionTitle>Collections</StyledCollectionTitle>
+            {items.map((item, index) => (
               <Draggable key={item.id} draggableId={item.id} index={index}>
                 {(provided, snapshot) => (
-                  <React.Fragment>
+                  <>
                     <Item
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                       isDragging={snapshot.isDragging}
-                      style={provided.draggableProps.style}
+                      // style={provided.draggableProps.style}
                     >
-                      {item.content}
+                      <StyledExerciseTitle>
+                        <StyledMuscleGroupIcon src= {AbsImage} />
+                        <StyledExerciseName>{item.content}</StyledExerciseName>
+                      </StyledExerciseTitle>
+                      <StyledRemoveIcon
+                        src={RemoveIcon}
+                        onClick={() => {
+                          setItems(
+                            items.filter((single) => {
+                              if (single !== item) return single;
+                            })
+                          );
+                        }}
+                      />
                     </Item>
-                    {snapshot.isDragging && <Clone>{item.content}</Clone>}
-                  </React.Fragment>
+                    {snapshot.isDragging && (
+                      <Clone>
+                        <StyledExerciseTitle>
+                          <StyledMuscleGroupIcon src= {AbsImage} />
+                          <StyledExerciseName>{item.content}</StyledExerciseName>
+                        </StyledExerciseTitle>
+                        <StyledRemoveIcon
+                          src={RemoveIcon}
+                        />
+                      </Clone>
+                    )}
+                  </>
                 )}
               </Draggable>
             ))}
@@ -185,14 +236,14 @@ function App () {
         )}
       </Droppable>
       <Content>
-        <Droppable key={1} droppableId={'plan'}>
+        <Droppable key={1} droppableId={'order'}>
           {(provided, snapshot) => (
             <Container
               ref={provided.innerRef}
               isDraggingOver={snapshot.isDraggingOver}
             >
-              {plan.plan.length
-                ? plan.plan.map((item, index) => (
+              {plan.order.length
+                ? plan.order.map((item, index) => (
                     <Draggable
                       key={item.id}
                       draggableId={item.id}
@@ -213,22 +264,39 @@ function App () {
                               />
                             </svg>
                           </Handle>
-                          {item.content}
+                          <StyledExerciseTitle>
+                            <StyledMuscleGroupIcon src= {AbsImage} />
+                            <StyledExerciseName>{item.content}</StyledExerciseName>
+                          </StyledExerciseTitle>
+                          <StyledRemoveIcon
+                            src={RemoveIcon}
+                            onClick={() => {
+                              setPlan({
+                                order: plan.order.filter((single) => {
+                                  if (single !== item) return single;
+                                }),
+                              });
+                            }}
+                          />
                         </Item>
                       )}
                     </Draggable>
                   ))
-                : !snapshot.isDraggingOver && <Notice>Drop items here</Notice>}
+                : !snapshot.isDraggingOver && <Notice>Drag Your Favorite Exercises</Notice>}
               {provided.placeholder}
             </Container>
           )}
         </Droppable>
       </Content>
-      <button onClick={() => {
-        console.log(plan)
-      }}>click</button>
+      {/* <button
+        onClick={() => {
+          console.log(plan);
+        }}
+      >
+        click
+      </button> */}
     </DragDropContext>
   );
 }
 
-export default App;
+export default DragAndDrop;

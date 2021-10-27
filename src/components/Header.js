@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import Logo from '../images/logo.png';
-import HamIcon from '../images/menu.png';
-import Sidebar from 'react-sidebar';
+import Burger from './Burger';
 
 const StyledHeader = styled.div`
   display: flex;
@@ -27,15 +26,6 @@ const StyledLogo = styled.img`
   }
 `;
 
-const StyledHamIcon = styled.img`
-  height: 30px;
-  position: absolute;
-  left: 40px;
-  top: 35px;
-  @media (min-width: 950px) {
-    display: none;
-  }
-`;
 
 const StyledLink = styled(NavLink)`
   color: white;
@@ -54,17 +44,50 @@ const StyledNavBar = styled.div`
   }
 `;
 
-const StyledSidebar = styled(Sidebar)`
-  @media (min-width: 950px) {
-    display: none;
+const StyledMenu = styled.nav`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #ddd;
+  width: 100%;
+  height: 100vh;
+  text-align: left;
+  padding: 2rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: transform 0.3s ease-in-out;
+  z-index: 5;
+  transform: ${({ open }) => open ? 'translateX(0)' : 'translateX(-100%)'};
+
+  @media (min-width: 700px) {
+    width: 50%;
   }
 `;
 
-export default function Header() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
+export default function Header() {
+  const [open, setOpen] = useState(false);
   return (
     <StyledHeader>
+      <Burger open={open} setOpen={setOpen}/>
+      <StyledMenu  open={open}>
+        <StyledLink to="/gymworkout" activeStyle={{ color: '#1face1' }}>
+          Gym Workout
+        </StyledLink>
+        <StyledLink to="/homeworkout" activeStyle={{ color: '#1face1' }}>
+          Home Workout
+        </StyledLink>
+        <StyledLink to="/createplan" activeStyle={{ color: '#1face1' }}>
+          Create A Plan
+        </StyledLink>
+        <StyledLink to="/createworkout" activeStyle={{ color: '#1face1' }}>
+          Create A Workout
+        </StyledLink>
+        <StyledLink to="/profile" activeStyle={{ color: '#1face1' }}>
+          Profile
+        </StyledLink>
+      </StyledMenu>
       <StyledLogo src={Logo} />
       <StyledNavBar>
         <StyledLink to="/gymworkout" activeStyle={{ color: '#1face1' }}>
@@ -83,30 +106,6 @@ export default function Header() {
           Profile
         </StyledLink>
       </StyledNavBar>
-      {/* <StyledSidebar
-        sidebar={
-          <>
-            <StyledLink to="/gymworkout" activeStyle={{ color: '#1face1' }}>
-              Gym Workout
-            </StyledLink>
-            <StyledLink to="/homeworkout" activeStyle={{ color: '#1face1' }}>
-              Home Workout
-            </StyledLink>
-            <StyledLink to="/createplan" activeStyle={{ color: '#1face1' }}>
-              Create A Plan
-            </StyledLink>
-          </>
-        }
-        open={sidebarOpen}
-        styles={{ sidebar: { background: 'white' } }}
-      >
-        <StyledHamIcon
-          src={HamIcon}
-          onClick={() => {
-            setSidebarOpen(true)
-          }}
-        />
-      </StyledSidebar> */}
     </StyledHeader>
   );
 }

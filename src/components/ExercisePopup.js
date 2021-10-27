@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
 import Popup from 'reactjs-popup';
-import FlutterKicks from '../images/flutter_kicks.mov'
 import AbsIcon from '../images/abs-blue.png'
 
 const StyledPopup = styled(Popup)`
@@ -60,11 +59,11 @@ const StyledTextContent = styled.div`
 export default function ExercisePopup() {
   return (
     <StyledPopup
-      trigger={<button>Join Now</button>}
+      trigger={<button>hi</button>}
       modal
       nested
     >
-      <StyledVideo src={FlutterKicks} autoPlay loop playsinline muted></StyledVideo>
+      <StyledVideo src={'https://firebasestorage.googleapis.com/v0/b/uniquefit-william.appspot.com/o/flutter_kicks.mov?alt=media&token=cc0427dd-bb02-4936-80bb-032ef964e027'} autoPlay loop playsinline muted></StyledVideo>
       <StyledDetails>
         <StyledTitleContainer>
           <StyledMuscleIcon src={AbsIcon} />

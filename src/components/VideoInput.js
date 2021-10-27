@@ -1,42 +1,122 @@
-import React from "react";
+import React, { useState, useRef } from 'react';
+import styled from 'styled-components';
+import Upload from '../images/upload.png';
 
-export default function VideoInput(props) {
-  const { width, height } = props;
+const StyledVideoInput = styled.div`
+  width: 100%;
+  @media (min-width: 850px) {
+    width: 45%;
+  }
+`;
 
-  const inputRef = React.useRef();
+const StyledCreateLabel = styled.div`
+  color: #1face1;
+  font-size: 30px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid #1face1;
+  margin-bottom: 20px;
+`;
 
-  const [source, setSource] = React.useState();
+const StyledUploadArea = styled.div`
+  background: #ededed;
+  width: 100%;
+  height: 350px;
+  margin-bottom: 20px;
+`;
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
+const StyledUploadIcon = styled.img`
+  width: 100px;
+  position: relative;
+  top: 120px;
+  left: calc(50% - 50px);
+  cursor: pointer;
+`;
+
+const StyledUploadVideo = styled.video`
+  width: 100%;
+`;
+
+const StyledChangeVideoBtn = styled.button`
+  font-size: 25px;
+  height: 50px;
+  width: 200px;
+  margin-bottom: 20px;
+`;
+
+const StyledTypeInput = styled.input`
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+`;
+
+const StyledTypeLabel = styled.label`
+  color: white;
+  font-size: 25px;
+  margin-right: 10px;
+`;
+
+export default function VideoInput({ setType, type, setVideoFile}) {
+  const inputRef = useRef();
+  const [source, setSource] = useState();
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setVideoFile(file)
     const url = URL.createObjectURL(file);
     setSource(url);
   };
 
-  const handleChoose = (event) => {
+  const handleChoose = () => {
     inputRef.current.click();
   };
 
   return (
-    <div className="VideoInput">
+    <StyledVideoInput>
+      <StyledCreateLabel>Video</StyledCreateLabel>
       <input
+        style={{ display: 'none' }}
         ref={inputRef}
-        className="VideoInput_input"
         type="file"
         onChange={handleFileChange}
         accept=".mov,.mp4"
       />
-      {!source && <button onClick={handleChoose}>Choose</button>}
-      {source && (
-        <video
-          className="VideoInput_video"
-          width="35%"
-          height={height}
-          controls
-          src={source}
-        />
+      {source ? (
+        <>
+          <StyledUploadVideo controls src={source} />
+          <StyledChangeVideoBtn onClick={handleChoose}>
+            Change Video
+          </StyledChangeVideoBtn>
+        </>
+      ) : (
+        <StyledUploadArea>
+          <StyledUploadIcon src={Upload} onClick={handleChoose} />
+        </StyledUploadArea>
       )}
-      <div className="VideoInput_footer">{source || "Nothing selected"}</div>
-    </div>
+      <StyledCreateLabel>Type</StyledCreateLabel>
+      <StyledTypeInput
+        type={'radio'}
+        name={'workoutType'}
+        value={'gymworkout'}
+        checked={type === 'gymworkout'}
+        onClick={() => {
+          if (type !== 'gymworkout') {
+            setType('gymworkout')
+          }
+        }}
+      />
+      <StyledTypeLabel>Gym Workout</StyledTypeLabel>
+      <StyledTypeInput
+        type={'radio'}
+        name={'workoutType'}
+        value={'homeworkout'}
+        checked={type === 'homeworkout'}
+        onClick={() => {
+          if (type !== 'homeworkout') {
+            setType('homeworkout')
+          }
+        }}
+      />
+      <StyledTypeLabel>Home Workout</StyledTypeLabel>
+    </StyledVideoInput>
   );
 }

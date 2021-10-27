@@ -19,14 +19,17 @@ import ExercisePopup from './ExercisePopup';
 import ExerciseItem from './ExerciseItem';
 
 const StyledFilterContainer = styled.div`
-  width: 750px;
-  height: 200px;
-  background-color: #ddd;
-  display: flex;
-  margin: 30px auto;
-  border-radius: 20px;
-  align-items: center;
-  justify-content: space-around;
+  display: none;
+  @media (min-width: 800px) {
+    width: 750px;
+    height: 200px;
+    background-color: #ddd;
+    display: flex;
+    margin: 30px auto 0px;
+    border-radius: 20px;
+    align-items: center;
+    justify-content: space-around;
+  }
 `;
 
 const StyledFilterMuscleGroups = styled.div`
@@ -74,7 +77,26 @@ const StyledBody = styled.div`
 `;
 
 const StyledExerciseContainer = styled.div`
-  padding: 50px 200px;
+  padding: 30px 10% 100px;
+  align-items: center;
+  display: block;
+  @media (min-width: 1240px) {
+    padding: 30px 10% 100px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+`;
+
+const StyledExerciseCount = styled.div`
+  font-size: 30px;
+  color: white;
+  text-align: center;
+  margin-top: 50px;
+  @media (min-width: 1240px) {
+    text-align: left;
+    margin: 50px 0 0px 250px;
+  }
 `;
 
 export default function CreatePlanPage() {
@@ -114,8 +136,13 @@ export default function CreatePlanPage() {
             )}
           </StyledPopup>
         </StyledFilterContainer>
+        <StyledExerciseCount>Total (20)</StyledExerciseCount>
         <StyledExerciseContainer>
-          <ExerciseItem img={Abs}/>
+          <ExerciseItem image={Abs} />
+          <ExerciseItem image={Abs} />
+          <ExerciseItem image={Abs} />
+          <ExerciseItem image={Abs} />
+          <ExerciseItem image={Abs} />
         </StyledExerciseContainer>
       </StyledBody>
     </>

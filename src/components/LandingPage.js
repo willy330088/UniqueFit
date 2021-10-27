@@ -7,7 +7,7 @@ import Google from '../images/google.png';
 import styled, {keyframes} from 'styled-components';
 import Popup from 'reactjs-popup';
 import firebase from '../utils/firebase';
-// import 'firebase/auth ';
+import 'firebase/auth';
 import { facebookProvider, googleProvider } from '../utils/authMethod';
 import socialMediaAuth from '../utils/auth';
 import { useHistory } from 'react-router-dom';
@@ -205,6 +205,7 @@ export default function LandingPage() {
 
   const handleOnClick = async (provider) => {
     const res = await socialMediaAuth(provider);
+    history.push('/gymworkout')
     console.log(res);
   };
 
