@@ -64,7 +64,7 @@ export default function CreateWorkoutPage() {
           videoURL
         })
       })
-    })
+    }).then(alert('Created Successfully!'))
   }
 
   return (
