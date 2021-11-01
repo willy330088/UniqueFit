@@ -4,22 +4,31 @@ import { HiUserCircle } from 'react-icons/hi';
 import { ImPlay } from 'react-icons/im';
 import { BsFillBookmarkHeartFill } from 'react-icons/bs';
 import { RiMessage2Fill } from 'react-icons/ri';
+import Popup from 'reactjs-popup';
+import muscleGroups from '../utils/muscleGroup';
+import WorkoutPopup from './WorkoutPopup';
 
 const StyledExerciseItemContainer = styled.div`
-  text-align: center;
-  margin: 40px 10px;
-  @media (min-width: 600px) {
+  padding: 30px 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  width: 450px;
+  margin: auto;
+
+  @media (min-width: 1380px) {
     display: flex;
     align-items: center;
     cursor: pointer;
-    justify-content: center;
+    width: 450px;
+    margin: 0 10px 0 0;
   }
 `;
 
 const StyledExerciseItemDescription = styled.div``;
 
 const StyledExerciseItemTitle = styled.div`
-  font-size: 50px;
+  font-size: 40px;
   color: #1face1;
 `;
 
@@ -41,7 +50,7 @@ const StyledExerciseItemSocial = styled.div`
 `;
 
 const StyledExerciseItemImage = styled.img`
-  width: 100px;
+  width: 80px;
   margin-right: 20px;
 `;
 
@@ -59,13 +68,14 @@ const StyledPublisherImage = styled.img`
 const StyledPlayIcon = styled(ImPlay)`
   color: white;
   font-size: 60px;
+  margin-left: auto;
 
   &:hover {
     color: #1face1;
   }
 
-  @media (min-width: 600px) {
-    margin-left: 40px;
+  @media (min-width: 1300px) {
+    margin-left: auto;
   }
 `;
 
@@ -77,24 +87,53 @@ const StyledMessageIcon = styled(RiMessage2Fill)`
   color: white;
 `;
 
-export default function ExerciseItem({
-  image,
-  gymWorkout
-}) {
+//popup
+
+const StyledPopup = styled(Popup)`
+  &-overlay {
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  &-content {
+    margin: auto;
+    background: #222d35;
+    width: 700px;
+    height: 550px;
+    overflow-y: scroll;
+  }
+`;
+
+export default function ExerciseItem({ workout, gymWorkoutTypeSelected }) {
   return (
     <StyledExerciseItemContainer>
-      <StyledExerciseItemImage src={image} />
+      <StyledExerciseItemImage
+        src={
+          muscleGroups.filter((muscleGroup) => {
+            if (muscleGroup.name === workout.targetMuscleGroup)
+              return muscleGroup;
+          })[0].src
+        }
+      />
       <StyledExerciseItemDescription>
-        <StyledExerciseItemTitle>{gymWorkout.title}</StyledExerciseItemTitle>
+        <StyledExerciseItemTitle>{workout.title}</StyledExerciseItemTitle>
         <StyledExerciseItemPublisher>
-          {gymWorkout.publisher.photoURL ? (<StyledPublisherImage src={gymWorkout.publisher.photoURL} />) : (<StyledPublisherIcon />)}
-          {gymWorkout.publisher.displayName ? (gymWorkout.publisher.displayName) : ('User')}
+          {workout.publisher.photoURL ? (
+            <StyledPublisherImage src={workout.publisher.photoURL} />
+          ) : (
+            <StyledPublisherIcon />
+          )}
+          {workout.publisher.displayName
+            ? workout.publisher.displayName
+            : 'User'}
         </StyledExerciseItemPublisher>
         <StyledExerciseItemSocial>
-          <StyledCollectIcon /> Collected 5 / <StyledMessageIcon /> Comments 7
+          <StyledCollectIcon /> Collected (5) / <StyledMessageIcon /> Comments
+          (7)
         </StyledExerciseItemSocial>
       </StyledExerciseItemDescription>
-      <StyledPlayIcon />
+      <StyledPopup trigger={<StyledPlayIcon />} modal nested>
+        <WorkoutPopup workout={workout} gymWorkoutTypeSelected={gymWorkoutTypeSelected}/>
+      </StyledPopup>
     </StyledExerciseItemContainer>
   );
 }

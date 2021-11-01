@@ -20,7 +20,7 @@ export default function CreatePlanPage() {
   return (
     <StyledBody>
       <Header />
-      <Banner />
+      <Banner slogan={'Create Your Plan'}/>
       <StyledContainer>
         <PlanDetailsInput />
         <DragandDrop/>

@@ -72,11 +72,11 @@ export default function Header() {
     <StyledHeader>
       <Burger open={open} setOpen={setOpen}/>
       <StyledMenu  open={open}>
-        <StyledLink to="/gymworkout" activeStyle={{ color: '#1face1' }}>
-          Gym Workout
+        <StyledLink to="/workouts" activeStyle={{ color: '#1face1' }}>
+          Workouts
         </StyledLink>
-        <StyledLink to="/homeworkout" activeStyle={{ color: '#1face1' }}>
-          Home Workout
+        <StyledLink to="/plans" activeStyle={{ color: '#1face1' }}>
+          Plans
         </StyledLink>
         <StyledLink to="/createplan" activeStyle={{ color: '#1face1' }}>
           Create A Plan
@@ -90,11 +90,11 @@ export default function Header() {
       </StyledMenu>
       <StyledLogo src={Logo} />
       <StyledNavBar>
-        <StyledLink to="/gymworkout" activeStyle={{ color: '#1face1' }}>
-          Gym Workout
+        <StyledLink to="/workouts" activeStyle={{ color: '#1face1' }}>
+          Workouts
         </StyledLink>
-        <StyledLink to="/homeworkout" activeStyle={{ color: '#1face1' }}>
-          Home Workout
+        <StyledLink to="/plans" activeStyle={{ color: '#1face1' }}>
+          Plans
         </StyledLink>
         <StyledLink to="/createplan" activeStyle={{ color: '#1face1' }}>
           Create A Plan

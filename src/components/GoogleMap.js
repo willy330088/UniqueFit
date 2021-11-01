@@ -31,10 +31,24 @@ const StyledInfoOpening = styled.h2`
   font-size: 15px;
 `;
 
+const StyledLocationBtn = styled.button`
+  margin-top: 30px;
+  margin-left: calc(50% - 75px);
+  width: 150px;
+  height: 50px;
+  font-size: 20px;
+`;
+
+const StyledLoadingContent = styled.div`
+  height: 600px;
+  width: 100%;
+  background: grey;
+`;
+
 const libraries = ["places"];
 const mapContainerStyle = {
-  height: "500px",
-  width: "700px",
+  height: "600px",
+  width: "100%",
 };
 
 export default function App() {
@@ -89,11 +103,9 @@ export default function App() {
   if (!isLoaded) return "Loading...";
 
   return isNavigating ? (
-    <div>loading</div>
+    <StyledLoadingContent>loading</StyledLoadingContent>
   ):(
     <div>
-      <Locate setCurrentLocation={setCurrentLocation} setIsNavigating={setIsNavigating}/>
-
       <GoogleMap
         id="map"
         mapContainerStyle={mapContainerStyle}
@@ -138,13 +150,14 @@ export default function App() {
           </InfoWindow>
         ) : null}  
       </GoogleMap>
+      <Locate setCurrentLocation={setCurrentLocation} setIsNavigating={setIsNavigating} />
     </div>
   );
 }
 
 function Locate({ setCurrentLocation, setIsNavigating }) {
   return (
-    <button
+    <StyledLocationBtn
       onClick={() => {
         setIsNavigating(true)
         navigator.geolocation.getCurrentPosition(
@@ -162,7 +175,7 @@ function Locate({ setCurrentLocation, setIsNavigating }) {
         );
       }}
     >
-      where I am
-    </button>
+      Where I Am
+    </StyledLocationBtn>
   );
 }

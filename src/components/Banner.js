@@ -17,10 +17,10 @@ const StyledBannerTitle = styled.div`
   left: 80px
 `;
 
-export default function Banner() {
+export default function Banner({slogan}) {
   return (
     <StyledBanner>
-      <StyledBannerTitle>Create Your Workout Plan</StyledBannerTitle>
+      <StyledBannerTitle>{slogan}</StyledBannerTitle>
     </StyledBanner>
   )
 }

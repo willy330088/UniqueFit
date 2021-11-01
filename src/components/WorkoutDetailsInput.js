@@ -1,15 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
-import Abs from '../images/muscle group/abs.png'
-import Back from '../images/muscle group/back.png'
-import Biceps from '../images/muscle group/biceps.png'
-import Chest from '../images/muscle group/chest.png'
-import Glutes from '../images/muscle group/glutes.png'
-import Hamstrings from '../images/muscle group/hamstrings.png'
-import Lowerback from '../images/muscle group/lowerback.png'
-import Quadriceps from '../images/muscle group/quadriceps.png'
-import Shoulder from '../images/muscle group/shoulder.png'
-import Triceps from '../images/muscle group/triceps.png'
+import muscleGroupImage from '../utils/muscleGroup'
 
 const StyledPlanDetails = styled.div`
   width: 100%;
@@ -65,49 +56,6 @@ const StyledDescriptionInput = styled.textarea`
   outline: none;
   margin-bottom: 20px;
 `;
-
-const muscleGroupImage = [
-  {
-    name: 'abs',
-    src: Abs
-  },
-  {
-    name: 'biceps',
-    src: Biceps
-  },
-  {
-    name: 'chest',
-    src: Chest
-  },
-  {
-    name: 'glutes',
-    src: Glutes
-  },
-  {
-    name: 'hamstrings',
-    src: Hamstrings
-  },
-  {
-    name: 'lowerback',
-    src: Lowerback
-  },
-    {
-    name: 'quadriceps',
-    src: Quadriceps
-  },
-  {
-    name: 'shoulder',
-    src: Shoulder
-  },
-  {
-    name: 'triceps',
-    src: Triceps
-  },
-  {
-    name: 'back',
-    src: Back
-  }
-]
 
 export default function PlanDetailsInput({ setTitle, setDescription, setTargetMuscleGroup, targetMuscleGroup }) {
   return (

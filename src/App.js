@@ -3,7 +3,10 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import Header from './components/Header';
 import CreatePlanPage from './components/CreatePlanPage';
-import GymWorkoutPage from './components/GymWorkoutPage';
+import WorkoutListPage from './components/WorkoutListPage';
+import ProfilePage from './components/ProfilePage'
+import PlanListPage from './components/PlanListPage'
+import SpecificPlanPage from './components/SpecificPlanPage'
 import GoogleMap from './components/GoogleMap'
 import CreateWorkoutPage from './components/CreateWorkoutPage';
 
@@ -14,11 +17,11 @@ function App() {
         <Route exact path='/'>
           <LandingPage />
         </Route>
-        <Route path='/gymworkout'>
-          <GymWorkoutPage/>
+        <Route path='/workouts'>
+          <WorkoutListPage/>
         </Route>
-        <Route path='/homeworkout'>
-          <Header/>
+        <Route path='/plans'>
+          <PlanListPage/>
         </Route>
         <Route path='/createplan'>
           <CreatePlanPage/>
@@ -27,8 +30,10 @@ function App() {
           <CreateWorkoutPage />
         </Route>
         <Route path='/profile'>
-          <Header />
-          <GoogleMap />
+          <ProfilePage/>
+        </Route>
+        <Route path='/specificplan'>
+          <SpecificPlanPage/>
         </Route>
       </Switch>
     </Router>

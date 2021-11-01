@@ -125,6 +125,7 @@ const StyledCollectionTitle = styled.div`
   color: #222d35;
   font-size: 30px;
   text-align: center;
+  margin-bottom: 15px;
 `;
 
 const StyledCreateLabel = styled.div`
@@ -282,7 +283,7 @@ function DragAndDrop() {
                     </Draggable>
                   ))
                 : !snapshot.isDraggingOver && (
-                    <Notice>Drag Your Favorite Exercises</Notice>
+                    <Notice>Drag Your Favorite Workouts</Notice>
                   )}
               {provided.placeholder}
             </Container>

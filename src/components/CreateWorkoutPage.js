@@ -70,7 +70,7 @@ export default function CreateWorkoutPage() {
   return (
     <StyledBody>
       <Header />
-      <Banner />
+      <Banner slogan={'Create Your Workout'}/>
       <StyledContainer>
         <WorkoutDetailsInput
           setTitle={setTitle}

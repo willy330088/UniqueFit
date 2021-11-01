@@ -34,6 +34,7 @@ const StyledSlogan = styled.div`
   text-align: center;
   top: 55%;
   left: 25%;
+  letter-spacing: 1px;
 `;
 
 const StyledLoginBtn = styled.button`
@@ -205,7 +206,7 @@ export default function LandingPage() {
 
   const handleOnClick = async (provider) => {
     const res = await socialMediaAuth(provider);
-    history.push('/gymworkout')
+    history.push('/workouts')
     console.log(res);
   };
 
@@ -215,7 +216,12 @@ export default function LandingPage() {
         .auth()
         .createUserWithEmailAndPassword(email, password)
         .then(() => {
-          history.push('/gymworkout');
+          firebase.auth().currentUser.updateProfile({
+            displayName:name
+          })
+        })
+        .then(() => {
+          history.push('/workouts');
         })
         .catch((error) => {
           switch (error.code) {
@@ -236,7 +242,7 @@ export default function LandingPage() {
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-          history.push('/gymworkout');
+          history.push('/workouts');
         })
         .catch((error) => {
           switch (error.code) {
