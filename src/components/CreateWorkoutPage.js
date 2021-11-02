@@ -34,17 +34,12 @@ export default function CreateWorkoutPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [targetMuscleGroup, setTargetMuscleGroup] = useState('');
-  const [type, setType] = useState('gymworkout');
+  const [type, setType] = useState('Gymworkout');
   const [videoFile, setVideoFile] = useState('');
   const history = useHistory();
 
   function createWorkout() {
-    let documentRef;
-    if (type === 'gymworkout') {
-      documentRef = firebase.firestore().collection('gym-workouts').doc();
-    } else {
-      documentRef = firebase.firestore().collection('home-workouts').doc();
-    }
+    const documentRef = firebase.firestore().collection('workouts').doc();
 
     const fileRef = firebase.storage().ref('workout-videos/' + documentRef.id);
     const metadata = {
@@ -63,6 +58,7 @@ export default function CreateWorkoutPage() {
             },
             description: description,
             targetMuscleGroup: targetMuscleGroup,
+            type: type,
             collectedBy: [],
             comments: [],
             videoURL,

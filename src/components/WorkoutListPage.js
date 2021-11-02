@@ -108,30 +108,17 @@ export default function WorkoutListPage() {
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
 
   useEffect(() => {
-    if (gymWorkoutTypeSelected) {
-      firebase
-        .firestore()
-        .collection('gym-workouts')
-        .onSnapshot((collectionSnapshot) => {
-          const data = collectionSnapshot.docs.map((docSnapshot) => {
-            const id = docSnapshot.id
-            return { ...docSnapshot.data(), id };
-          });
-          setWorkouts(data);
-        })
-    } else {
-      firebase
-        .firestore()
-        .collection('home-workouts')
-        .onSnapshot((collectionSnapshot) => {
-          const data = collectionSnapshot.docs.map((docSnapshot) => {
-            const id = docSnapshot.id
-            return { ...docSnapshot.data(), id };
-          });
-          setWorkouts(data);
-        })
-    }
-  }, [gymWorkoutTypeSelected]);
+    firebase
+      .firestore()
+      .collection('workouts')
+      .onSnapshot((collectionSnapshot) => {
+        const data = collectionSnapshot.docs.map((docSnapshot) => {
+          const id = docSnapshot.id;
+          return { ...docSnapshot.data(), id };
+        });
+        setWorkouts(data);
+      });
+  }, []);
 
   return (
     <StyledBody>
@@ -185,12 +172,25 @@ export default function WorkoutListPage() {
         </StyledFilterContainer>
         <StyledExerciseContainer>
           {workouts.map((workout) => {
-            return (
-              <WorkoutItem
-                workout={workout}
-                gymWorkoutTypeSelected={gymWorkoutTypeSelected}
-              />
-            );
+            if (gymWorkoutTypeSelected) {
+              if (workout.type === 'Gymworkout') {
+                return (
+                  <WorkoutItem
+                    workout={workout}
+                    gymWorkoutTypeSelected={gymWorkoutTypeSelected}
+                  />
+                );
+              }
+            } else {
+              if (workout.type === 'Homeworkout') {
+                return (
+                  <WorkoutItem
+                    workout={workout}
+                    gymWorkoutTypeSelected={gymWorkoutTypeSelected}
+                  />
+                );
+              }
+            }
           })}
         </StyledExerciseContainer>
       </StyledWorkoutListContainer>

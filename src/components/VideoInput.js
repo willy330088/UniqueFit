@@ -96,11 +96,11 @@ export default function VideoInput({ setType, type, setVideoFile}) {
       <StyledTypeInput
         type={'radio'}
         name={'workoutType'}
-        value={'gymworkout'}
-        checked={type === 'gymworkout'}
+        value={'Gymworkout'}
+        checked={type === 'Gymworkout'}
         onClick={() => {
-          if (type !== 'gymworkout') {
-            setType('gymworkout')
+          if (type !== 'Gymworkout') {
+            setType('Gymworkout')
           }
         }}
       />
@@ -108,11 +108,11 @@ export default function VideoInput({ setType, type, setVideoFile}) {
       <StyledTypeInput
         type={'radio'}
         name={'workoutType'}
-        value={'homeworkout'}
-        checked={type === 'homeworkout'}
+        value={'Homeworkout'}
+        checked={type === 'Homeworkout'}
         onClick={() => {
-          if (type !== 'homeworkout') {
-            setType('homeworkout')
+          if (type !== 'Homeworkout') {
+            setType('Homeworkout')
           }
         }}
       />

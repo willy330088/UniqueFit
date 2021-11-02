@@ -82,6 +82,7 @@ const StyledPlanListContainer = styled.div`
   margin-top: 80px;
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 `;
 
 const StyledPlanContainer = styled.div`
@@ -89,6 +90,7 @@ const StyledPlanContainer = styled.div`
   background: white;
   padding: 30px 50px;
   position: relative;
+  margin-bottom: 50px;
 `;
 
 const StyledPlanInfoContainer = styled.div`

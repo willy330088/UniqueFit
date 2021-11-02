@@ -223,34 +223,19 @@ function DragAndDrop({ plan, setPlan, createPlan }) {
   }
 
   useEffect(() => {
-    if (gymWorkoutTypeSelected) {
-      firebase
-        .firestore()
-        .collection('gym-workouts')
-        .where('collectedBy', 'array-contains', firebase.auth().currentUser.uid)
-        .get()
-        .then((collectionSnapshot) => {
-          const data = collectionSnapshot.docs.map((docSnapshot) => {
-            const id = docSnapshot.id;
-            return { ...docSnapshot.data(), id };
-          });
-          setWorkoutData(data);
+    firebase
+      .firestore()
+      .collection('workouts')
+      .where('collectedBy', 'array-contains', firebase.auth().currentUser.uid)
+      .get()
+      .then((collectionSnapshot) => {
+        const data = collectionSnapshot.docs.map((docSnapshot) => {
+          const id = docSnapshot.id;
+          return { ...docSnapshot.data(), id };
         });
-    } else {
-      firebase
-        .firestore()
-        .collection('home-workouts')
-        .where('collectedBy', 'array-contains', firebase.auth().currentUser.uid)
-        .get()
-        .then((collectionSnapshot) => {
-          const data = collectionSnapshot.docs.map((docSnapshot) => {
-            const id = docSnapshot.id;
-            return { ...docSnapshot.data(), id };
-          });
-          setWorkoutData(data);
-        });
-    }
-  }, [gymWorkoutTypeSelected]);
+        setWorkoutData(data);
+      });
+  }, []);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -358,9 +343,7 @@ function DragAndDrop({ plan, setPlan, createPlan }) {
             </Container>
           )}
         </Droppable>
-        <StyledCreateWorkoutBtn
-          onClick={createPlan}
-        >
+        <StyledCreateWorkoutBtn onClick={createPlan}>
           Create
         </StyledCreateWorkoutBtn>
       </Content>
@@ -390,58 +373,147 @@ function DragAndDrop({ plan, setPlan, createPlan }) {
                 Home Workout
               </StyledWorkoutTypeTag>
             </StyledBookmark>
-            {workoutData.map((item, index) => (
-              <Draggable key={item.id} draggableId={item.id} index={index}>
-                {(provided, snapshot) => (
-                  <>
-                    <Item
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      isDragging={snapshot.isDragging}
+            {workoutData.map((item, index) => {
+              if (gymWorkoutTypeSelected) {
+                if (item.type === 'Gymworkout') {
+                  return (
+                    <Draggable
+                      key={item.id}
+                      draggableId={item.id}
+                      index={index}
                     >
-                      <StyledExerciseTitle>
-                        <StyledMuscleGroupIcon
-                          src={
-                            muscleGroups.filter((muscleGroup) => {
-                              if (muscleGroup.name === item.targetMuscleGroup)
-                                return muscleGroup;
-                            })[0].src
-                          }
-                        />
-                        <StyledExerciseName>{item.title}</StyledExerciseName>
-                      </StyledExerciseTitle>
-                      <StyledRemoveIcon
-                        src={RemoveIcon}
-                        onClick={() => {
-                          setWorkoutData(
-                            workoutData.filter((single) => {
-                              if (single !== item) return single;
-                            })
-                          );
-                        }}
-                      />
-                    </Item>
-                    {snapshot.isDragging && (
-                      <Clone>
-                        <StyledExerciseTitle>
-                          <StyledMuscleGroupIcon
-                            src={
-                              muscleGroups.filter((muscleGroup) => {
-                                if (muscleGroup.name === item.targetMuscleGroup)
-                                  return muscleGroup;
-                              })[0].src
-                            }
-                          />
-                          <StyledExerciseName>{item.title}</StyledExerciseName>
-                        </StyledExerciseTitle>
-                        <StyledRemoveIcon src={RemoveIcon} />
-                      </Clone>
-                    )}
-                  </>
-                )}
-              </Draggable>
-            ))}
+                      {(provided, snapshot) => (
+                        <>
+                          <Item
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            isDragging={snapshot.isDragging}
+                          >
+                            <StyledExerciseTitle>
+                              <StyledMuscleGroupIcon
+                                src={
+                                  muscleGroups.filter((muscleGroup) => {
+                                    if (
+                                      muscleGroup.name ===
+                                      item.targetMuscleGroup
+                                    )
+                                      return muscleGroup;
+                                  })[0].src
+                                }
+                              />
+                              <StyledExerciseName>
+                                {item.title}
+                              </StyledExerciseName>
+                            </StyledExerciseTitle>
+                            <StyledRemoveIcon
+                              src={RemoveIcon}
+                              onClick={() => {
+                                setWorkoutData(
+                                  workoutData.filter((single) => {
+                                    if (single !== item) return single;
+                                  })
+                                );
+                              }}
+                            />
+                          </Item>
+                          {snapshot.isDragging && (
+                            <Clone>
+                              <StyledExerciseTitle>
+                                <StyledMuscleGroupIcon
+                                  src={
+                                    muscleGroups.filter((muscleGroup) => {
+                                      if (
+                                        muscleGroup.name ===
+                                        item.targetMuscleGroup
+                                      )
+                                        return muscleGroup;
+                                    })[0].src
+                                  }
+                                />
+                                <StyledExerciseName>
+                                  {item.title}
+                                </StyledExerciseName>
+                              </StyledExerciseTitle>
+                              <StyledRemoveIcon src={RemoveIcon} />
+                            </Clone>
+                          )}
+                        </>
+                      )}
+                    </Draggable>
+                  );
+                }
+              } else {
+                if (item.type === 'Homeworkout') {
+                  return (
+                    <Draggable
+                      key={item.id}
+                      draggableId={item.id}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <>
+                          <Item
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            isDragging={snapshot.isDragging}
+                          >
+                            <StyledExerciseTitle>
+                              <StyledMuscleGroupIcon
+                                src={
+                                  muscleGroups.filter((muscleGroup) => {
+                                    if (
+                                      muscleGroup.name ===
+                                      item.targetMuscleGroup
+                                    )
+                                      return muscleGroup;
+                                  })[0].src
+                                }
+                              />
+                              <StyledExerciseName>
+                                {item.title}
+                              </StyledExerciseName>
+                            </StyledExerciseTitle>
+                            <StyledRemoveIcon
+                              src={RemoveIcon}
+                              onClick={() => {
+                                setWorkoutData(
+                                  workoutData.filter((single) => {
+                                    if (single !== item) return single;
+                                  })
+                                );
+                              }}
+                            />
+                          </Item>
+                          {snapshot.isDragging && (
+                            <Clone>
+                              <StyledExerciseTitle>
+                                <StyledMuscleGroupIcon
+                                  src={
+                                    muscleGroups.filter((muscleGroup) => {
+                                      if (
+                                        muscleGroup.name ===
+                                        item.targetMuscleGroup
+                                      )
+                                        return muscleGroup;
+                                    })[0].src
+                                  }
+                                />
+                                <StyledExerciseName>
+                                  {item.title}
+                                </StyledExerciseName>
+                              </StyledExerciseTitle>
+                              <StyledRemoveIcon src={RemoveIcon} />
+                            </Clone>
+                          )}
+                        </>
+                      )}
+                    </Draggable>
+                  );
+                }
+              }
+            })}
             {provided.placeholder}
           </Kiosk>
         )}

@@ -278,6 +278,8 @@ export default function SpecificPlanPage() {
     collectedBy: [],
     comments: [],
   });
+  const [workoutSet, setWorkoutSet] = useState([]);
+  const [workoutSetDetails, setWorkoutSetDetails] = useState([]);
 
   useEffect(() => {
     firebase
@@ -286,9 +288,25 @@ export default function SpecificPlanPage() {
       .doc(planId)
       .get()
       .then((docSnapshot) => {
+        console.log(docSnapshot)
         const data = docSnapshot.data();
         setPlan(data);
-        console.log(data);
+        console.log(data.workoutSet);
+        setWorkoutSet(data.workoutSet)
+        Promise.all(
+          data.workoutSet.map((workout) => {
+            console.log(workout.workoutId)
+            return firebase
+              .firestore()
+              .collection('workouts')
+              .doc(workout.workoutId)
+              .get();
+          })
+        ).then((values) => {
+          setWorkoutSetDetails(values.map((value) => {
+            return value.data()
+          }))
+        });
       });
   }, []);
 
@@ -347,57 +365,36 @@ export default function SpecificPlanPage() {
           </StyledPlanText>
           <StyledPlanWorkouts>Workouts</StyledPlanWorkouts>
           <StyledPlanWorkoutsContainer>
-            <StyledPlanWorkoutItemContainer>
-              <StyledPlanWorkoutItemTitleContainer>
-                <StyledPlanWorkoutImage src={muscleGroupImage[7].src} />
-                <StyledPlanWorkoutName>Shoulder Press</StyledPlanWorkoutName>
-                <StyledPlanPlayIcon />
-              </StyledPlanWorkoutItemTitleContainer>
-              <StyledPlanWorkoutItemDetailContainer>
-                <StyledPlanWorkoutItemWeightIcon />
-                <StyledPlanWorkoutItemWeightNum>
-                  15kg
-                </StyledPlanWorkoutItemWeightNum>
-                <StyledPlanWorkoutItemDumbbellIcon />
-                <StyledPlanWorkoutItemDumbbellNum>
-                  20reps
-                </StyledPlanWorkoutItemDumbbellNum>
-              </StyledPlanWorkoutItemDetailContainer>
-            </StyledPlanWorkoutItemContainer>
-            <StyledPlanWorkoutItemContainer>
-              <StyledPlanWorkoutItemTitleContainer>
-                <StyledPlanWorkoutImage src={muscleGroupImage[7].src} />
-                <StyledPlanWorkoutName>Shoulder Press</StyledPlanWorkoutName>
-                <StyledPlanPlayIcon />
-              </StyledPlanWorkoutItemTitleContainer>
-              <StyledPlanWorkoutItemDetailContainer>
-                <StyledPlanWorkoutItemWeightIcon />
-                <StyledPlanWorkoutItemWeightNum>
-                  15kg
-                </StyledPlanWorkoutItemWeightNum>
-                <StyledPlanWorkoutItemDumbbellIcon />
-                <StyledPlanWorkoutItemDumbbellNum>
-                  20reps
-                </StyledPlanWorkoutItemDumbbellNum>
-              </StyledPlanWorkoutItemDetailContainer>
-            </StyledPlanWorkoutItemContainer>
-            <StyledPlanWorkoutItemContainer>
-              <StyledPlanWorkoutItemTitleContainer>
-                <StyledPlanWorkoutImage src={muscleGroupImage[7].src} />
-                <StyledPlanWorkoutName>Shoulder Press</StyledPlanWorkoutName>
-                <StyledPlanPlayIcon />
-              </StyledPlanWorkoutItemTitleContainer>
-              <StyledPlanWorkoutItemDetailContainer>
-                <StyledPlanWorkoutItemWeightIcon />
-                <StyledPlanWorkoutItemWeightNum>
-                  15kg
-                </StyledPlanWorkoutItemWeightNum>
-                <StyledPlanWorkoutItemDumbbellIcon />
-                <StyledPlanWorkoutItemDumbbellNum>
-                  20reps
-                </StyledPlanWorkoutItemDumbbellNum>
-              </StyledPlanWorkoutItemDetailContainer>
-            </StyledPlanWorkoutItemContainer>
+            {workoutSet.map((workout, index) => {
+              return (
+                <StyledPlanWorkoutItemContainer>
+                  <StyledPlanWorkoutItemTitleContainer>
+                    <StyledPlanWorkoutImage
+                    src={
+                      muscleGroups.filter((muscleGroup) => {
+                        if (muscleGroup.name === workoutSetDetails[index].targetMuscleGroup)
+                          return muscleGroup;
+                      })[0].src
+                    }
+                    />
+                    <StyledPlanWorkoutName>
+                      {workout.title}
+                    </StyledPlanWorkoutName>
+                    <StyledPlanPlayIcon />
+                  </StyledPlanWorkoutItemTitleContainer>
+                  <StyledPlanWorkoutItemDetailContainer>
+                    <StyledPlanWorkoutItemWeightIcon />
+                    <StyledPlanWorkoutItemWeightNum>
+                      {workout.weight}kg
+                    </StyledPlanWorkoutItemWeightNum>
+                    <StyledPlanWorkoutItemDumbbellIcon />
+                    <StyledPlanWorkoutItemDumbbellNum>
+                      {workout.reps}reps
+                    </StyledPlanWorkoutItemDumbbellNum>
+                  </StyledPlanWorkoutItemDetailContainer>
+                </StyledPlanWorkoutItemContainer>
+              );
+            })}
           </StyledPlanWorkoutsContainer>
           <StyledCommentContainer>
             <StyledPlanComments>Comments (15)</StyledPlanComments>
@@ -438,6 +435,13 @@ export default function SpecificPlanPage() {
           </StyledCommentContainer>
         </StyledPlanContainer>
       </StyledSpecificPlanPageContainer>
+      <button
+        onClick={() => {
+          console.log(workoutSetDetails);
+        }}
+      >
+        hihihihi
+      </button>
     </StyledBody>
   );
 }

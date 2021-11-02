@@ -30,7 +30,7 @@ const StyledMuscleIcon = styled.img`
 
 const StyledTitle = styled.div`
   color: #1face1;
-  font-size: 70px;
+  font-size: 60px;
 `;
 
 const StyledDetails = styled.div`
@@ -162,12 +162,12 @@ export default function WorkoutPopup({ workout, gymWorkoutTypeSelected }) {
     firebase.auth().currentUser.uid
   );
 
-  function updateCollected(type) {
+  function toggleCollected() {
     const uid = firebase.auth().currentUser.uid;
     if (isCollected) {
       firebase
         .firestore()
-        .collection(type)
+        .collection('workouts')
         .doc(workout.id)
         .update({
           collectedBy: firebase.firestore.FieldValue.arrayRemove(uid),
@@ -175,19 +175,11 @@ export default function WorkoutPopup({ workout, gymWorkoutTypeSelected }) {
     } else {
       firebase
         .firestore()
-        .collection(type)
+        .collection('workouts')
         .doc(workout.id)
         .update({
           collectedBy: firebase.firestore.FieldValue.arrayUnion(uid),
         });
-    }
-  }
-
-  function toggleCollected() {
-    if (gymWorkoutTypeSelected) {
-      updateCollected('gym-workouts')
-    } else {
-      updateCollected('home-workouts')
     }
   }
 
