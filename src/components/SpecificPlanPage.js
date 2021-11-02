@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Header from './Header';
 import Banner from './Banner';
 import styled from 'styled-components';
@@ -14,6 +15,10 @@ import { BiTimeFive } from 'react-icons/bi';
 import { RiArticleLine } from 'react-icons/ri';
 import { ImPlay } from 'react-icons/im';
 import { BsThreeDots } from 'react-icons/bs';
+import firebase from '../utils/firebase';
+import 'firebase/firestore';
+import 'firebase/storage';
+import muscleGroups from '../utils/muscleGroup';
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -51,16 +56,23 @@ const StyledPlanInfoTitle = styled.div`
 
 const StyledPlanInfoPublisherContainer = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const StyledPlanInfoPublisherName = styled.div`
   color: #222d35;
-  font-size: 35px;
+  font-size: 30px;
 `;
 
 const StyledPlanInfoPublisherIcon = styled(HiUserCircle)`
   color: #222d35;
   font-size: 35px;
+`;
+
+const StyledPlanInfoPublisherImage = styled.img`
+  width: 35px;
+  border-radius: 50%;
+  margin-right: 10px;
 `;
 
 const StyledPlanMediaContainer = styled.div`
@@ -121,7 +133,7 @@ const StyledPlanWorkoutItemContainer = styled.div`
   margin-bottom: 10px;
 `;
 
-const StyledPlanWorkoutItemTitleContainer= styled.div`
+const StyledPlanWorkoutItemTitleContainer = styled.div`
   display: flex;
   align-items: center;
 `;
@@ -210,7 +222,7 @@ const StyledLeaveCommentBtnContainer = styled.div`
 const StyledContentContainer = styled.div`
   overflow-y: scroll;
   height: 330px;
-  padding: 0 50px
+  padding: 0 50px;
 `;
 
 const StyledLeaveCommentBtn = styled.button`
@@ -260,6 +272,26 @@ const StyledCommentThreeDot = styled(BsThreeDots)`
 `;
 
 export default function SpecificPlanPage() {
+  const { planId } = useParams();
+  const [plan, setPlan] = useState({
+    publisher: {},
+    collectedBy: [],
+    comments: [],
+  });
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection('plans')
+      .doc(planId)
+      .get()
+      .then((docSnapshot) => {
+        const data = docSnapshot.data();
+        setPlan(data);
+        console.log(data);
+      });
+  }, []);
+
   return (
     <StyledBody>
       <Header />
@@ -268,41 +300,58 @@ export default function SpecificPlanPage() {
         <StyledPlanContainer>
           <StyledPlanCollectIcon />
           <StyledPlanInfoContainer>
-            <StyledPlanInfoImage src={muscleGroupImage[7].src} />
+            <StyledPlanInfoImage
+              src={
+                plan.targetMuscleGroup
+                  ? muscleGroups.filter((muscleGroup) => {
+                      if (muscleGroup.name === plan.targetMuscleGroup)
+                        return muscleGroup;
+                    })[0].src
+                  : null
+              }
+            />
             <StyledPlanInfoContentContainer>
-              <StyledPlanInfoTitle>
-                Full Shoulder Workout in 60 mins
-              </StyledPlanInfoTitle>
+              <StyledPlanInfoTitle>{plan.title}</StyledPlanInfoTitle>
               <StyledPlanInfoPublisherContainer>
-                <StyledPlanInfoPublisherIcon />
-                <StyledPlanInfoPublisherName>Anna</StyledPlanInfoPublisherName>
+                {plan.publisher.photoURL ? (
+                  <StyledPlanInfoPublisherImage src={plan.publisher.photoURL} />
+                ) : (
+                  <StyledPlanInfoPublisherIcon />
+                )}
+                <StyledPlanInfoPublisherName>
+                  {plan.publisher.displayName}
+                </StyledPlanInfoPublisherName>
               </StyledPlanInfoPublisherContainer>
             </StyledPlanInfoContentContainer>
           </StyledPlanInfoContainer>
           <StyledPlanMediaContainer>
             <StyledPlanCollectionContainer>
               <StyledPlanCollectionIcon />
-              <StyledPlanCollectionNum>15</StyledPlanCollectionNum>
+              <StyledPlanCollectionNum>
+                {plan.collectedBy.length}
+              </StyledPlanCollectionNum>
             </StyledPlanCollectionContainer>
             <StyledPlanCommentContainer>
               <StyledPlanCommentIcon />
-              <StyledPlanCommentNum>15</StyledPlanCommentNum>
+              <StyledPlanCommentNum>
+                {plan.comments.length}
+              </StyledPlanCommentNum>
             </StyledPlanCommentContainer>
           </StyledPlanMediaContainer>
-          <StyledPlanText><BiTimeFive/> Estimated Training Time: 60 mins</StyledPlanText>
           <StyledPlanText>
-            <RiArticleLine/> Description: Lorem ipsum dolor sit amet, consectetur adipiscing
-            elit. Donec pretium ante erat, vitae sodales mi varius quis. Etiam
-            vestibulum lorem vel urna tempor, eu fermentum odio aliquam. Aliquam
-            consequat urna vitae ipsum pulvinar, in blandit purus eleifend.
+            <BiTimeFive /> Estimated Training Time: {plan.estimatedTrainingTime}{' '}
+            mins
+          </StyledPlanText>
+          <StyledPlanText>
+            <RiArticleLine /> Description: {plan.description}
           </StyledPlanText>
           <StyledPlanWorkouts>Workouts</StyledPlanWorkouts>
           <StyledPlanWorkoutsContainer>
             <StyledPlanWorkoutItemContainer>
               <StyledPlanWorkoutItemTitleContainer>
-                <StyledPlanWorkoutImage src={muscleGroupImage[7].src}/>
+                <StyledPlanWorkoutImage src={muscleGroupImage[7].src} />
                 <StyledPlanWorkoutName>Shoulder Press</StyledPlanWorkoutName>
-                <StyledPlanPlayIcon/>
+                <StyledPlanPlayIcon />
               </StyledPlanWorkoutItemTitleContainer>
               <StyledPlanWorkoutItemDetailContainer>
                 <StyledPlanWorkoutItemWeightIcon />
@@ -317,9 +366,9 @@ export default function SpecificPlanPage() {
             </StyledPlanWorkoutItemContainer>
             <StyledPlanWorkoutItemContainer>
               <StyledPlanWorkoutItemTitleContainer>
-                <StyledPlanWorkoutImage src={muscleGroupImage[7].src}/>
+                <StyledPlanWorkoutImage src={muscleGroupImage[7].src} />
                 <StyledPlanWorkoutName>Shoulder Press</StyledPlanWorkoutName>
-                <StyledPlanPlayIcon/>
+                <StyledPlanPlayIcon />
               </StyledPlanWorkoutItemTitleContainer>
               <StyledPlanWorkoutItemDetailContainer>
                 <StyledPlanWorkoutItemWeightIcon />
@@ -334,9 +383,9 @@ export default function SpecificPlanPage() {
             </StyledPlanWorkoutItemContainer>
             <StyledPlanWorkoutItemContainer>
               <StyledPlanWorkoutItemTitleContainer>
-                <StyledPlanWorkoutImage src={muscleGroupImage[7].src}/>
+                <StyledPlanWorkoutImage src={muscleGroupImage[7].src} />
                 <StyledPlanWorkoutName>Shoulder Press</StyledPlanWorkoutName>
-                <StyledPlanPlayIcon/>
+                <StyledPlanPlayIcon />
               </StyledPlanWorkoutItemTitleContainer>
               <StyledPlanWorkoutItemDetailContainer>
                 <StyledPlanWorkoutItemWeightIcon />
@@ -353,39 +402,37 @@ export default function SpecificPlanPage() {
           <StyledCommentContainer>
             <StyledPlanComments>Comments (15)</StyledPlanComments>
             <StyledCommentInputContainer>
-              <StyledCommentInput/>
+              <StyledCommentInput />
             </StyledCommentInputContainer>
             <StyledLeaveCommentBtnContainer>
               <StyledLeaveCommentBtn>Leave Comment</StyledLeaveCommentBtn>
             </StyledLeaveCommentBtnContainer>
             <StyledCommentWrap>
-              <StyledPlanInfoPublisherIcon/>
+              <StyledPlanInfoPublisherIcon />
               <StyledNameCommentWrap>
-                <StyledCommentUserName>
-                  哈拉哈拉哈哈哈
-                </StyledCommentUserName>
+                <StyledCommentUserName>哈拉哈拉哈哈哈</StyledCommentUserName>
                 <StyledCommentUserContext>
-                  This is a good workout! This is a good workout! This is a good workout! This is a good workout!
+                  This is a good workout! This is a good workout! This is a good
+                  workout! This is a good workout!
                 </StyledCommentUserContext>
                 <StyledCommentTimeStamp>
                   2021/12/10 05:20
                 </StyledCommentTimeStamp>
-                <StyledCommentThreeDot/>
+                <StyledCommentThreeDot />
               </StyledNameCommentWrap>
             </StyledCommentWrap>
             <StyledCommentWrap>
-              <StyledPlanInfoPublisherIcon/>
+              <StyledPlanInfoPublisherIcon />
               <StyledNameCommentWrap>
-                <StyledCommentUserName>
-                  哈拉哈拉哈哈哈
-                </StyledCommentUserName>
+                <StyledCommentUserName>哈拉哈拉哈哈哈</StyledCommentUserName>
                 <StyledCommentUserContext>
-                  This is a good workout! This is a good workout! This is a good workout! This is a good workout!
+                  This is a good workout! This is a good workout! This is a good
+                  workout! This is a good workout!
                 </StyledCommentUserContext>
                 <StyledCommentTimeStamp>
                   2021/12/10 05:20
                 </StyledCommentTimeStamp>
-                <StyledCommentThreeDot/>
+                <StyledCommentThreeDot />
               </StyledNameCommentWrap>
             </StyledCommentWrap>
           </StyledCommentContainer>

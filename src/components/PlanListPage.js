@@ -13,6 +13,9 @@ import { FaWeightHanging } from 'react-icons/fa';
 import { FaDumbbell } from 'react-icons/fa';
 import { BsBookmarkFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
+import firebase from '../utils/firebase';
+import 'firebase/firestore';
+import muscleGroups from '../utils/muscleGroup';
 
 const StyledFilterContainer = styled.div`
   display: none;
@@ -108,16 +111,23 @@ const StyledPlanInfoTitle = styled.div`
 
 const StyledPlanInfoPublisherContainer = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const StyledPlanInfoPublisherName = styled.div`
   color: #222d35;
-  font-size: 25px;
+  font-size: 20px;
 `;
 
 const StyledPlanInfoPublisherIcon = styled(HiUserCircle)`
   color: #222d35;
   font-size: 25px;
+`;
+
+const StyledPlanInfoPublisherImage = styled.img`
+  width: 25px;
+  border-radius: 50%;
+  margin-right: 10px;
 `;
 
 const StyledPlanMediaContainer = styled.div`
@@ -166,8 +176,7 @@ const StyledPlanWorkouts = styled.div`
   font-size: 20px;
 `;
 
-const StyledPlanWorkoutsContainer = styled.div`
-`;
+const StyledPlanWorkoutsContainer = styled.div``;
 
 const StyledPlanMainContentContainer = styled.div`
   overflow-y: scroll;
@@ -234,6 +243,20 @@ const StyledPlanMoreDetailBtn = styled.button`
 `;
 
 export default function PlanListPage() {
+  const [plans, setPlans] = useState([]);
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection('plans')
+      .onSnapshot((collectionSnapshot) => {
+        const data = collectionSnapshot.docs.map((docSnapshot) => {
+          const id = docSnapshot.id;
+          return { ...docSnapshot.data(), id };
+        });
+        setPlans(data);
+      });
+  }, []);
+
   return (
     <StyledBody>
       <Header />
@@ -266,77 +289,81 @@ export default function PlanListPage() {
           </StyledPopup>
         </StyledFilterContainer>
         <StyledPlanListContainer>
-          <StyledPlanContainer>
-            <StyledPlanCollectIcon/>
-            <StyledPlanInfoContainer>
-              <StyledPlanInfoImage src={muscleGroupImage[7].src} />
-              <StyledPlanInfoContentContainer>
-                <StyledPlanInfoTitle>Full Shoulder Workout in 60 mins</StyledPlanInfoTitle>
-                <StyledPlanInfoPublisherContainer>
-                  <StyledPlanInfoPublisherIcon/>
-                  <StyledPlanInfoPublisherName>Anna</StyledPlanInfoPublisherName>
-                </StyledPlanInfoPublisherContainer>
-              </StyledPlanInfoContentContainer>
-            </StyledPlanInfoContainer>
-            <StyledPlanMediaContainer>
-              <StyledPlanCollectionContainer>
-                <StyledPlanCollectionIcon/>
-                <StyledPlanCollectionNum>15</StyledPlanCollectionNum>
-              </StyledPlanCollectionContainer>
-              <StyledPlanCommentContainer>
-                <StyledPlanCommentIcon/>
-                <StyledPlanCommentNum>15</StyledPlanCommentNum>
-              </StyledPlanCommentContainer>
-            </StyledPlanMediaContainer>
-            <StyledPlanMainContentContainer>
-              <StyledPlanText>
-                Estimated Training Time: 60 mins
-              </StyledPlanText>
-              <StyledPlanText>
-                Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium ante erat, vitae sodales mi varius quis. Etiam vestibulum lorem vel urna tempor, eu fermentum odio aliquam. Aliquam consequat urna vitae ipsum pulvinar, in blandit purus eleifend.
-              </StyledPlanText>
-              <StyledPlanWorkouts>Workouts</StyledPlanWorkouts>
-              <StyledPlanWorkoutsContainer>
-                <StyledPlanWorkoutItemContainer>
-                  <StyledPlanWorkoutName>Shoulder Press</StyledPlanWorkoutName>
-                  <StyledPlanWorkoutItemDetailContainer>
-                    <StyledPlanWorkoutItemWeightIcon />
-                    <StyledPlanWorkoutItemWeightNum>15kg</StyledPlanWorkoutItemWeightNum>
-                    <StyledPlanWorkoutItemDumbbellIcon />
-                    <StyledPlanWorkoutItemDumbbellNum>20reps</StyledPlanWorkoutItemDumbbellNum>
-                  </StyledPlanWorkoutItemDetailContainer>
-                </StyledPlanWorkoutItemContainer>
-                <StyledPlanWorkoutItemContainer>
-                  <StyledPlanWorkoutName>Shoulder Press</StyledPlanWorkoutName>
-                  <StyledPlanWorkoutItemDetailContainer>
-                    <StyledPlanWorkoutItemWeightIcon />
-                    <StyledPlanWorkoutItemWeightNum>15kg</StyledPlanWorkoutItemWeightNum>
-                    <StyledPlanWorkoutItemDumbbellIcon />
-                    <StyledPlanWorkoutItemDumbbellNum>20reps</StyledPlanWorkoutItemDumbbellNum>
-                  </StyledPlanWorkoutItemDetailContainer>
-                </StyledPlanWorkoutItemContainer>
-                <StyledPlanWorkoutItemContainer>
-                  <StyledPlanWorkoutName>Shoulder Press</StyledPlanWorkoutName>
-                  <StyledPlanWorkoutItemDetailContainer>
-                    <StyledPlanWorkoutItemWeightIcon />
-                    <StyledPlanWorkoutItemWeightNum>15kg</StyledPlanWorkoutItemWeightNum>
-                    <StyledPlanWorkoutItemDumbbellIcon />
-                    <StyledPlanWorkoutItemDumbbellNum>20reps</StyledPlanWorkoutItemDumbbellNum>
-                  </StyledPlanWorkoutItemDetailContainer>
-                </StyledPlanWorkoutItemContainer>
-                <StyledPlanWorkoutItemContainer>
-                  <StyledPlanWorkoutName>Shoulder Press</StyledPlanWorkoutName>
-                  <StyledPlanWorkoutItemDetailContainer>
-                    <StyledPlanWorkoutItemWeightIcon />
-                    <StyledPlanWorkoutItemWeightNum>15kg</StyledPlanWorkoutItemWeightNum>
-                    <StyledPlanWorkoutItemDumbbellIcon />
-                    <StyledPlanWorkoutItemDumbbellNum>20reps</StyledPlanWorkoutItemDumbbellNum>
-                  </StyledPlanWorkoutItemDetailContainer>
-                </StyledPlanWorkoutItemContainer>
-              </StyledPlanWorkoutsContainer>
-            </StyledPlanMainContentContainer>
-            <StyledPlanMoreDetailBtn>More Details</StyledPlanMoreDetailBtn>
-          </StyledPlanContainer>
+          {plans.map((plan) => {
+            return (
+              <StyledPlanContainer>
+                <StyledPlanCollectIcon />
+                <StyledPlanInfoContainer>
+                  <StyledPlanInfoImage
+                    src={
+                      muscleGroups.filter((muscleGroup) => {
+                        if (muscleGroup.name === plan.targetMuscleGroup)
+                          return muscleGroup;
+                      })[0].src
+                    }
+                  />
+                  <StyledPlanInfoContentContainer>
+                    <StyledPlanInfoTitle>{plan.title}</StyledPlanInfoTitle>
+                    <StyledPlanInfoPublisherContainer>
+                      {plan.publisher.photoURL ? (
+                        <StyledPlanInfoPublisherImage
+                          src={plan.publisher.photoURL}
+                        />
+                      ) : (
+                        <StyledPlanInfoPublisherIcon />
+                      )}
+                      <StyledPlanInfoPublisherName>
+                        {plan.publisher.displayName}
+                      </StyledPlanInfoPublisherName>
+                    </StyledPlanInfoPublisherContainer>
+                  </StyledPlanInfoContentContainer>
+                </StyledPlanInfoContainer>
+                <StyledPlanMediaContainer>
+                  <StyledPlanCollectionContainer>
+                    <StyledPlanCollectionIcon />
+                    <StyledPlanCollectionNum>
+                      {plan.collectedBy.length}
+                    </StyledPlanCollectionNum>
+                  </StyledPlanCollectionContainer>
+                  <StyledPlanCommentContainer>
+                    <StyledPlanCommentIcon />
+                    <StyledPlanCommentNum>
+                      {plan.comments.length}
+                    </StyledPlanCommentNum>
+                  </StyledPlanCommentContainer>
+                </StyledPlanMediaContainer>
+                <StyledPlanMainContentContainer>
+                  <StyledPlanText>
+                    Estimated Training Time: {plan.estimatedTrainingTime} mins
+                  </StyledPlanText>
+                  <StyledPlanText>
+                    Description: {plan.description}
+                  </StyledPlanText>
+                  <StyledPlanWorkouts>Workouts</StyledPlanWorkouts>
+                  <StyledPlanWorkoutsContainer>
+                    {plan.workoutSet.map((workout) => {
+                      return <StyledPlanWorkoutItemContainer>
+                        <StyledPlanWorkoutName>
+                          {workout.title}
+                        </StyledPlanWorkoutName>
+                        <StyledPlanWorkoutItemDetailContainer>
+                          <StyledPlanWorkoutItemWeightIcon />
+                          <StyledPlanWorkoutItemWeightNum>
+                            {workout.weight}kg
+                          </StyledPlanWorkoutItemWeightNum>
+                          <StyledPlanWorkoutItemDumbbellIcon />
+                          <StyledPlanWorkoutItemDumbbellNum>
+                            {workout.reps}reps
+                          </StyledPlanWorkoutItemDumbbellNum>
+                        </StyledPlanWorkoutItemDetailContainer>
+                      </StyledPlanWorkoutItemContainer>;
+                    })}
+                  </StyledPlanWorkoutsContainer>
+                </StyledPlanMainContentContainer>
+                <StyledPlanMoreDetailBtn as={Link} to={`/plans/${plan.id}`}>More Details</StyledPlanMoreDetailBtn>
+              </StyledPlanContainer>
+            );
+          })}
         </StyledPlanListContainer>
       </StyledPlanListPageContainer>
     </StyledBody>

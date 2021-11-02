@@ -6,7 +6,7 @@ import muscleGroupImage from '../utils/muscleGroup';
 import FrontMuscle from './FrontMuscle';
 import BackMuscle from './BackMuscle';
 import Popup from 'reactjs-popup';
-import ExerciseItem from './ExerciseItem';
+import WorkoutItem from './WorkoutItem';
 import firebase from '../utils/firebase';
 import 'firebase/firestore';
 
@@ -112,25 +112,24 @@ export default function WorkoutListPage() {
       firebase
         .firestore()
         .collection('gym-workouts')
-        .get()
-        .then((collectionSnapshot) => {
+        .onSnapshot((collectionSnapshot) => {
           const data = collectionSnapshot.docs.map((docSnapshot) => {
             const id = docSnapshot.id
             return { ...docSnapshot.data(), id };
           });
           setWorkouts(data);
-        });
+        })
     } else {
       firebase
         .firestore()
         .collection('home-workouts')
-        .get()
-        .then((collectionSnapshot) => {
+        .onSnapshot((collectionSnapshot) => {
           const data = collectionSnapshot.docs.map((docSnapshot) => {
-            return docSnapshot.data();
+            const id = docSnapshot.id
+            return { ...docSnapshot.data(), id };
           });
           setWorkouts(data);
-        });
+        })
     }
   }, [gymWorkoutTypeSelected]);
 
@@ -187,7 +186,7 @@ export default function WorkoutListPage() {
         <StyledExerciseContainer>
           {workouts.map((workout) => {
             return (
-              <ExerciseItem
+              <WorkoutItem
                 workout={workout}
                 gymWorkoutTypeSelected={gymWorkoutTypeSelected}
               />

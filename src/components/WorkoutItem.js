@@ -88,7 +88,6 @@ const StyledMessageIcon = styled(RiMessage2Fill)`
 `;
 
 //popup
-
 const StyledPopup = styled(Popup)`
   &-overlay {
     background: rgba(0, 0, 0, 0.6);
@@ -103,7 +102,7 @@ const StyledPopup = styled(Popup)`
   }
 `;
 
-export default function ExerciseItem({ workout, gymWorkoutTypeSelected }) {
+export default function WorkoutItem({ workout, gymWorkoutTypeSelected }) {
   return (
     <StyledExerciseItemContainer>
       <StyledExerciseItemImage
@@ -127,8 +126,8 @@ export default function ExerciseItem({ workout, gymWorkoutTypeSelected }) {
             : 'User'}
         </StyledExerciseItemPublisher>
         <StyledExerciseItemSocial>
-          <StyledCollectIcon /> Collected (5) / <StyledMessageIcon /> Comments
-          (7)
+          <StyledCollectIcon /> Collected ({workout.collectedBy.length}) / <StyledMessageIcon /> Comments
+          ({workout.comments.length})
         </StyledExerciseItemSocial>
       </StyledExerciseItemDescription>
       <StyledPopup trigger={<StyledPlayIcon />} modal nested>

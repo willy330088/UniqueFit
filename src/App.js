@@ -14,25 +14,25 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route exact path='/'>
+        <Route exact path='/' exact>
           <LandingPage />
         </Route>
-        <Route path='/workouts'>
+        <Route path='/workouts' exact>
           <WorkoutListPage/>
         </Route>
-        <Route path='/plans'>
+        <Route path='/plans' exact>
           <PlanListPage/>
         </Route>
-        <Route path='/createplan'>
+        <Route path='/createplan' exact>
           <CreatePlanPage/>
         </Route>
-        <Route path='/createworkout'>
+        <Route path='/createworkout' exact>
           <CreateWorkoutPage />
         </Route>
-        <Route path='/profile'>
+        <Route path='/profile' exact>
           <ProfilePage/>
         </Route>
-        <Route path='/specificplan'>
+        <Route path='/plans/:planId' exact>
           <SpecificPlanPage/>
         </Route>
       </Switch>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import muscleGroups from '../utils/muscleGroup';
 import { HiUserCircle } from 'react-icons/hi';
@@ -66,16 +66,16 @@ const StyledPublisherImage = styled.img`
   margin-right: 10px;
 `;
 
-const StyledCollectIcon = styled(BsFillBookmarkHeartFill)`
-`;
+const StyledCollectIcon = styled(BsFillBookmarkHeartFill)``;
 
 const StyledAddToCollectIcon = styled(BsBookmarkFill)`
   font-size: 50px;
-  color: white;
+  color: ${(props) => (props.isCollected ? '#1face1' : 'white')};
   position: absolute;
   right: 30px;
   bottom: 50px;
   z-index: 20;
+  cursor: pointer;
 `;
 
 const StyledCommentContainer = styled.div`
@@ -85,8 +85,7 @@ const StyledCommentContainer = styled.div`
   padding-top: 30px;
 `;
 
-const StyledCommentIcon = styled(RiMessage2Fill)`
-`;
+const StyledCommentIcon = styled(RiMessage2Fill)``;
 
 const StyledCommentInput = styled.textarea`
   height: 70px;
@@ -109,7 +108,7 @@ const StyledLeaveCommentBtnContainer = styled.div`
 const StyledContentContainer = styled.div`
   overflow-y: scroll;
   height: 330px;
-  padding: 0 50px
+  padding: 0 50px;
 `;
 
 const StyledLeaveCommentBtn = styled.button`
@@ -159,25 +158,46 @@ const StyledCommentThreeDot = styled(BsThreeDots)`
 `;
 
 export default function WorkoutPopup({ workout, gymWorkoutTypeSelected }) {
-  function toggleCollected() {
+  const isCollected = workout.collectedBy?.includes(
+    firebase.auth().currentUser.uid
+  );
+
+  function updateCollected(type) {
     const uid = firebase.auth().currentUser.uid;
-    console.log(workout.id)
-    console.log(gymWorkoutTypeSelected)
-    if (gymWorkoutTypeSelected) {
-      firebase.firestore().collection('gym-workouts').doc(workout.id).update({
-        collectedBy: firebase.firestore.FieldValue.arrayUnion(uid)
-      })
+    if (isCollected) {
+      firebase
+        .firestore()
+        .collection(type)
+        .doc(workout.id)
+        .update({
+          collectedBy: firebase.firestore.FieldValue.arrayRemove(uid),
+        });
     } else {
-      firebase.firestore().collection('home-workouts').doc(workout.id).update({
-        collectedBy: firebase.firestore.FieldValue.arrayUnion(uid)
-      })     
+      firebase
+        .firestore()
+        .collection(type)
+        .doc(workout.id)
+        .update({
+          collectedBy: firebase.firestore.FieldValue.arrayUnion(uid),
+        });
+    }
+  }
+
+  function toggleCollected() {
+    if (gymWorkoutTypeSelected) {
+      updateCollected('gym-workouts')
+    } else {
+      updateCollected('home-workouts')
     }
   }
 
   return (
     <>
       <input type="text" autofocus="autofocus" style={{ display: 'none' }} />
-      <StyledAddToCollectIcon onClick={toggleCollected}/>
+      <StyledAddToCollectIcon
+        onClick={toggleCollected}
+        isCollected={isCollected}
+      />
       <StyledVideo
         src={workout.videoURL}
         autoPlay
@@ -215,14 +235,14 @@ export default function WorkoutPopup({ workout, gymWorkoutTypeSelected }) {
             Description : {workout.description}
           </StyledTextContent>
           <StyledTextContent>
-            <StyledCollectIcon/>  15
+            <StyledCollectIcon /> 15
           </StyledTextContent>
           <StyledCommentContainer>
             <StyledTextContent>
-              <StyledCommentIcon/> Comments 
+              <StyledCommentIcon /> Comments
             </StyledTextContent>
             <StyledCommentInputContainer>
-              <StyledCommentInput/>
+              <StyledCommentInput />
             </StyledCommentInputContainer>
             <StyledLeaveCommentBtnContainer>
               <StyledLeaveCommentBtn>Leave Comment</StyledLeaveCommentBtn>
@@ -230,36 +250,34 @@ export default function WorkoutPopup({ workout, gymWorkoutTypeSelected }) {
             <StyledCommentWrap>
               <StyledCommentUserImage src={workout.publisher.photoURL} />
               <StyledNameCommentWrap>
-                <StyledCommentUserName>
-                  哈拉哈拉哈哈哈
-                </StyledCommentUserName>
+                <StyledCommentUserName>哈拉哈拉哈哈哈</StyledCommentUserName>
                 <StyledCommentUserContext>
-                  This is a good workout! This is a good workout! This is a good workout! This is a good workout!
+                  This is a good workout! This is a good workout! This is a good
+                  workout! This is a good workout!
                 </StyledCommentUserContext>
                 <StyledCommentTimeStamp>
                   2021/12/10 05:20
                 </StyledCommentTimeStamp>
-                <StyledCommentThreeDot/>
+                <StyledCommentThreeDot />
               </StyledNameCommentWrap>
             </StyledCommentWrap>
             <StyledCommentWrap>
               <StyledCommentUserImage src={workout.publisher.photoURL} />
               <StyledNameCommentWrap>
-                <StyledCommentUserName>
-                  哈拉哈拉哈哈哈
-                </StyledCommentUserName>
+                <StyledCommentUserName>哈拉哈拉哈哈哈</StyledCommentUserName>
                 <StyledCommentUserContext>
-                  This is a good workout! This is a good workout! This is a good workout! This is a good workout!
+                  This is a good workout! This is a good workout! This is a good
+                  workout! This is a good workout!
                 </StyledCommentUserContext>
                 <StyledCommentTimeStamp>
                   2021/12/10 05:20
                 </StyledCommentTimeStamp>
-                <StyledCommentThreeDot/>
+                <StyledCommentThreeDot />
               </StyledNameCommentWrap>
             </StyledCommentWrap>
           </StyledCommentContainer>
         </StyledContentContainer>
       </StyledDetails>
     </>
-  )
+  );
 }
