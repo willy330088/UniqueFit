@@ -157,7 +157,7 @@ const StyledCommentThreeDot = styled(BsThreeDots)`
   font-size: 20px;
 `;
 
-export default function WorkoutPopup({ workout, gymWorkoutTypeSelected }) {
+export default function WorkoutPopup({ workout }) {
   const isCollected = workout.collectedBy?.includes(
     firebase.auth().currentUser.uid
   );
@@ -227,7 +227,7 @@ export default function WorkoutPopup({ workout, gymWorkoutTypeSelected }) {
             Description : {workout.description}
           </StyledTextContent>
           <StyledTextContent>
-            <StyledCollectIcon /> 15
+            <StyledCollectIcon /> {workout.collectedBy.length}
           </StyledTextContent>
           <StyledCommentContainer>
             <StyledTextContent>

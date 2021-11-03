@@ -250,6 +250,7 @@ export default function PlanListPage() {
     firebase
       .firestore()
       .collection('plans')
+      .where('public', '==', true)
       .onSnapshot((collectionSnapshot) => {
         const data = collectionSnapshot.docs.map((docSnapshot) => {
           const id = docSnapshot.id;
@@ -294,7 +295,6 @@ export default function PlanListPage() {
           {plans.map((plan) => {
             return (
               <StyledPlanContainer>
-                <StyledPlanCollectIcon />
                 <StyledPlanInfoContainer>
                   <StyledPlanInfoImage
                     src={
@@ -330,7 +330,7 @@ export default function PlanListPage() {
                   <StyledPlanCommentContainer>
                     <StyledPlanCommentIcon />
                     <StyledPlanCommentNum>
-                      {plan.comments.length}
+                      {plan.commentsCount || 0}
                     </StyledPlanCommentNum>
                   </StyledPlanCommentContainer>
                 </StyledPlanMediaContainer>
