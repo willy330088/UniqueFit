@@ -127,7 +127,7 @@ export default function WorkoutItem({ workout, gymWorkoutTypeSelected }) {
         </StyledExerciseItemPublisher>
         <StyledExerciseItemSocial>
           <StyledCollectIcon /> Collected ({workout.collectedBy.length}) / <StyledMessageIcon /> Comments
-          ({workout.comments.length})
+          ({workout.commentsCount || 0})
         </StyledExerciseItemSocial>
       </StyledExerciseItemDescription>
       <StyledPopup trigger={<StyledPlayIcon />} modal nested>

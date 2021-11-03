@@ -13,13 +13,13 @@ import { BsBookmarkFill } from 'react-icons/bs';
 import { BiTimeFive } from 'react-icons/bi';
 import { RiArticleLine } from 'react-icons/ri';
 import { ImPlay } from 'react-icons/im';
-import { BsThreeDots } from 'react-icons/bs';
 import firebase from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/auth';
 import muscleGroups from '../utils/muscleGroup';
 import WorkoutPopup from './WorkoutPopup';
+import PlanComment from './PlanComment';
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -228,49 +228,6 @@ const StyledLeaveCommentBtn = styled.button`
   cursor: pointer;
 `;
 
-const StyledCommentWrap = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
-  height: 120px;
-  position: relative;
-`;
-
-const StyledCommentUserImage = styled.img`
-  width: 50px;
-  border-radius: 50%;
-`;
-
-const StyledNameCommentWrap = styled.div`
-  margin-left: 20px;
-`;
-
-const StyledCommentUserName = styled.div`
-  color: #1face1;
-  font-size: 25px;
-`;
-
-const StyledCommentUserContext = styled.div`
-  color: #222d35;
-  font-size: 18px;
-  margin-top: 10px;
-  word-break: break-all;
-`;
-
-const StyledCommentTimeStamp = styled.div`
-  color: #969696;
-  position: absolute;
-  right: 0;
-`;
-
-const StyledCommentThreeDot = styled(BsThreeDots)`
-  color: #222d35;
-  position: absolute;
-  right: 0;
-  top: 15px;
-  font-size: 20px;
-`;
-
 const StyledPopup = styled(Popup)`
   &-overlay {
     background: rgba(0, 0, 0, 0.6);
@@ -340,7 +297,8 @@ export default function SpecificPlanPage() {
         ).then((values) => {
           setWorkoutSetDetails(
             values.map((value) => {
-              return value.data();
+              const id = value.id
+              return { ...value.data(), id};
             })
           );
         });
@@ -356,7 +314,8 @@ export default function SpecificPlanPage() {
       .orderBy('createdAt', 'desc')
       .onSnapshot((collectionSnapshot) => {
         const data = collectionSnapshot.docs.map((doc) => {
-          return doc.data();
+          const id = doc.id
+          return { ...doc.data(), id };
         });
         setComments(data);
       });
@@ -506,25 +465,7 @@ export default function SpecificPlanPage() {
             </StyledLeaveCommentBtnContainer>
             {comments.map((comment) => {
               return (
-                <StyledCommentWrap>
-                  {comment.publisher.photoURL ? (
-                    <StyledCommentUserImage src={comment.publisher.photoURL} />
-                  ) : (
-                    <StyledPlanInfoPublisherIcon />
-                  )}
-                  <StyledNameCommentWrap>
-                    <StyledCommentUserName>
-                      {comment.publisher.displayName}
-                    </StyledCommentUserName>
-                    <StyledCommentUserContext>
-                      {comment.content}
-                    </StyledCommentUserContext>
-                    <StyledCommentTimeStamp>
-                      {comment.createdAt.toDate().toLocaleString()}
-                    </StyledCommentTimeStamp>
-                    <StyledCommentThreeDot />
-                  </StyledNameCommentWrap>
-                </StyledCommentWrap>
+                <PlanComment comment={comment} planId={planId}/>
               );
             })}
           </StyledCommentContainer>

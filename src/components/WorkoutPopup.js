@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import muscleGroups from '../utils/muscleGroup';
 import { HiUserCircle } from 'react-icons/hi';
@@ -8,6 +8,7 @@ import { RiMessage2Fill } from 'react-icons/ri';
 import { BsThreeDots } from 'react-icons/bs';
 import firebase from '../utils/firebase';
 import 'firebase/firestore';
+import WorkoutComment from './WorkoutComment';
 
 const StyledVideo = styled.video`
   position: fixed;
@@ -115,52 +116,54 @@ const StyledLeaveCommentBtn = styled.button`
   align-items: flex-end;
 `;
 
-const StyledCommentWrap = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
-  height: 120px;
-  position: relative;
-`;
-
-const StyledCommentUserImage = styled.img`
-  width: 50px;
-  border-radius: 50%;
-`;
-
-const StyledNameCommentWrap = styled.div`
-  margin-left: 20px;
-`;
-
-const StyledCommentUserName = styled.div`
-  color: #1face1;
-  font-size: 25px;
-`;
-
-const StyledCommentUserContext = styled.div`
-  color: white;
-  font-size: 18px;
-  margin-top: 10px;
-`;
-
-const StyledCommentTimeStamp = styled.div`
-  color: #969696;
-  position: absolute;
-  right: 0;
-`;
-
-const StyledCommentThreeDot = styled(BsThreeDots)`
-  color: white;
-  position: absolute;
-  right: 0;
-  top: 15px;
-  font-size: 20px;
-`;
-
 export default function WorkoutPopup({ workout }) {
+  const [commentContent, setCommentContent] = useState('');
+  const [comments, setComments] = useState([]);
+
   const isCollected = workout.collectedBy?.includes(
     firebase.auth().currentUser.uid
   );
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection('workouts')
+      .doc(workout.id)
+      .collection('comments')
+      .orderBy('createdAt', 'desc')
+      .onSnapshot((collectionSnapshot) => {
+        const data = collectionSnapshot.docs.map((doc) => {
+          const id = doc.id
+          return { ...doc.data(), id };
+        });
+        setComments(data);
+      });
+  }, []);
+
+  function onSubmitComment() {
+    const firestore = firebase.firestore();
+    const batch = firestore.batch();
+    const planRef = firestore.collection('workouts').doc(workout.id);
+
+    batch.update(planRef, {
+      commentsCount: firebase.firestore.FieldValue.increment(1),
+    });
+
+    const commentRef = planRef.collection('comments').doc();
+    batch.set(commentRef, {
+      content: commentContent,
+      createdAt: firebase.firestore.Timestamp.now(),
+      publisher: {
+        uid: firebase.auth().currentUser.uid,
+        displayName: firebase.auth().currentUser.displayName || '',
+        photoURL: firebase.auth().currentUser.photoURL || '',
+      },
+    });
+
+    batch.commit().then(() => {
+      setCommentContent('');
+    });
+  }
 
   function toggleCollected() {
     const uid = firebase.auth().currentUser.uid;
@@ -234,39 +237,23 @@ export default function WorkoutPopup({ workout }) {
               <StyledCommentIcon /> Comments
             </StyledTextContent>
             <StyledCommentInputContainer>
-              <StyledCommentInput />
+              <StyledCommentInput
+                value={commentContent}
+                onChange={(e) => {
+                  setCommentContent(e.target.value);
+                }}
+              />
             </StyledCommentInputContainer>
             <StyledLeaveCommentBtnContainer>
-              <StyledLeaveCommentBtn>Leave Comment</StyledLeaveCommentBtn>
+              <StyledLeaveCommentBtn onClick={onSubmitComment}>
+                Leave Comment
+              </StyledLeaveCommentBtn>
             </StyledLeaveCommentBtnContainer>
-            <StyledCommentWrap>
-              <StyledCommentUserImage src={workout.publisher.photoURL} />
-              <StyledNameCommentWrap>
-                <StyledCommentUserName>哈拉哈拉哈哈哈</StyledCommentUserName>
-                <StyledCommentUserContext>
-                  This is a good workout! This is a good workout! This is a good
-                  workout! This is a good workout!
-                </StyledCommentUserContext>
-                <StyledCommentTimeStamp>
-                  2021/12/10 05:20
-                </StyledCommentTimeStamp>
-                <StyledCommentThreeDot />
-              </StyledNameCommentWrap>
-            </StyledCommentWrap>
-            <StyledCommentWrap>
-              <StyledCommentUserImage src={workout.publisher.photoURL} />
-              <StyledNameCommentWrap>
-                <StyledCommentUserName>哈拉哈拉哈哈哈</StyledCommentUserName>
-                <StyledCommentUserContext>
-                  This is a good workout! This is a good workout! This is a good
-                  workout! This is a good workout!
-                </StyledCommentUserContext>
-                <StyledCommentTimeStamp>
-                  2021/12/10 05:20
-                </StyledCommentTimeStamp>
-                <StyledCommentThreeDot />
-              </StyledNameCommentWrap>
-            </StyledCommentWrap>
+            {comments.map((comment) => {
+              return (
+                <WorkoutComment comment={comment} workoutId={workout.id}/>
+              );
+            })}
           </StyledCommentContainer>
         </StyledContentContainer>
       </StyledDetails>
