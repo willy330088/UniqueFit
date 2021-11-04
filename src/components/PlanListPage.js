@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import Banner from './Banner';
+import CreatePlanPopup from './CreatePlanPopup';
 import styled from 'styled-components';
 import Popup from 'reactjs-popup';
 import firebase from '../utils/firebase';
@@ -22,6 +23,28 @@ const StyledPlanListContainer = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+`;
+
+const StyledPopup = styled(Popup)`
+  &-overlay {
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  &-content {
+    margin: auto;
+    background: #222d35;
+    width: 700px;
+    height: 800px;
+    padding: 50px 100px;
+    position: relative;
+  }
+`;
+
+const StyledCreatePlanBtn = styled.button`
+  width: 200px;
+  height: 50px;
+  margin-left: auto;
+  font-size: 20px;
 `;
 
 export default function PlanListPage() {
@@ -47,6 +70,17 @@ export default function PlanListPage() {
       <Header />
       <Banner slogan={'Collect Your Plans'} />
       <StyledPlanListPageContainer>
+        <StyledPopup
+          trigger={
+            <StyledCreatePlanBtn>
+              Create Your Workout
+            </StyledCreatePlanBtn>
+          }
+          modal
+          nested
+        >
+          <CreatePlanPopup/>
+        </StyledPopup>
         <Filter
           filteredMuscleGroups={filteredMuscleGroups}
           setFilteredMuscleGroups={setFilteredMuscleGroups}

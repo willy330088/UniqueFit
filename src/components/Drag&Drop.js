@@ -10,7 +10,10 @@ import 'firebase/auth';
 import muscleGroups from '../utils/muscleGroup';
 
 const Content = styled.div`
-  padding: 30px 20px 50px;
+`;
+
+const StyledDnDContainer = styled.div`
+  display: flex;
 `;
 
 const Item = styled.div`
@@ -109,15 +112,6 @@ const StyledCollectionTitle = styled.div`
   margin-bottom: 15px;
 `;
 
-const StyledCreateLabel = styled.div`
-  color: #1face1;
-  font-size: 30px;
-  padding-bottom: 10px;
-  border-bottom: 3px solid #1face1;
-  margin-bottom: 20px;
-  width: 100%;
-`;
-
 const StyledWeightInput = styled.input`
   width: 40px;
   margin-right: 10px;
@@ -159,14 +153,6 @@ const StyledWorkoutTypeSeparator = styled.div`
   margin: 0 10px;
 `;
 
-const StyledCreateWorkoutBtn = styled.button`
-  width: 200px;
-  font-size: 30px;
-  margin-left: calc(50% - 100px);
-  margin-top: 30px;
-  cursor: pointer;
-`;
-
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
@@ -190,7 +176,7 @@ const copy = (source, destination, droppableSource, droppableDestination) => {
   return destClone;
 };
 
-function DragAndDrop({ plan, setPlan, createPlan }) {
+function DragAndDrop({ plan, setPlan }) {
   const [workoutData, setWorkoutData] = useState([]);
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
 
@@ -239,263 +225,261 @@ function DragAndDrop({ plan, setPlan, createPlan }) {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Content>
-        <StyledCreateLabel>Order Your Workouts</StyledCreateLabel>
-        <Droppable key={1} droppableId={'workoutSet'}>
+      <StyledDnDContainer>
+        <Content>
+          <Droppable key={1} droppableId={'workoutSet'}>
+            {(provided, snapshot) => (
+              <Container
+                ref={provided.innerRef}
+                isDraggingOver={snapshot.isDraggingOver}
+              >
+                {plan.workoutSet.length
+                  ? plan.workoutSet.map((item, index) => (
+                      <Draggable
+                        key={item.id}
+                        draggableId={item.id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <Item
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            isDragging={snapshot.isDragging}
+                          >
+                            <Handle {...provided.dragHandleProps}>
+                              <StyledDragIcon />
+                            </Handle>
+                            <StyledExerciseTitle>
+                              <StyledMuscleGroupIcon
+                                src={
+                                  muscleGroups.filter((muscleGroup) => {
+                                    if (
+                                      muscleGroup.name === item.targetMuscleGroup
+                                    )
+                                      return muscleGroup;
+                                  })[0].src
+                                }
+                              />
+                              <StyledExerciseName>
+                                {item.title}
+                              </StyledExerciseName>
+                            </StyledExerciseTitle>
+                            <StyledWeightSet>
+                              <StyledWeightInput
+                                placeholder={'0'}
+                                onChange={(e) => {
+                                  setPlan({
+                                    workoutSet: plan.workoutSet.filter(
+                                      (single) => {
+                                        if (single === item) {
+                                          single.weight = parseInt(
+                                            e.target.value,
+                                            10
+                                          );
+                                          return single;
+                                        } else {
+                                          return single;
+                                        }
+                                      }
+                                    ),
+                                  });
+                                }}
+                              />
+                              <StyledWeightLabel>kg</StyledWeightLabel>
+                              <StyledWeightInput
+                                placeholder={'0'}
+                                onChange={(e) => {
+                                  setPlan({
+                                    workoutSet: plan.workoutSet.filter(
+                                      (single) => {
+                                        if (single === item) {
+                                          single.reps = parseInt(
+                                            e.target.value,
+                                            10
+                                          );
+                                          return single;
+                                        } else {
+                                          return single;
+                                        }
+                                      }
+                                    ),
+                                  });
+                                }}
+                              />
+                              <StyledWeightLabel>reps</StyledWeightLabel>
+                            </StyledWeightSet>
+                            <StyledRemoveIcon
+                              src={RemoveIcon}
+                              onClick={() => {
+                                setPlan({
+                                  workoutSet: plan.workoutSet.filter((single) => {
+                                    if (single !== item) return single;
+                                  }),
+                                });
+                              }}
+                            />
+                          </Item>
+                        )}
+                      </Draggable>
+                    ))
+                  : !snapshot.isDraggingOver && (
+                      <Notice>Drag Your Workouts From Collections</Notice>
+                    )}
+                {provided.placeholder}
+              </Container>
+            )}
+          </Droppable>
+        </Content>
+        <Droppable droppableId="workoutData" isDropDisabled={true}>
           {(provided, snapshot) => (
-            <Container
+            <Kiosk
               ref={provided.innerRef}
               isDraggingOver={snapshot.isDraggingOver}
             >
-              {plan.workoutSet.length
-                ? plan.workoutSet.map((item, index) => (
-                    <Draggable
-                      key={item.id}
-                      draggableId={item.id}
-                      index={index}
-                    >
-                      {(provided, snapshot) => (
-                        <Item
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          isDragging={snapshot.isDragging}
-                        >
-                          <Handle {...provided.dragHandleProps}>
-                            <StyledDragIcon />
-                          </Handle>
-                          <StyledExerciseTitle>
-                            <StyledMuscleGroupIcon
-                              src={
-                                muscleGroups.filter((muscleGroup) => {
-                                  if (
-                                    muscleGroup.name === item.targetMuscleGroup
-                                  )
-                                    return muscleGroup;
-                                })[0].src
-                              }
-                            />
-                            <StyledExerciseName>
-                              {item.title}
-                            </StyledExerciseName>
-                          </StyledExerciseTitle>
-                          <StyledWeightSet>
-                            <StyledWeightInput
-                              placeholder={'0'}
-                              onChange={(e) => {
-                                setPlan({
-                                  workoutSet: plan.workoutSet.filter(
-                                    (single) => {
-                                      if (single === item) {
-                                        single.weight = parseInt(
-                                          e.target.value,
-                                          10
-                                        );
-                                        return single;
-                                      } else {
-                                        return single;
-                                      }
+              <StyledCollectionTitle>Collections</StyledCollectionTitle>
+              <StyledBookmark>
+                <StyledWorkoutTypeTag
+                  selected={gymWorkoutTypeSelected}
+                  onClick={() => {
+                    setGymWorkoutTypeSelected(true);
+                  }}
+                >
+                  Gym Workout
+                </StyledWorkoutTypeTag>
+                <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
+                <StyledWorkoutTypeTag
+                  selected={!gymWorkoutTypeSelected}
+                  onClick={() => {
+                    setGymWorkoutTypeSelected(false);
+                  }}
+                >
+                  Home Workout
+                </StyledWorkoutTypeTag>
+              </StyledBookmark>
+              {workoutData.map((item, index) => {
+                if (gymWorkoutTypeSelected) {
+                  if (item.type === 'Gymworkout') {
+                    return (
+                      <Draggable
+                        key={item.id}
+                        draggableId={item.id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <>
+                            <Item
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              isDragging={snapshot.isDragging}
+                            >
+                              <StyledExerciseTitle>
+                                <StyledMuscleGroupIcon
+                                  src={
+                                    muscleGroups.filter((muscleGroup) => {
+                                      if (
+                                        muscleGroup.name ===
+                                        item.targetMuscleGroup
+                                      )
+                                        return muscleGroup;
+                                    })[0].src
+                                  }
+                                />
+                                <StyledExerciseName>
+                                  {item.title}
+                                </StyledExerciseName>
+                              </StyledExerciseTitle>
+                            </Item>
+                            {snapshot.isDragging && (
+                              <Clone>
+                                <StyledExerciseTitle>
+                                  <StyledMuscleGroupIcon
+                                    src={
+                                      muscleGroups.filter((muscleGroup) => {
+                                        if (
+                                          muscleGroup.name ===
+                                          item.targetMuscleGroup
+                                        )
+                                          return muscleGroup;
+                                      })[0].src
                                     }
-                                  ),
-                                });
-                              }}
-                            />
-                            <StyledWeightLabel>kg</StyledWeightLabel>
-                            <StyledWeightInput
-                              placeholder={'0'}
-                              onChange={(e) => {
-                                setPlan({
-                                  workoutSet: plan.workoutSet.filter(
-                                    (single) => {
-                                      if (single === item) {
-                                        single.reps = parseInt(
-                                          e.target.value,
-                                          10
-                                        );
-                                        return single;
-                                      } else {
-                                        return single;
-                                      }
+                                  />
+                                  <StyledExerciseName>
+                                    {item.title}
+                                  </StyledExerciseName>
+                                </StyledExerciseTitle>
+                              </Clone>
+                            )}
+                          </>
+                        )}
+                      </Draggable>
+                    );
+                  }
+                } else {
+                  if (item.type === 'Homeworkout') {
+                    return (
+                      <Draggable
+                        key={item.id}
+                        draggableId={item.id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <>
+                            <Item
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              isDragging={snapshot.isDragging}
+                            >
+                              <StyledExerciseTitle>
+                                <StyledMuscleGroupIcon
+                                  src={
+                                    muscleGroups.filter((muscleGroup) => {
+                                      if (
+                                        muscleGroup.name ===
+                                        item.targetMuscleGroup
+                                      )
+                                        return muscleGroup;
+                                    })[0].src
+                                  }
+                                />
+                                <StyledExerciseName>
+                                  {item.title}
+                                </StyledExerciseName>
+                              </StyledExerciseTitle>
+                            </Item>
+                            {snapshot.isDragging && (
+                              <Clone>
+                                <StyledExerciseTitle>
+                                  <StyledMuscleGroupIcon
+                                    src={
+                                      muscleGroups.filter((muscleGroup) => {
+                                        if (
+                                          muscleGroup.name ===
+                                          item.targetMuscleGroup
+                                        )
+                                          return muscleGroup;
+                                      })[0].src
                                     }
-                                  ),
-                                });
-                              }}
-                            />
-                            <StyledWeightLabel>reps</StyledWeightLabel>
-                          </StyledWeightSet>
-                          <StyledRemoveIcon
-                            src={RemoveIcon}
-                            onClick={() => {
-                              setPlan({
-                                workoutSet: plan.workoutSet.filter((single) => {
-                                  if (single !== item) return single;
-                                }),
-                              });
-                            }}
-                          />
-                        </Item>
-                      )}
-                    </Draggable>
-                  ))
-                : !snapshot.isDraggingOver && (
-                    <Notice>Drag Your Workouts From Collections</Notice>
-                  )}
+                                  />
+                                  <StyledExerciseName>
+                                    {item.title}
+                                  </StyledExerciseName>
+                                </StyledExerciseTitle>
+                              </Clone>
+                            )}
+                          </>
+                        )}
+                      </Draggable>
+                    );
+                  }
+                }
+              })}
               {provided.placeholder}
-            </Container>
+            </Kiosk>
           )}
         </Droppable>
-        <StyledCreateWorkoutBtn onClick={createPlan}>
-          Create
-        </StyledCreateWorkoutBtn>
-      </Content>
-      <Droppable droppableId="workoutData" isDropDisabled={true}>
-        {(provided, snapshot) => (
-          <Kiosk
-            ref={provided.innerRef}
-            isDraggingOver={snapshot.isDraggingOver}
-          >
-            <StyledCollectionTitle>Collections</StyledCollectionTitle>
-            <StyledBookmark>
-              <StyledWorkoutTypeTag
-                selected={gymWorkoutTypeSelected}
-                onClick={() => {
-                  setGymWorkoutTypeSelected(true);
-                }}
-              >
-                Gym Workout
-              </StyledWorkoutTypeTag>
-              <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
-              <StyledWorkoutTypeTag
-                selected={!gymWorkoutTypeSelected}
-                onClick={() => {
-                  setGymWorkoutTypeSelected(false);
-                }}
-              >
-                Home Workout
-              </StyledWorkoutTypeTag>
-            </StyledBookmark>
-            {workoutData.map((item, index) => {
-              if (gymWorkoutTypeSelected) {
-                if (item.type === 'Gymworkout') {
-                  return (
-                    <Draggable
-                      key={item.id}
-                      draggableId={item.id}
-                      index={index}
-                    >
-                      {(provided, snapshot) => (
-                        <>
-                          <Item
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            isDragging={snapshot.isDragging}
-                          >
-                            <StyledExerciseTitle>
-                              <StyledMuscleGroupIcon
-                                src={
-                                  muscleGroups.filter((muscleGroup) => {
-                                    if (
-                                      muscleGroup.name ===
-                                      item.targetMuscleGroup
-                                    )
-                                      return muscleGroup;
-                                  })[0].src
-                                }
-                              />
-                              <StyledExerciseName>
-                                {item.title}
-                              </StyledExerciseName>
-                            </StyledExerciseTitle>
-                          </Item>
-                          {snapshot.isDragging && (
-                            <Clone>
-                              <StyledExerciseTitle>
-                                <StyledMuscleGroupIcon
-                                  src={
-                                    muscleGroups.filter((muscleGroup) => {
-                                      if (
-                                        muscleGroup.name ===
-                                        item.targetMuscleGroup
-                                      )
-                                        return muscleGroup;
-                                    })[0].src
-                                  }
-                                />
-                                <StyledExerciseName>
-                                  {item.title}
-                                </StyledExerciseName>
-                              </StyledExerciseTitle>
-                            </Clone>
-                          )}
-                        </>
-                      )}
-                    </Draggable>
-                  );
-                }
-              } else {
-                if (item.type === 'Homeworkout') {
-                  return (
-                    <Draggable
-                      key={item.id}
-                      draggableId={item.id}
-                      index={index}
-                    >
-                      {(provided, snapshot) => (
-                        <>
-                          <Item
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            isDragging={snapshot.isDragging}
-                          >
-                            <StyledExerciseTitle>
-                              <StyledMuscleGroupIcon
-                                src={
-                                  muscleGroups.filter((muscleGroup) => {
-                                    if (
-                                      muscleGroup.name ===
-                                      item.targetMuscleGroup
-                                    )
-                                      return muscleGroup;
-                                  })[0].src
-                                }
-                              />
-                              <StyledExerciseName>
-                                {item.title}
-                              </StyledExerciseName>
-                            </StyledExerciseTitle>
-                          </Item>
-                          {snapshot.isDragging && (
-                            <Clone>
-                              <StyledExerciseTitle>
-                                <StyledMuscleGroupIcon
-                                  src={
-                                    muscleGroups.filter((muscleGroup) => {
-                                      if (
-                                        muscleGroup.name ===
-                                        item.targetMuscleGroup
-                                      )
-                                        return muscleGroup;
-                                    })[0].src
-                                  }
-                                />
-                                <StyledExerciseName>
-                                  {item.title}
-                                </StyledExerciseName>
-                              </StyledExerciseTitle>
-                            </Clone>
-                          )}
-                        </>
-                      )}
-                    </Draggable>
-                  );
-                }
-              }
-            })}
-            {provided.placeholder}
-          </Kiosk>
-        )}
-      </Droppable>
+      </StyledDnDContainer>
     </DragDropContext>
   );
 }

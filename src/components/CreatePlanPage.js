@@ -3,7 +3,7 @@ import Header from './Header';
 import DragandDrop from './Drag&Drop';
 import Banner from './Banner';
 import styled from 'styled-components';
-import PlanDetailsInput from './PlanDetailsInput';
+import PlanDetailsInput from './PlanDetailsInputP1';
 import firebase from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
