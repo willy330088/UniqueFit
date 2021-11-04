@@ -33,9 +33,9 @@ const StyledPopup = styled(Popup)`
   &-content {
     margin: auto;
     background: #222d35;
-    width: 700px;
+    width: ${(props) => (props.paging === 3 ? '1100px' : '700px')};
     height: 800px;
-    padding: 50px 100px;
+    padding: ${(props) => (props.paging === 3 ? '50px 50px' : '50px 100px')};
     position: relative;
   }
 `;
@@ -50,6 +50,7 @@ const StyledCreatePlanBtn = styled.button`
 export default function PlanListPage() {
   const [plans, setPlans] = useState([]);
   const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
+  const [paging, setPaging] = useState(1);
 
   useEffect(() => {
     firebase
@@ -78,8 +79,9 @@ export default function PlanListPage() {
           }
           modal
           nested
+          paging={paging}
         >
-          <CreatePlanPopup/>
+          <CreatePlanPopup paging={paging} setPaging={setPaging}/>
         </StyledPopup>
         <Filter
           filteredMuscleGroups={filteredMuscleGroups}

@@ -10,10 +10,14 @@ import 'firebase/auth';
 import muscleGroups from '../utils/muscleGroup';
 
 const Content = styled.div`
+  width: 550px
 `;
 
 const StyledDnDContainer = styled.div`
   display: flex;
+  justify-content: space-between;
+  overflow-y: scroll;
+  height: 550px;
 `;
 
 const Item = styled.div`
@@ -60,15 +64,15 @@ const List = styled.div`
 `;
 
 const Kiosk = styled(List)`
+  width: 350px;
   overflow-y: scroll;
   background: #ddd;
   border: none;
   border-radius: 0;
-  padding: 40px;
 `;
 
 const Container = styled(List)`
-  width: 520px;
+  width: 100%;
   margin: auto;
 `;
 

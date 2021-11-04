@@ -45,7 +45,7 @@ const StyledCreateLabel = styled.div`
   width: 100%;
 `;
 
-export default function CreatePlanPage() {
+export default function CreatePlanPage({paging, setPaging}) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [targetMuscleGroup, setTargetMuscleGroup] = useState('');
@@ -54,7 +54,6 @@ export default function CreatePlanPage() {
   const [plan, setPlan] = useState({
     workoutSet: [],
   });
-  const [paging, setPaging] = useState(1);
 
   function createPlan() {
     const documentRef = firebase.firestore().collection('plans').doc();

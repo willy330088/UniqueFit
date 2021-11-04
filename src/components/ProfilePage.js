@@ -171,77 +171,44 @@ export default function CreateWorkoutPage() {
     if (mainContent === 'mynearbygyms') {
       return (
         <>
-          <StyledSideBar>
-            <StyledSideBarContainer>
-              {SidebarData.map((item, index) => {
-                return (
-                  <ProfileSubMenu item={item} setMainContent={setMainContent} />
-                );
-              })}
-            </StyledSideBarContainer>
-          </StyledSideBar>
-          <StyledProfileContentContainer>
-            <StyledProfileContentTitle>My Nearby Gyms</StyledProfileContentTitle>
-            <GoogleMap />
-          </StyledProfileContentContainer>
+          <StyledProfileContentTitle>My Nearby Gyms</StyledProfileContentTitle>
+          <GoogleMap />
         </>
       );
     } else if (mainContent === 'myworkoutcreations'){
       return (
         <>
-          <StyledSideBar>
-            <StyledSideBarContainer>
-              {SidebarData.map((item, index) => {
-                return (
-                  <ProfileSubMenu item={item} setMainContent={setMainContent} />
-                );
-              })}
-            </StyledSideBarContainer>
-          </StyledSideBar>
-          <StyledProfileContentContainer>
-            <StyledProfileContentTitle>
-              My Workout Creations
-            </StyledProfileContentTitle>
-            <StyledBookmark>
-              <StyledWorkoutTypeTag>Gym Workout</StyledWorkoutTypeTag>
-              <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
-              <StyledWorkoutTypeTag>Home Workout</StyledWorkoutTypeTag>
-            </StyledBookmark>
-            {workouts.map((workout) => {
-              if (workout.publisher.uid === firebase.auth().currentUser.uid) {
-                return <WorkoutCreation workout={workout} setMainContent={setMainContent}/>;
-              }
-            })}
-          </StyledProfileContentContainer>
+          <StyledProfileContentTitle>
+            My Workout Creations
+          </StyledProfileContentTitle>
+          <StyledBookmark>
+            <StyledWorkoutTypeTag>Gym Workout</StyledWorkoutTypeTag>
+            <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
+            <StyledWorkoutTypeTag>Home Workout</StyledWorkoutTypeTag>
+          </StyledBookmark>
+          {workouts.map((workout) => {
+            if (workout.publisher.uid === firebase.auth().currentUser.uid) {
+              return <WorkoutCreation workout={workout} setMainContent={setMainContent}/>;
+            }
+          })}
         </>
       );
     } else if (mainContent === 'myworkoutcollections'){
       return (
         <>
-          <StyledSideBar>
-            <StyledSideBarContainer>
-              {SidebarData.map((item, index) => {
-                return (
-                  <ProfileSubMenu item={item} setMainContent={setMainContent} />
-                );
-              })}
-            </StyledSideBarContainer>
-          </StyledSideBar>
-          <StyledProfileContentContainer>
-            <StyledProfileContentTitle>
-              My Workout Collections
-            </StyledProfileContentTitle>
-            <StyledBookmark>
-              <StyledWorkoutTypeTag>Gym Workout</StyledWorkoutTypeTag>
-              <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
-              <StyledWorkoutTypeTag>Home Workout</StyledWorkoutTypeTag>
-            </StyledBookmark>
-            {workouts.map((workout) => {
-              if (workout.collectedBy.includes(firebase.auth().currentUser.uid)) {
-                return <WorkoutCollection workout={workout} />;
-              }
-            })}
-          </StyledProfileContentContainer>
+          <StyledProfileContentTitle>
+            My Workout Collections
+          </StyledProfileContentTitle>
+          <StyledBookmark>
+            <StyledWorkoutTypeTag>Gym Workout</StyledWorkoutTypeTag>
+            <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
+            <StyledWorkoutTypeTag>Home Workout</StyledWorkoutTypeTag>
+          </StyledBookmark>
+          {workouts.map((workout) => {
+            if (workout.collectedBy.includes(firebase.auth().currentUser.uid)) {
+              return <WorkoutCollection workout={workout} />;
+            }
+          })}
         </>
       );
     } else if (mainContent === 'editworkout') {
@@ -280,7 +247,18 @@ export default function CreateWorkoutPage() {
             </StyledPersonalEmail>
           </StyledPersonalInfo>
         </StyledPersonalInfoContainer>
-        {showMainContent()}
+        <StyledSideBar>
+          <StyledSideBarContainer>
+            {SidebarData.map((item, index) => {
+              return (
+                <ProfileSubMenu item={item} setMainContent={setMainContent} />
+              );
+            })}
+          </StyledSideBarContainer>
+        </StyledSideBar>
+        <StyledProfileContentContainer>
+          {showMainContent()}
+        </StyledProfileContentContainer>
       </StyledProfilePageContainer>
     </StyledBody>
   );

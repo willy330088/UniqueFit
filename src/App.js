@@ -20,9 +20,6 @@ function App() {
         <Route path='/plans' exact>
           <PlanListPage/>
         </Route>
-        <Route path='/createplan' exact>
-          <CreatePlanPage/>
-        </Route>
         <Route path='/profile' exact>
           <ProfilePage/>
         </Route>
