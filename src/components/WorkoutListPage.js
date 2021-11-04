@@ -37,7 +37,12 @@ const StyledMuscleGroupImage = styled.img`
   flex: 1 20%;
   width: 50px;
   cursor: pointer;
-  padding: 5px;
+  border-radius: 50%;
+  border: ${(props) => (props.selected ? '3px solid #1face1' : 'none')};
+
+  &:hover {
+    border: 3px solid #a2dff5;
+  }
 `;
 
 const StyledFilterMuscleIcons = styled.div`
@@ -106,6 +111,7 @@ const StyledWorkoutTypeSeparator = styled.div`
 export default function WorkoutListPage() {
   const [workouts, setWorkouts] = useState([]);
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
+  const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
 
   useEffect(() => {
     firebase
@@ -119,6 +125,23 @@ export default function WorkoutListPage() {
         setWorkouts(data);
       });
   }, []);
+
+  function toggleMuscleClick(name) {
+    if (filteredMuscleGroups.includes(name)) {
+      setFilteredMuscleGroups(
+        filteredMuscleGroups.filter((muscle) => {
+          if (muscle !== name) return muscle;
+        })
+      );
+    } else {
+      setFilteredMuscleGroups((filteredMuscleGroups) => [
+        ...filteredMuscleGroups,
+        name,
+      ]);
+    }
+  }
+
+  console.log(filteredMuscleGroups);
 
   return (
     <StyledBody>
@@ -148,15 +171,30 @@ export default function WorkoutListPage() {
           <StyledFilterMuscleGroups>
             {muscleGroupImage.map((muscle) => {
               return (
-                <StyledMuscleGroupImage key={muscle.name} src={muscle.src} />
+                <StyledMuscleGroupImage
+                  key={muscle.name}
+                  src={muscle.src}
+                  onClick={() => {
+                    toggleMuscleClick(muscle.name);
+                  }}
+                  selected={filteredMuscleGroups.includes(muscle.name)}
+                />
               );
             })}
           </StyledFilterMuscleGroups>
           <StyledPopup
             trigger={
               <StyledFilterMuscleIcons>
-                <FrontMuscle width={'100px'} />
-                <BackMuscle width={'100px'} />
+                <FrontMuscle
+                  width={'100px'}
+                  filteredMuscleGroups={filteredMuscleGroups}
+                  setFilteredMuscleGroups={setFilteredMuscleGroups}
+                />
+                <BackMuscle
+                  width={'100px'}
+                  filteredMuscleGroups={filteredMuscleGroups}
+                  setFilteredMuscleGroups={setFilteredMuscleGroups}
+                />
               </StyledFilterMuscleIcons>
             }
             modal
@@ -164,31 +202,63 @@ export default function WorkoutListPage() {
           >
             {(close) => (
               <>
-                <FrontMuscle width={'300px'} />
-                <BackMuscle width={'300px'} />
+                <FrontMuscle
+                  width={'300px'}
+                  filteredMuscleGroups={filteredMuscleGroups}
+                  setFilteredMuscleGroups={setFilteredMuscleGroups}
+                />
+                <BackMuscle
+                  width={'300px'}
+                  filteredMuscleGroups={filteredMuscleGroups}
+                  setFilteredMuscleGroups={setFilteredMuscleGroups}
+                />
               </>
             )}
           </StyledPopup>
         </StyledFilterContainer>
         <StyledExerciseContainer>
           {workouts.map((workout) => {
-            if (gymWorkoutTypeSelected) {
-              if (workout.type === 'Gymworkout') {
-                return (
-                  <WorkoutItem
-                    workout={workout}
-                    gymWorkoutTypeSelected={gymWorkoutTypeSelected}
-                  />
-                );
+            if (filteredMuscleGroups.length !== 0) {
+              if (filteredMuscleGroups.includes(workout.targetMuscleGroup)) {
+                if (gymWorkoutTypeSelected) {
+                  if (workout.type === 'Gymworkout') {
+                    return (
+                      <WorkoutItem
+                        workout={workout}
+                        gymWorkoutTypeSelected={gymWorkoutTypeSelected}
+                      />
+                    );
+                  }
+                } else {
+                  if (workout.type === 'Homeworkout') {
+                    return (
+                      <WorkoutItem
+                        workout={workout}
+                        gymWorkoutTypeSelected={gymWorkoutTypeSelected}
+                      />
+                    );
+                  }
+                }
               }
             } else {
-              if (workout.type === 'Homeworkout') {
-                return (
-                  <WorkoutItem
-                    workout={workout}
-                    gymWorkoutTypeSelected={gymWorkoutTypeSelected}
-                  />
-                );
+              if (gymWorkoutTypeSelected) {
+                if (workout.type === 'Gymworkout') {
+                  return (
+                    <WorkoutItem
+                      workout={workout}
+                      gymWorkoutTypeSelected={gymWorkoutTypeSelected}
+                    />
+                  );
+                }
+              } else {
+                if (workout.type === 'Homeworkout') {
+                  return (
+                    <WorkoutItem
+                      workout={workout}
+                      gymWorkoutTypeSelected={gymWorkoutTypeSelected}
+                    />
+                  );
+                }
               }
             }
           })}
