@@ -4,15 +4,13 @@ import muscleGroupImage from '../utils/muscleGroup'
 
 const StyledPlanDetails = styled.div`
   width: 100%;
-  @media (min-width: 850px) {
-    width: 45%;
-  }
 `;
 
 const StyledCreateLabel = styled.div`
   color:#1face1;
   font-size: 30px;
   padding-bottom: 10px;
+  width: 100%;
   border-bottom: 3px solid #1face1;
   margin-bottom: 20px;
 `;
@@ -25,7 +23,7 @@ const StyledInput= styled.input`
   padding: 10px;
   outline: none;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
 `;
 
 const StyledTargetMuscleGroups = styled.div`
@@ -33,7 +31,7 @@ const StyledTargetMuscleGroups = styled.div`
   flex-wrap: wrap;
   width: 100%;
   border-radius: 5px;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
 `;
 
 const StyledMuscleGroupImage = styled.img`
@@ -51,19 +49,21 @@ const StyledMuscleGroupImage = styled.img`
 
 const StyledDescriptionInput = styled.textarea`
   width: 100%;
-  height: 100px;
+  height: 150px;
   font-size: 20px;
   outline: none;
   margin-bottom: 20px;
 `;
 
-export default function PlanDetailsInput({ setTitle, setDescription, setTargetMuscleGroup, targetMuscleGroup }) {
+export default function PlanDetailsInput({ title, description, setTitle, setDescription, setTargetMuscleGroup, targetMuscleGroup }) {
   return (
     <StyledPlanDetails>
       <StyledCreateLabel>Title of the Workout</StyledCreateLabel>
       <StyledInput onChange={(e) => {
         setTitle(e.target.value)
-      }}/>
+      }}
+        value={title}
+      />
       <StyledCreateLabel>Target Muscle Group</StyledCreateLabel>
       <StyledTargetMuscleGroups>
         {
@@ -77,7 +77,9 @@ export default function PlanDetailsInput({ setTitle, setDescription, setTargetMu
       <StyledCreateLabel>Description</StyledCreateLabel>
       <StyledDescriptionInput onChange={(e) => {
         setDescription(e.target.value)
-      }}/>
+      }}
+        value={description}
+      />
     </StyledPlanDetails>
   )
 }

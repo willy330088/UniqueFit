@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import Banner from './Banner';
+import CreateWorkoutPopup from './CreateWorkoutPopup';
 import styled from 'styled-components';
-import muscleGroupImage from '../utils/muscleGroup';
-import FrontMuscle from './FrontMuscle';
-import BackMuscle from './BackMuscle';
 import Popup from 'reactjs-popup';
 import WorkoutItem from './WorkoutItem';
 import firebase from '../utils/firebase';
@@ -31,8 +29,7 @@ const StyledWorkoutListContainer = styled.div`
 const StyledBookmark = styled.div`
   display: flex;
   margin-bottom: 50px;
-  @media (min-width: 1300px) {
-  }
+  align-items: center;
 `;
 
 const StyledWorkoutTypeTag = styled.div`
@@ -50,6 +47,28 @@ const StyledWorkoutTypeSeparator = styled.div`
   color: white;
   font-size: 40px;
   margin-right: 20px;
+`;
+
+const StyledCreateWorkoutBtn = styled.button`
+  width: 200px;
+  height: 50px;
+  margin-left: auto;
+  font-size: 20px;
+`;
+
+const StyledPopup = styled(Popup)`
+  &-overlay {
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  &-content {
+    margin: auto;
+    background: #222d35;
+    width: 700px;
+    height: 800px;
+    padding: 50px 100px;
+    position: relative;
+  }
 `;
 
 export default function WorkoutListPage() {
@@ -95,6 +114,17 @@ export default function WorkoutListPage() {
           >
             Home Workout
           </StyledWorkoutTypeTag>
+          <StyledPopup
+            trigger={
+              <StyledCreateWorkoutBtn>
+                Create Your Workout
+              </StyledCreateWorkoutBtn>
+            }
+            modal
+            nested
+          >
+            <CreateWorkoutPopup />
+          </StyledPopup>
         </StyledBookmark>
         <Filter
           filteredMuscleGroups={filteredMuscleGroups}

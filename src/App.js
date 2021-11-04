@@ -1,14 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
-import Header from './components/Header';
 import CreatePlanPage from './components/CreatePlanPage';
 import WorkoutListPage from './components/WorkoutListPage';
 import ProfilePage from './components/ProfilePage'
 import PlanListPage from './components/PlanListPage'
 import SpecificPlanPage from './components/SpecificPlanPage'
-import GoogleMap from './components/GoogleMap'
-import CreateWorkoutPage from './components/CreateWorkoutPage';
 
 function App() {
   return (
@@ -25,9 +22,6 @@ function App() {
         </Route>
         <Route path='/createplan' exact>
           <CreatePlanPage/>
-        </Route>
-        <Route path='/createworkout' exact>
-          <CreateWorkoutPage />
         </Route>
         <Route path='/profile' exact>
           <ProfilePage/>

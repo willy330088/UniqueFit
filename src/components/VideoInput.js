@@ -4,9 +4,6 @@ import Upload from '../images/upload.png';
 
 const StyledVideoInput = styled.div`
   width: 100%;
-  @media (min-width: 850px) {
-    width: 45%;
-  }
 `;
 
 const StyledCreateLabel = styled.div`
@@ -55,13 +52,18 @@ const StyledTypeLabel = styled.label`
   margin-right: 10px;
 `;
 
-export default function VideoInput({ setType, type, setVideoFile}) {
+export default function VideoInput({
+  source,
+  setSource,
+  setType,
+  type,
+  setVideoFile,
+}) {
   const inputRef = useRef();
-  const [source, setSource] = useState();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setVideoFile(file)
+    setVideoFile(file);
     const url = URL.createObjectURL(file);
     setSource(url);
   };
@@ -100,7 +102,7 @@ export default function VideoInput({ setType, type, setVideoFile}) {
         checked={type === 'Gymworkout'}
         onClick={() => {
           if (type !== 'Gymworkout') {
-            setType('Gymworkout')
+            setType('Gymworkout');
           }
         }}
       />
@@ -112,7 +114,7 @@ export default function VideoInput({ setType, type, setVideoFile}) {
         checked={type === 'Homeworkout'}
         onClick={() => {
           if (type !== 'Homeworkout') {
-            setType('Homeworkout')
+            setType('Homeworkout');
           }
         }}
       />

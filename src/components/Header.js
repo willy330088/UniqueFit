@@ -81,9 +81,6 @@ export default function Header() {
         <StyledLink to="/createplan" activeStyle={{ color: '#1face1' }}>
           Create A Plan
         </StyledLink>
-        <StyledLink to="/createworkout" activeStyle={{ color: '#1face1' }}>
-          Create A Workout
-        </StyledLink>
         <StyledLink to="/profile" activeStyle={{ color: '#1face1' }}>
           Profile
         </StyledLink>
@@ -95,9 +92,6 @@ export default function Header() {
         </StyledLink>
         <StyledLink to="/plans" activeStyle={{ color: '#1face1' }}>
           Plans
-        </StyledLink>
-        <StyledLink to="/createworkout" activeStyle={{ color: '#1face1' }}>
-          Create A Workout
         </StyledLink>
         <StyledLink to="/createplan" activeStyle={{ color: '#1face1' }}>
           Create A Plan
