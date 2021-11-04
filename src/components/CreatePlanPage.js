@@ -53,7 +53,6 @@ export default function CreatePlanPage() {
           };
         }),
         collectedBy: [],
-        comments: [],
       })
       .then(() => {
         alert('Created Successfully!');

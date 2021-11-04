@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import Banner from './Banner';
 import GoogleMap from './GoogleMap';
 import WorkoutCreation from './WorkoutCreation';
+import WorkoutCollection from './WorkoutCollection';
 import styled from 'styled-components';
 import firebase from '../utils/firebase';
 import { BsFillPencilFill } from 'react-icons/bs';
-import { AiOutlineDownCircle } from 'react-icons/ai';
 import Popup from 'reactjs-popup';
 import 'firebase/auth';
-import * as RiIcons from 'react-icons/ri';
 import ProfileSubMenu from './ProfileSubMenu';
+import SidebarData from '../utils/profileSidebarData';
+import { HiUserCircle } from 'react-icons/hi';
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -143,74 +144,114 @@ const StyledWorkoutTypeSeparator = styled.div`
   margin-right: 20px;
 `;
 
-const SidebarData = [
-  {
-    title: 'My Workouts',
-    state: 'myworkouts',
-    iconClosed: <RiIcons.RiArrowDownSFill />,
-    iconOpened: <RiIcons.RiArrowUpSFill />,
-
-    subNav: [
-      {
-        title: 'My Workout Creations',
-        state: 'myworkoutcreations',
-      },
-      {
-        title: 'My Workout Collections',
-        state: 'myworkoutcollections',
-      },
-    ],
-  },
-  {
-    title: 'My Plans',
-    state: 'myplans',
-    iconClosed: <RiIcons.RiArrowDownSFill />,
-    iconOpened: <RiIcons.RiArrowUpSFill />,
-
-    subNav: [
-      {
-        title: 'My plan Creations',
-        state: 'myplancreations',
-      },
-      {
-        title: 'My plan Collections',
-        state: 'myplancollections',
-      },
-    ],
-  },
-  {
-    title: 'My Nearby Gyms',
-    state: 'mynearbygyms',
-    iconClosed: <RiIcons.RiArrowDownSFill />,
-    iconOpened: <RiIcons.RiArrowUpSFill />,
-  },
-];
+const StyledPersonalIcon = styled(HiUserCircle)`
+  font-size: 120px;
+  margin-right: 10px;
+  color: white;
+`;
 
 export default function CreateWorkoutPage() {
-  const [mainContent, setMainContent] = useState('');
+  const [workouts, setWorkouts] = useState([]);
+  const [mainContent, setMainContent] = useState('myworkoutcreations');
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection('workouts')
+      .onSnapshot((collectionSnapshot) => {
+        const data = collectionSnapshot.docs.map((docSnapshot) => {
+          const id = docSnapshot.id;
+          return { ...docSnapshot.data(), id };
+        });
+        setWorkouts(data);
+      });
+  }, []);
 
   function showMainContent() {
     if (mainContent === 'mynearbygyms') {
       return (
         <>
-          <StyledProfileContentTitle>My Nearby Gyms</StyledProfileContentTitle>
-          <GoogleMap />
+          <StyledSideBar>
+            <StyledSideBarContainer>
+              {SidebarData.map((item, index) => {
+                return (
+                  <ProfileSubMenu item={item} setMainContent={setMainContent} />
+                );
+              })}
+            </StyledSideBarContainer>
+          </StyledSideBar>
+          <StyledProfileContentContainer>
+            <StyledProfileContentTitle>My Nearby Gyms</StyledProfileContentTitle>
+            <GoogleMap />
+          </StyledProfileContentContainer>
         </>
       );
-    } else {
+    } else if (mainContent === 'myworkoutcreations'){
+      return (
+        <>
+          <StyledSideBar>
+            <StyledSideBarContainer>
+              {SidebarData.map((item, index) => {
+                return (
+                  <ProfileSubMenu item={item} setMainContent={setMainContent} />
+                );
+              })}
+            </StyledSideBarContainer>
+          </StyledSideBar>
+          <StyledProfileContentContainer>
+            <StyledProfileContentTitle>
+              My Workout Creations
+            </StyledProfileContentTitle>
+            <StyledBookmark>
+              <StyledWorkoutTypeTag>Gym Workout</StyledWorkoutTypeTag>
+              <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
+              <StyledWorkoutTypeTag>Home Workout</StyledWorkoutTypeTag>
+            </StyledBookmark>
+            {workouts.map((workout) => {
+              if (workout.publisher.uid === firebase.auth().currentUser.uid) {
+                return <WorkoutCreation workout={workout} setMainContent={setMainContent}/>;
+              }
+            })}
+          </StyledProfileContentContainer>
+        </>
+      );
+    } else if (mainContent === 'myworkoutcollections'){
+      return (
+        <>
+          <StyledSideBar>
+            <StyledSideBarContainer>
+              {SidebarData.map((item, index) => {
+                return (
+                  <ProfileSubMenu item={item} setMainContent={setMainContent} />
+                );
+              })}
+            </StyledSideBarContainer>
+          </StyledSideBar>
+          <StyledProfileContentContainer>
+            <StyledProfileContentTitle>
+              My Workout Collections
+            </StyledProfileContentTitle>
+            <StyledBookmark>
+              <StyledWorkoutTypeTag>Gym Workout</StyledWorkoutTypeTag>
+              <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
+              <StyledWorkoutTypeTag>Home Workout</StyledWorkoutTypeTag>
+            </StyledBookmark>
+            {workouts.map((workout) => {
+              if (workout.collectedBy.includes(firebase.auth().currentUser.uid)) {
+                return <WorkoutCollection workout={workout} />;
+              }
+            })}
+          </StyledProfileContentContainer>
+        </>
+      );
+    } else if (mainContent === 'editworkout') {
       return (
         <>
           <StyledProfileContentTitle>
-            My Workout Creations
+            Edit
           </StyledProfileContentTitle>
-          <StyledBookmark>
-            <StyledWorkoutTypeTag>Gym Workout</StyledWorkoutTypeTag>
-            <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
-            <StyledWorkoutTypeTag>Home Workout</StyledWorkoutTypeTag>
-          </StyledBookmark>
-          <WorkoutCreation />
         </>
-      );
+      )
     }
   }
 
@@ -220,7 +261,11 @@ export default function CreateWorkoutPage() {
       <Banner slogan={'My Profile'} />
       <StyledProfilePageContainer>
         <StyledPersonalInfoContainer>
-          <StyledPersonalImage src={firebase.auth().currentUser.photoURL} />
+          {firebase.auth().currentUser.photoURL ? (
+            <StyledPersonalImage src={firebase.auth().currentUser.photoURL} />
+          ) : (
+            <StyledPersonalIcon />
+          )}
           <StyledPersonalInfo>
             <StyledPersonalName>
               {firebase.auth().currentUser.displayName}
@@ -235,16 +280,7 @@ export default function CreateWorkoutPage() {
             </StyledPersonalEmail>
           </StyledPersonalInfo>
         </StyledPersonalInfoContainer>
-        <StyledSideBar>
-          <StyledSideBarContainer>
-            {SidebarData.map((item, index) => {
-              return <ProfileSubMenu item={item} setMainContent={setMainContent}/>;
-            })}
-          </StyledSideBarContainer>
-        </StyledSideBar>
-        <StyledProfileContentContainer>
-          {showMainContent()}
-        </StyledProfileContentContainer>
+        {showMainContent()}
       </StyledProfilePageContainer>
     </StyledBody>
   );

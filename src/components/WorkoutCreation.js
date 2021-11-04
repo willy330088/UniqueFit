@@ -32,34 +32,14 @@ const StyledRemoveIcon = styled(FaTrashAlt)`
   }
 `;
 
-export default function WorkoutCreation() {
+export default function WorkoutCreation({workout, setMainContent}) {
   return (
-    <>
-      <StyledWorkoutCreationContainer>
-        <ProfileWorkout />
-        <StyledPencilIcon />
-        <StyledRemoveIcon />
-      </StyledWorkoutCreationContainer>
-      <StyledWorkoutCreationContainer>
-        <ProfileWorkout />
-        <StyledPencilIcon />
-        <StyledRemoveIcon />
-      </StyledWorkoutCreationContainer>
-      <StyledWorkoutCreationContainer>
-        <ProfileWorkout />
-        <StyledPencilIcon />
-        <StyledRemoveIcon />
-      </StyledWorkoutCreationContainer>
-      <StyledWorkoutCreationContainer>
-        <ProfileWorkout />
-        <StyledPencilIcon />
-        <StyledRemoveIcon />
-      </StyledWorkoutCreationContainer>
-      <StyledWorkoutCreationContainer>
-        <ProfileWorkout />
-        <StyledPencilIcon />
-        <StyledRemoveIcon />
-      </StyledWorkoutCreationContainer>
-    </>
+    <StyledWorkoutCreationContainer>
+      <ProfileWorkout workout={workout}/>
+      <StyledPencilIcon onClick={() => {
+        setMainContent('editworkout')
+      }}/>
+      <StyledRemoveIcon />
+    </StyledWorkoutCreationContainer>
   )
 }

@@ -406,16 +406,6 @@ function DragAndDrop({ plan, setPlan, createPlan }) {
                                 {item.title}
                               </StyledExerciseName>
                             </StyledExerciseTitle>
-                            <StyledRemoveIcon
-                              src={RemoveIcon}
-                              onClick={() => {
-                                setWorkoutData(
-                                  workoutData.filter((single) => {
-                                    if (single !== item) return single;
-                                  })
-                                );
-                              }}
-                            />
                           </Item>
                           {snapshot.isDragging && (
                             <Clone>
@@ -435,7 +425,6 @@ function DragAndDrop({ plan, setPlan, createPlan }) {
                                   {item.title}
                                 </StyledExerciseName>
                               </StyledExerciseTitle>
-                              <StyledRemoveIcon src={RemoveIcon} />
                             </Clone>
                           )}
                         </>
@@ -475,16 +464,6 @@ function DragAndDrop({ plan, setPlan, createPlan }) {
                                 {item.title}
                               </StyledExerciseName>
                             </StyledExerciseTitle>
-                            <StyledRemoveIcon
-                              src={RemoveIcon}
-                              onClick={() => {
-                                setWorkoutData(
-                                  workoutData.filter((single) => {
-                                    if (single !== item) return single;
-                                  })
-                                );
-                              }}
-                            />
                           </Item>
                           {snapshot.isDragging && (
                             <Clone>
@@ -504,7 +483,6 @@ function DragAndDrop({ plan, setPlan, createPlan }) {
                                   {item.title}
                                 </StyledExerciseName>
                               </StyledExerciseTitle>
-                              <StyledRemoveIcon src={RemoveIcon} />
                             </Clone>
                           )}
                         </>

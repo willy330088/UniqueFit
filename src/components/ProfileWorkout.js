@@ -66,21 +66,31 @@ const StyledMessageIcon = styled(RiMessage2Fill)`
   color: white;
 `;
 
-export default function ProfileWorkout() {
+export default function ProfileWorkout({workout}) {
   return (
     <StyledWorkoutItemContainer>
       <StyledWorkoutItemImage
         src={
-          muscleGroups[0].src
+          muscleGroups.filter((muscleGroup) => {
+            if (muscleGroup.name === workout.targetMuscleGroup)
+              return muscleGroup;
+          })[0].src
         }
       />
       <StyledWorkoutItemDescription>
-        <StyledWorkoutItemTitle>Flutter Kicks</StyledWorkoutItemTitle>
+        <StyledWorkoutItemTitle>{workout.title}</StyledWorkoutItemTitle>
         <StyledWorkoutItemPublisher>
-          <StyledPublisherIcon /> User
+          {workout.publisher.photoURL ? (
+            <StyledPublisherImage src={workout.publisher.photoURL} />
+          ) : (
+            <StyledPublisherIcon />
+          )}
+          {workout.publisher.displayName
+            ? workout.publisher.displayName
+            : 'User'}
         </StyledWorkoutItemPublisher>
         <StyledWorkoutItemSocial>
-          <StyledCollectIcon /> Collected (5) / <StyledMessageIcon /> Comments (7)
+          <StyledCollectIcon /> Collected ({workout.collectedBy.length}) / <StyledMessageIcon /> Comments ({workout.commentsCount || 0})
         </StyledWorkoutItemSocial>
       </StyledWorkoutItemDescription>
       <StyledPlayIcon />

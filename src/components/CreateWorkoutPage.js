@@ -60,7 +60,6 @@ export default function CreateWorkoutPage() {
             targetMuscleGroup: targetMuscleGroup,
             type: type,
             collectedBy: [],
-            comments: [],
             videoURL,
           });
         });
