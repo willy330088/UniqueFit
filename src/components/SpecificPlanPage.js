@@ -352,6 +352,8 @@ export default function SpecificPlanPage() {
     });
   }
 
+  console.log(plan)
+
   return (
     <StyledBody>
       <Header />

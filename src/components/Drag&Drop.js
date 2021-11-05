@@ -199,7 +199,6 @@ function DragAndDrop({ plan, setPlan }) {
           destination.index
         ),
       });
-      console.log([source.droppableId]);
     } else {
       setPlan({
         workoutSet: copy(
@@ -226,6 +225,8 @@ function DragAndDrop({ plan, setPlan }) {
         setWorkoutData(data);
       });
   }, []);
+
+  console.log(plan.workoutSet)
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -271,6 +272,8 @@ function DragAndDrop({ plan, setPlan }) {
                             <StyledWeightSet>
                               <StyledWeightInput
                                 placeholder={'0'}
+                                type="number"
+                                value={item.weight}
                                 onChange={(e) => {
                                   setPlan({
                                     workoutSet: plan.workoutSet.filter(
@@ -292,6 +295,8 @@ function DragAndDrop({ plan, setPlan }) {
                               <StyledWeightLabel>kg</StyledWeightLabel>
                               <StyledWeightInput
                                 placeholder={'0'}
+                                type="number"
+                                value={item.reps}
                                 onChange={(e) => {
                                   setPlan({
                                     workoutSet: plan.workoutSet.filter(

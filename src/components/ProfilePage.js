@@ -5,6 +5,7 @@ import GoogleMap from './GoogleMap';
 import WorkoutCreation from './WorkoutCreation';
 import PlanCreation from './PlanCreation';
 import WorkoutCollection from './WorkoutCollection';
+import PlanCollection from './PlanCollection';
 import styled from 'styled-components';
 import firebase from '../utils/firebase';
 import { BsFillPencilFill } from 'react-icons/bs';
@@ -251,6 +252,18 @@ export default function CreateWorkoutPage() {
             if (plan.publisher.uid === firebase.auth().currentUser.uid) {
               return (
                 <PlanCreation plan={plan}/>
+              );
+            }
+          })}
+        </>
+      );
+    } else if (mainContent === 'My Plan Collections') {
+      return (
+        <>
+          {plans.map((plan) => {
+            if (plan.collectedBy.includes(firebase.auth().currentUser.uid)) {
+              return (
+                <PlanCollection plan={plan}/>
               );
             }
           })}

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import ProfilePlan from './ProfilePlan';
+import EditPlanPopup from './EditPlanPopup';
 import { BsFillPencilFill } from 'react-icons/bs';
 import { FaTrashAlt } from 'react-icons/fa';
 import Popup from 'reactjs-popup';
@@ -17,7 +18,7 @@ const StyledPlanCreationContainer = styled.div`
 
 const StyledPencilIcon = styled(BsFillPencilFill)`
   font-size: 40px;
-  margin-left: 10px;
+  margin-left: auto;
   color: #7d7d7d;
   cursor: pointer;
 
@@ -45,37 +46,38 @@ const StyledPopup = styled(Popup)`
   &-content {
     margin: auto;
     background: #222d35;
-    width: 700px;
+    width: ${(props) => (props.paging === 3 ? '1100px' : '700px')};
     height: 800px;
-    padding: 50px 100px;
+    padding: ${(props) => (props.paging === 3 ? '50px 50px' : '50px 100px')};
     position: relative;
   }
 `;
 
 export default function WorkoutCreation({ plan }) {
-  // function deleteWorkout() {
-  //   firebase
-  //     .firestore()
-  //     .collection('workouts')
-  //     .doc(workout.id)
-  //     .delete()
-  //     .then(() => {
-  //       firebase
-  //         .storage()
-  //         .ref('workout-videos/' + workout.id)
-  //         .delete()
-  //         .then(() => {
-  //           alert('Deleted Successfully!');
-  //         });
-  //     });
-  // }
+  const [paging, setPaging] = useState(1);
+  function deletePlan() {
+    firebase
+      .firestore()
+      .collection('plans')
+      .doc(plan.id)
+      .delete()
+      .then(() => {
+        alert('Deleted Successfully!');
+      });
+  }
 
   return (
     <StyledPlanCreationContainer>
-      <ProfilePlan plan={plan}/>
-      <StyledPopup trigger={<StyledPencilIcon />} modal nested>
+      <ProfilePlan plan={plan} />
+      <StyledPopup
+        trigger={<StyledPencilIcon />}
+        modal
+        nested
+        paging={paging}
+      >
+        <EditPlanPopup paging={paging} setPaging={setPaging} originalPlan={plan}/>
       </StyledPopup>
-      <StyledRemoveIcon />
+      <StyledRemoveIcon onClick={deletePlan}/>
     </StyledPlanCreationContainer>
   );
 }
