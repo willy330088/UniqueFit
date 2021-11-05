@@ -5,6 +5,8 @@ import { ImPlay } from 'react-icons/im';
 import { BsFillBookmarkHeartFill } from 'react-icons/bs';
 import { RiMessage2Fill } from 'react-icons/ri';
 import muscleGroups from '../utils/muscleGroup';
+import Popup from 'reactjs-popup';
+import WorkoutPopup from './WorkoutPopup';
 
 const StyledWorkoutItemContainer = styled.div`
   width: 100%;
@@ -52,6 +54,7 @@ const StyledPlayIcon = styled(ImPlay)`
   color: white;
   font-size: 60px;
   margin-left: 30px;
+  cursor: pointer;
 
   &:hover {
     color: #1face1;
@@ -64,6 +67,21 @@ const StyledCollectIcon = styled(BsFillBookmarkHeartFill)`
 
 const StyledMessageIcon = styled(RiMessage2Fill)`
   color: white;
+`;
+
+//popup
+const StyledPopup = styled(Popup)`
+  &-overlay {
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  &-content {
+    margin: auto;
+    background: #222d35;
+    width: 700px;
+    height: 550px;
+    overflow-y: scroll;
+  }
 `;
 
 export default function ProfileWorkout({workout}) {
@@ -93,7 +111,9 @@ export default function ProfileWorkout({workout}) {
           <StyledCollectIcon /> Collected ({workout.collectedBy.length}) / <StyledMessageIcon /> Comments ({workout.commentsCount || 0})
         </StyledWorkoutItemSocial>
       </StyledWorkoutItemDescription>
-      <StyledPlayIcon />
+      <StyledPopup trigger={<StyledPlayIcon />} modal nested>
+        <WorkoutPopup workout={workout}/>
+      </StyledPopup>
     </StyledWorkoutItemContainer>
   );
 }

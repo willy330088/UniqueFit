@@ -128,7 +128,7 @@ const StyledBookmark = styled.div`
 `;
 
 const StyledWorkoutTypeTag = styled.div`
-  color: ${(props) => (props.selected ? '#1face1' : '#808080')};
+  color: ${(props) => (props.selected ? 'white' : '#808080')};
   font-size: 30px;
   margin-right: 20px;
   cursor: pointer;
@@ -152,7 +152,8 @@ const StyledPersonalIcon = styled(HiUserCircle)`
 
 export default function CreateWorkoutPage() {
   const [workouts, setWorkouts] = useState([]);
-  const [mainContent, setMainContent] = useState('myworkoutcreations');
+  const [mainContent, setMainContent] = useState('My Workout Creations');
+  const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
 
   useEffect(() => {
     firebase
@@ -168,57 +169,66 @@ export default function CreateWorkoutPage() {
   }, []);
 
   function showMainContent() {
-    if (mainContent === 'mynearbygyms') {
+    if (mainContent === 'My Nearby Gyms') {
       return (
         <>
-          <StyledProfileContentTitle>My Nearby Gyms</StyledProfileContentTitle>
           <GoogleMap />
         </>
       );
-    } else if (mainContent === 'myworkoutcreations'){
+    } else if (mainContent === 'My Workout Creations') {
       return (
         <>
-          <StyledProfileContentTitle>
-            My Workout Creations
-          </StyledProfileContentTitle>
-          <StyledBookmark>
-            <StyledWorkoutTypeTag>Gym Workout</StyledWorkoutTypeTag>
-            <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
-            <StyledWorkoutTypeTag>Home Workout</StyledWorkoutTypeTag>
-          </StyledBookmark>
           {workouts.map((workout) => {
-            if (workout.publisher.uid === firebase.auth().currentUser.uid) {
-              return <WorkoutCreation workout={workout} setMainContent={setMainContent}/>;
+            if (gymWorkoutTypeSelected) {
+              if (workout.type === 'Gymworkout') {
+                if (workout.publisher.uid === firebase.auth().currentUser.uid) {
+                  return (
+                    <WorkoutCreation
+                      workout={workout}
+                      setMainContent={setMainContent}
+                    />
+                  );
+                }
+              }
+            } else {
+              if (workout.type === 'Homeworkout') {
+                if (workout.publisher.uid === firebase.auth().currentUser.uid) {
+                  return (
+                    <WorkoutCreation
+                      workout={workout}
+                      setMainContent={setMainContent}
+                    />
+                  );
+                }
+              }
             }
           })}
         </>
       );
-    } else if (mainContent === 'myworkoutcollections'){
+    } else if (mainContent === 'My Workout Collections') {
       return (
         <>
-          <StyledProfileContentTitle>
-            My Workout Collections
-          </StyledProfileContentTitle>
-          <StyledBookmark>
-            <StyledWorkoutTypeTag>Gym Workout</StyledWorkoutTypeTag>
-            <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
-            <StyledWorkoutTypeTag>Home Workout</StyledWorkoutTypeTag>
-          </StyledBookmark>
           {workouts.map((workout) => {
-            if (workout.collectedBy.includes(firebase.auth().currentUser.uid)) {
-              return <WorkoutCollection workout={workout} />;
+            if (gymWorkoutTypeSelected) {
+              if (workout.type === 'Gymworkout') {
+                if (
+                  workout.collectedBy.includes(firebase.auth().currentUser.uid)
+                ) {
+                  return <WorkoutCollection workout={workout} />;
+                }
+              }
+            } else {
+              if (workout.type === 'Homeworkout') {
+                if (
+                  workout.collectedBy.includes(firebase.auth().currentUser.uid)
+                ) {
+                  return <WorkoutCollection workout={workout} />;
+                }
+              }
             }
           })}
         </>
       );
-    } else if (mainContent === 'editworkout') {
-      return (
-        <>
-          <StyledProfileContentTitle>
-            Edit
-          </StyledProfileContentTitle>
-        </>
-      )
     }
   }
 
@@ -257,6 +267,28 @@ export default function CreateWorkoutPage() {
           </StyledSideBarContainer>
         </StyledSideBar>
         <StyledProfileContentContainer>
+          <StyledProfileContentTitle>{mainContent}</StyledProfileContentTitle>
+          {mainContent === 'My Nearby Gyms' ? null : (
+            <StyledBookmark>
+              <StyledWorkoutTypeTag
+                selected={gymWorkoutTypeSelected}
+                onClick={() => {
+                  setGymWorkoutTypeSelected(true);
+                }}
+              >
+                Gym Workout
+              </StyledWorkoutTypeTag>
+              <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
+              <StyledWorkoutTypeTag
+                selected={!gymWorkoutTypeSelected}
+                onClick={() => {
+                  setGymWorkoutTypeSelected(false);
+                }}
+              >
+                Home Workout
+              </StyledWorkoutTypeTag>
+            </StyledBookmark>
+          )}
           {showMainContent()}
         </StyledProfileContentContainer>
       </StyledProfilePageContainer>

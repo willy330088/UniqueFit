@@ -131,7 +131,7 @@ export default function WorkoutItem({ workout, gymWorkoutTypeSelected }) {
         </StyledExerciseItemSocial>
       </StyledExerciseItemDescription>
       <StyledPopup trigger={<StyledPlayIcon />} modal nested>
-        <WorkoutPopup workout={workout} gymWorkoutTypeSelected={gymWorkoutTypeSelected}/>
+        <WorkoutPopup workout={workout}/>
       </StyledPopup>
     </StyledExerciseItemContainer>
   );

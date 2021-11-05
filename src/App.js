@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
-import CreatePlanPage from './components/CreatePlanPage';
 import WorkoutListPage from './components/WorkoutListPage';
 import ProfilePage from './components/ProfilePage'
 import PlanListPage from './components/PlanListPage'

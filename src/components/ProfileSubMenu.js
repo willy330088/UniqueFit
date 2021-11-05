@@ -48,7 +48,7 @@ export default function ProfileSubMenu({ item, setMainContent }) {
         <div>
           <StyledSidebarLabel
             onClick={() => {
-              setMainContent(item.state);
+              setMainContent(item.title);
             }}
           >
             {item.title}
@@ -67,7 +67,7 @@ export default function ProfileSubMenu({ item, setMainContent }) {
           return (
             <StyledDropdownLink
               onClick={() => {
-                setMainContent(item.state);
+                setMainContent(item.title);
               }}
               key={index}
             >
