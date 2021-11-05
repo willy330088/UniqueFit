@@ -26,11 +26,11 @@ const SidebarData = [
 
     subNav: [
       {
-        title: 'My plan Creations',
+        title: 'My Plan Creations',
         state: 'myplancreations',
       },
       {
-        title: 'My plan Collections',
+        title: 'My Plan Collections',
         state: 'myplancollections',
       },
     ],

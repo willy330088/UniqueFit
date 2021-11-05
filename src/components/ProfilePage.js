@@ -3,6 +3,7 @@ import Header from './Header';
 import Banner from './Banner';
 import GoogleMap from './GoogleMap';
 import WorkoutCreation from './WorkoutCreation';
+import PlanCreation from './PlanCreation';
 import WorkoutCollection from './WorkoutCollection';
 import styled from 'styled-components';
 import firebase from '../utils/firebase';
@@ -152,6 +153,7 @@ const StyledPersonalIcon = styled(HiUserCircle)`
 
 export default function CreateWorkoutPage() {
   const [workouts, setWorkouts] = useState([]);
+  const [plans, setPlans] = useState([]);
   const [mainContent, setMainContent] = useState('My Workout Creations');
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
 
@@ -165,6 +167,19 @@ export default function CreateWorkoutPage() {
           return { ...docSnapshot.data(), id };
         });
         setWorkouts(data);
+      });
+  }, []);
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection('plans')
+      .onSnapshot((collectionSnapshot) => {
+        const data = collectionSnapshot.docs.map((docSnapshot) => {
+          const id = docSnapshot.id;
+          return { ...docSnapshot.data(), id };
+        });
+        setPlans(data);
       });
   }, []);
 
@@ -229,6 +244,18 @@ export default function CreateWorkoutPage() {
           })}
         </>
       );
+    } else if (mainContent === 'My Plan Creations') {
+      return (
+        <>
+          {plans.map((plan) => {
+            if (plan.publisher.uid === firebase.auth().currentUser.uid) {
+              return (
+                <PlanCreation plan={plan}/>
+              );
+            }
+          })}
+        </>
+      );
     }
   }
 
@@ -268,7 +295,8 @@ export default function CreateWorkoutPage() {
         </StyledSideBar>
         <StyledProfileContentContainer>
           <StyledProfileContentTitle>{mainContent}</StyledProfileContentTitle>
-          {mainContent === 'My Nearby Gyms' ? null : (
+          {mainContent === 'My Workout Collections' ||
+          mainContent === 'My Workout Creations' ? (
             <StyledBookmark>
               <StyledWorkoutTypeTag
                 selected={gymWorkoutTypeSelected}
@@ -288,7 +316,7 @@ export default function CreateWorkoutPage() {
                 Home Workout
               </StyledWorkoutTypeTag>
             </StyledBookmark>
-          )}
+          ) : null}
           {showMainContent()}
         </StyledProfileContentContainer>
       </StyledProfilePageContainer>
