@@ -74,7 +74,7 @@ export default function PlanListPage() {
         <StyledPopup
           trigger={
             <StyledCreatePlanBtn>
-              Create Your Workout
+              Create Your Plan
             </StyledCreatePlanBtn>
           }
           modal

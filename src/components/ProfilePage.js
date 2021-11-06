@@ -155,6 +155,7 @@ const StyledPersonalIcon = styled(HiUserCircle)`
 export default function CreateWorkoutPage() {
   const [workouts, setWorkouts] = useState([]);
   const [plans, setPlans] = useState([]);
+  const [currentUser, setCurrentUser] = useState();
   const [mainContent, setMainContent] = useState('My Workout Creations');
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
 
@@ -169,6 +170,12 @@ export default function CreateWorkoutPage() {
         });
         setWorkouts(data);
       });
+  }, []);
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      setCurrentUser(user)
+    })
   }, []);
 
   useEffect(() => {
@@ -272,20 +279,20 @@ export default function CreateWorkoutPage() {
     }
   }
 
-  return (
+  return currentUser ? (
     <StyledBody>
       <Header />
       <Banner slogan={'My Profile'} />
       <StyledProfilePageContainer>
         <StyledPersonalInfoContainer>
-          {firebase.auth().currentUser.photoURL ? (
-            <StyledPersonalImage src={firebase.auth().currentUser.photoURL} />
+          {currentUser.photoURL ? (
+            <StyledPersonalImage src={currentUser.photoURL} />
           ) : (
             <StyledPersonalIcon />
           )}
           <StyledPersonalInfo>
             <StyledPersonalName>
-              {firebase.auth().currentUser.displayName}
+              {currentUser.displayName}
               <StyledPopup trigger={<StyledPencilIcon />} modal nested>
                 <StyledPopupTitle>Edit Your Name</StyledPopupTitle>
                 <StyledPopupInput />
@@ -293,7 +300,7 @@ export default function CreateWorkoutPage() {
               </StyledPopup>
             </StyledPersonalName>
             <StyledPersonalEmail>
-              {firebase.auth().currentUser.email}
+              {currentUser.email}
             </StyledPersonalEmail>
           </StyledPersonalInfo>
         </StyledPersonalInfoContainer>
@@ -334,5 +341,5 @@ export default function CreateWorkoutPage() {
         </StyledProfileContentContainer>
       </StyledProfilePageContainer>
     </StyledBody>
-  );
+  ) : <div>loading</div>;
 }

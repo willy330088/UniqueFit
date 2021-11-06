@@ -1,11 +1,11 @@
-import React, {useCallback, useRef, useState, useEffect} from "react";
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import {
   GoogleMap,
   useLoadScript,
   Marker,
   InfoWindow,
-} from "@react-google-maps/api";
-import Muscle from '../images/muscle.png'
+} from '@react-google-maps/api';
+import Muscle from '../images/muscle.png';
 import styled from 'styled-components';
 
 const StyledInfoHeader = styled.h2`
@@ -45,10 +45,10 @@ const StyledLoadingContent = styled.div`
   background: grey;
 `;
 
-const libraries = ["places"];
+const libraries = ['places'];
 const mapContainerStyle = {
-  height: "600px",
-  width: "100%",
+  height: '600px',
+  width: '100%',
 };
 
 export default function App() {
@@ -60,12 +60,11 @@ export default function App() {
   const [currentLocation, setCurrentLocation] = useState({
     lat: 25.0361,
     lng: 121.5372,
-  })
+  });
 
-  const [isNavigating, setIsNavigating] = useState(true)
-  const [isFetching, setIsFetching] = useState(false)
-  const [selected, setSelected] = React.useState(null);
-  const [nearby, setNearyby] = useState([])
+  const [isNavigating, setIsNavigating] = useState(true);
+  const [selected, setSelected] = useState(null);
+  const [nearby, setNearyby] = useState([]);
   // const mapRef = useRef();
   // const onMapLoad = useCallback((map) => {
   //   mapRef.current = map;
@@ -85,41 +84,68 @@ export default function App() {
         setCurrentLocation({
           lat: position.coords.latitude,
           lng: position.coords.longitude,
-        })
-        fetch(`https://us-central1-uniquefit-william.cloudfunctions.net/getGoogleNearbySearch?lat=${position.coords.latitude}&lng=${position.coords.longitude}`)
-          .then(res => res.json())
-          .then(json => setNearyby(json.results))
+        });
+        fetch(
+          `https://us-central1-uniquefit-william.cloudfunctions.net/getGoogleNearbySearch?lat=${position.coords.latitude}&lng=${position.coords.longitude}`
+        )
+          .then((res) => res.json())
+          .then((json) => setNearyby(json.results));
         setIsNavigating(false);
       },
       () => {
-        alert('Please allow location tracking!')
-        setIsNavigating(false)
+        alert('Please allow location tracking!');
+        setIsNavigating(false);
       }
     );
-  }, [])
+  }, []);
 
+  function dragMarker(coords) {
+    const { latLng } = coords;
+    const lat = latLng.lat();
+    const lng = latLng.lng();
 
-  if (loadError) return "Error";
-  if (!isLoaded) return "Loading...";
+    setCurrentLocation({
+      lat: lat,
+      lng: lng,
+    });
+    fetch(
+      `https://us-central1-uniquefit-william.cloudfunctions.net/getGoogleNearbySearch?lat=${lat}&lng=${lng}`
+    )
+      .then((res) => res.json())
+      .then((json) => setNearyby(json.results));
+    setIsNavigating(false);
+  }
+
+  if (loadError) return 'Error';
+  if (!isLoaded) return 'Loading...';
+
+  console.log(nearby);
+  console.log(selected);
 
   return isNavigating ? (
     <StyledLoadingContent>loading</StyledLoadingContent>
-  ):(
+  ) : (
     <div>
       <GoogleMap
         id="map"
         mapContainerStyle={mapContainerStyle}
         zoom={16}
         center={currentLocation}
+        clickableIcons={false}
         // onLoad={onMapLoad}
       >
         <Marker
           position={currentLocation}
+          draggable={true}
+          onDragEnd={(coords) => dragMarker(coords)}
         />
         {nearby.map((marker) => (
           <Marker
             key={marker.place_id}
-            position={{ lat: marker.geometry.location.lat, lng: marker.geometry.location.lng }}
+            position={{
+              lat: marker.geometry.location.lat,
+              lng: marker.geometry.location.lng,
+            }}
             onClick={() => {
               setSelected(marker);
             }}
@@ -134,43 +160,61 @@ export default function App() {
 
         {selected ? (
           <InfoWindow
-            position={{ lat: selected.geometry.location.lat, lng: selected.geometry.location.lng }}
+            position={{
+              lat: selected.geometry.location.lat,
+              lng: selected.geometry.location.lng,
+            }}
             onCloseClick={() => {
               setSelected(null);
             }}
           >
             <div>
-                <StyledInfoHeader>{selected.name}</StyledInfoHeader>
-                <StyledInfoRating> ⭐ {selected.rating} 📍 {selected.vicinity}</StyledInfoRating>
-                {selected.opening_hours.open_now ? (
-                  <StyledInfoOpening>🏠 Now Open</StyledInfoOpening>
-                ) : ( null
-                )}
+              <StyledInfoHeader>{selected.name}</StyledInfoHeader>
+              <StyledInfoRating>
+                {' '}
+                ⭐ {selected.rating} 📍 {selected.vicinity}
+              </StyledInfoRating>
+              {selected.business_status === 'CLOSED_TEMPORARILY' ? (
+                <StyledInfoOpening>Closed Temporarily</StyledInfoOpening>
+              ) : selected.opening_hours && selected.opening_hours.open_now ? (
+                <StyledInfoOpening>🏠 Now Open</StyledInfoOpening>
+              ) : (
+                <StyledInfoOpening>🏠 Now Closed</StyledInfoOpening>
+              )}
             </div>
           </InfoWindow>
-        ) : null}  
+        ) : null}
       </GoogleMap>
-      <Locate setCurrentLocation={setCurrentLocation} setIsNavigating={setIsNavigating} />
+      <LocateUser
+        setCurrentLocation={setCurrentLocation}
+        setIsNavigating={setIsNavigating}
+        setNearyby={setNearyby}
+      />
     </div>
   );
 }
 
-function Locate({ setCurrentLocation, setIsNavigating }) {
+function LocateUser({ setCurrentLocation, setIsNavigating, setNearyby }) {
   return (
     <StyledLocationBtn
       onClick={() => {
-        setIsNavigating(true)
+        setIsNavigating(true);
         navigator.geolocation.getCurrentPosition(
           (position) => {
             setCurrentLocation({
               lat: position.coords.latitude,
               lng: position.coords.longitude,
-            })
+            });
+            fetch(
+              `https://us-central1-uniquefit-william.cloudfunctions.net/getGoogleNearbySearch?lat=${position.coords.latitude}&lng=${position.coords.longitude}`
+            )
+              .then((res) => res.json())
+              .then((json) => setNearyby(json.results));
             setIsNavigating(false);
           },
           () => {
-            alert('Please allow location tracking!')
-            setIsNavigating(false)
+            alert('Please allow location tracking!');
+            setIsNavigating(false);
           }
         );
       }}
