@@ -48,7 +48,7 @@ export default function ProfileSubMenu({ item, setMainContent }) {
         <div>
           <StyledSidebarLabel
             onClick={() => {
-              if (item.title === 'My Nearby Gyms') {
+              if (item.title === 'My Nearby Gyms' || item.title === 'My Schedule') {
                 setMainContent(item.title);                
               }
             }}

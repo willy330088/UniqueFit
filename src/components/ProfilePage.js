@@ -6,6 +6,7 @@ import WorkoutCreation from './WorkoutCreation';
 import PlanCreation from './PlanCreation';
 import WorkoutCollection from './WorkoutCollection';
 import PlanCollection from './PlanCollection';
+import ScheduleCalendar from './ScheduleCalendar';
 import styled from 'styled-components';
 import firebase from '../utils/firebase';
 import { BsFillPencilFill } from 'react-icons/bs';
@@ -274,6 +275,12 @@ export default function CreateWorkoutPage() {
               );
             }
           })}
+        </>
+      );
+    } else if (mainContent === 'My Schedule') {
+      return (
+        <>
+          <ScheduleCalendar />
         </>
       );
     }

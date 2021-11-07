@@ -36,6 +36,12 @@ const SidebarData = [
     ],
   },
   {
+    title: 'My Schedule',
+    state: 'myschedule',
+    iconClosed: <RiIcons.RiArrowDownSFill />,
+    iconOpened: <RiIcons.RiArrowUpSFill />,
+  },
+  {
     title: 'My Nearby Gyms',
     state: 'mynearbygyms',
     iconClosed: <RiIcons.RiArrowDownSFill />,
