@@ -4,6 +4,41 @@ import moment from 'moment';
 import { v4 as uuid } from 'uuid';
 import 'react-datepicker/dist/react-datepicker.css';
 import firebase from '../utils/firebase';
+import styled from 'styled-components';
+
+const StyledLabel = styled.div`
+  color: #1face1;
+  font-size: 30px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid #1face1;
+  margin-bottom: 20px;
+  width: 100%;
+`;
+
+const StyledDatePicker = styled(DatePicker)`
+  font-size: 22px;
+`;
+
+const StyledDateContainer = styled.div`
+  margin-bottom: 50px;
+`;
+
+const StyledPlanContainer = styled.div`
+  margin-bottom: 70px;
+`;
+
+const StyledPlanSelect= styled.select`
+  font-size: 22px;
+`;
+
+const StyledAddTrainingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const StyledAddTrainingBtn = styled.button`
+  font-size: 20px;
+`;
 
 export default function ScheduleForm({ closeModal }) {
   // Date Picker State
@@ -62,18 +97,26 @@ export default function ScheduleForm({ closeModal }) {
   console.log(selectedPlan);
   return (
     <>
-      <DatePicker selected={selectedDate} onChange={setSelectedDate} />
-      <select
-        onChange={(e) => {
-          setSelectedPlan(e.target.value);
-        }}
-      >
-        <option selected="true" disabled="disabled">Choose A Plan</option>    
-        {plans.map((plan) => {
-          return <option value={[plan.id, plan.title]}>{plan.title}</option>;
-        })}
-      </select>
-      <button onClick={onSubmit}>Add Training</button>
+      <StyledDateContainer>
+        <StyledLabel>Choose Training Date</StyledLabel>
+        <StyledDatePicker selected={selectedDate} onChange={setSelectedDate} />
+      </StyledDateContainer>
+      <StyledPlanContainer>
+      <StyledLabel>Choose Training Plan</StyledLabel>
+        <StyledPlanSelect
+          onChange={(e) => {
+            setSelectedPlan(e.target.value);
+          }}
+        >
+          <option selected="true" disabled="disabled">Choose A Plan</option>    
+          {plans.map((plan) => {
+            return <option value={[plan.id, plan.title]}>{plan.title}</option>;
+          })}
+        </StyledPlanSelect>
+      </StyledPlanContainer>
+      <StyledAddTrainingContainer>
+        <StyledAddTrainingBtn onClick={onSubmit}>Add Training</StyledAddTrainingBtn>
+      </StyledAddTrainingContainer>
     </>
   );
 }

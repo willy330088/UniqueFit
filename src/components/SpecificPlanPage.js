@@ -253,6 +253,7 @@ export default function SpecificPlanPage() {
   const [workoutSetDetails, setWorkoutSetDetails] = useState([]);
   const [commentContent, setCommentContent] = useState('');
   const [comments, setComments] = useState([]);
+  const [currentUser, setCurrentUser] = useState();
 
   function toggleCollected() {
     const uid = firebase.auth().currentUser.uid;
@@ -275,6 +276,12 @@ export default function SpecificPlanPage() {
     }
     console.log(isCollected);
   }
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      setCurrentUser(user)
+    })
+  }, []);
 
   useEffect(() => {
     firebase
@@ -322,7 +329,7 @@ export default function SpecificPlanPage() {
   }, []);
 
   const isCollected = plan.collectedBy?.includes(
-    firebase.auth().currentUser.uid
+    currentUser?.uid
   );
 
   function onSubmitComment() {
@@ -354,7 +361,7 @@ export default function SpecificPlanPage() {
 
   console.log(plan)
 
-  return (
+  return currentUser ? (
     <StyledBody>
       <Header />
       <Banner slogan={'Explore Your Plan'} />
@@ -474,5 +481,5 @@ export default function SpecificPlanPage() {
         </StyledPlanContainer>
       </StyledSpecificPlanPageContainer>
     </StyledBody>
-  );
+  ) : <div>loading</div>;
 }

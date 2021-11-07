@@ -12,6 +12,22 @@ import firebase from '../utils/firebase';
 const StyledCalendarContainer = styled.div`
   background: white;
   padding: 20px;
+  position: relative;
+`;
+
+const StyledCloseBtn = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+`;
+
+const StyledAddTrainingBtn = styled.button`
+  position: absolute;
+  top: 25px;
+  left: 220px;
+  cursor: pointer;
+  font-size: 20px;
 `;
 
 export default function ScheduleCalendar() {
@@ -23,8 +39,10 @@ export default function ScheduleCalendar() {
       bottom: 'auto',
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
-      width: '500px',
-      height: '500px'
+      position: 'relative',
+      backgroundColor: '#222d35',
+      width: '350px',
+      height: '400px',
     },
     overlay: {
       zIndex: 1000,
@@ -71,17 +89,17 @@ export default function ScheduleCalendar() {
   const handleEventClick = (clickInfo) => {
     if(clickInfo.event) {
       setSelectedModal("ScheduleDetails");
-      setSelectedEvent(clickInfo.event._def)
+      setSelectedEvent(clickInfo.event)
       openModal();
-      console.log(clickInfo.event._def)
+      console.log(clickInfo.event._instance.range.start)
     }
   }
 
   return (
     <StyledCalendarContainer>
-      <button onClick={openForm}>
+      <StyledAddTrainingBtn onClick={openForm}>
         Add Training Plan
-      </button>
+      </StyledAddTrainingBtn>
       <FullCalendar
         plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
         headerToolbar={{
@@ -109,11 +127,11 @@ export default function ScheduleCalendar() {
           ariaHideApp={false}
           style={customModalStyles}
         >
-          <button onClick={closeModal}>X</button>
+          <StyledCloseBtn onClick={closeModal}>X</StyledCloseBtn>
           {selectedModal === "ScheduleForm" ? 
             <ScheduleForm closeModal={closeModal}/> : 
             selectedModal === "ScheduleDetails" ? 
-            <ScheduleDetails selectedEvent={selectedEvent}/> :
+            <ScheduleDetails selectedEvent={selectedEvent} closeModal={closeModal}/> :
             null
           }
         </Modal>
