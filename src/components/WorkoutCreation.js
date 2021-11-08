@@ -66,7 +66,32 @@ export default function WorkoutCreation({ workout }) {
           .ref('workout-videos/' + workout.id)
           .delete()
           .then(() => {
-            alert('Deleted Successfully!');
+            firebase
+              .firestore()
+              .collection('plans')
+              .get()
+              .then((collectionSnapshot) => {
+                collectionSnapshot.docs.forEach((docSnapshot) => {
+                  const id = docSnapshot.id;
+                  const plan = docSnapshot.data();
+                  const workoutContents = plan.workoutSet;
+                  const modified = workoutContents.filter((workoutContent) => {
+                    if (workoutContent.workoutId !== workout.id) {
+                      return workoutContent;
+                    }
+                  });
+                  firebase
+                    .firestore()
+                    .collection('plans')
+                    .doc(id)
+                    .update({
+                      workoutSet: modified,
+                    })
+                    .then(() => {
+                      alert('Deleted Successfully!');
+                    });
+                });
+              });
           });
       });
   }

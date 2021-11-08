@@ -62,7 +62,32 @@ export default function WorkoutCreation({ plan }) {
       .doc(plan.id)
       .delete()
       .then(() => {
-        alert('Deleted Successfully!');
+        firebase
+          .firestore()
+          .collection('schedules')
+          .get()
+          .then((collectionSnapshot) => {
+            collectionSnapshot.docs.forEach((docSnapshot) => {
+              const id = docSnapshot.id;
+              const schedule = docSnapshot.data();
+              const scheduleEvents = schedule.events;
+              const modified = scheduleEvents.filter((scheduleEvent) => {
+                if (scheduleEvent.id !== plan.id) {
+                  return scheduleEvent;
+                }
+              });
+              firebase
+                .firestore()
+                .collection('schedules')
+                .doc(id)
+                .update({
+                  events: modified,
+                })
+                .then(() => {
+                  alert('Deleted Successfully!');
+                });
+            });
+          });
       });
   }
 
