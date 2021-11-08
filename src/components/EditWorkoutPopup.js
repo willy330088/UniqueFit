@@ -74,7 +74,7 @@ export default function CreateWorkoutPage({ workout }) {
         .put(videoFile, metadata)
         .then(() => {
           fileRef.getDownloadURL().then((videoURL) => {
-            documentRef.set({
+            documentRef.update({
               title: title,
               description: description,
               targetMuscleGroup: targetMuscleGroup,
