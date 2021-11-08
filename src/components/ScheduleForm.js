@@ -27,7 +27,7 @@ const StyledPlanContainer = styled.div`
   margin-bottom: 70px;
 `;
 
-const StyledPlanSelect= styled.select`
+const StyledPlanSelect = styled.select`
   font-size: 22px;
 `;
 
@@ -78,16 +78,26 @@ export default function ScheduleForm({ closeModal }) {
       start: startDateTime,
     };
 
-    firebase
+    const scheduleRef = firebase
       .firestore()
       .collection('schedules')
-      .doc(firebase.auth().currentUser.uid)
-      .update({
-        events: firebase.firestore.FieldValue.arrayUnion(eventContent),
-      }).then(() => {
-        alert('Add successfully!')
-        setStartDateTime(new Date())
-        closeModal()
+      .doc(firebase.auth().currentUser.uid);
+
+    scheduleRef
+      .get()
+      .then((docSnapshot) => {
+        if (docSnapshot.exists) {
+          scheduleRef.update({
+            events: firebase.firestore.FieldValue.arrayUnion(eventContent),
+          });
+        } else {
+          scheduleRef.set({ events: [eventContent] });
+        }
+      })
+      .then(() => {
+        alert('Add successfully!');
+        setStartDateTime(new Date());
+        closeModal();
       });
   };
 
@@ -102,20 +112,24 @@ export default function ScheduleForm({ closeModal }) {
         <StyledDatePicker selected={selectedDate} onChange={setSelectedDate} />
       </StyledDateContainer>
       <StyledPlanContainer>
-      <StyledLabel>Choose Training Plan</StyledLabel>
+        <StyledLabel>Choose Training Plan</StyledLabel>
         <StyledPlanSelect
           onChange={(e) => {
             setSelectedPlan(e.target.value);
           }}
         >
-          <option selected="true" disabled="disabled">Choose A Plan</option>    
+          <option selected="true" disabled="disabled">
+            Choose A Plan
+          </option>
           {plans.map((plan) => {
             return <option value={[plan.id, plan.title]}>{plan.title}</option>;
           })}
         </StyledPlanSelect>
       </StyledPlanContainer>
       <StyledAddTrainingContainer>
-        <StyledAddTrainingBtn onClick={onSubmit}>Add Training</StyledAddTrainingBtn>
+        <StyledAddTrainingBtn onClick={onSubmit}>
+          Add Training
+        </StyledAddTrainingBtn>
       </StyledAddTrainingContainer>
     </>
   );

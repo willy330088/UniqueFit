@@ -82,7 +82,9 @@ export default function ScheduleCalendar() {
       .doc(firebase.auth().currentUser.uid)
       .onSnapshot((docSnapshot) => {
         const data = docSnapshot.data()
-        setEvents(data.events)
+        if (data) {
+          setEvents(data.events)
+        }
       });
   }, []);
 
