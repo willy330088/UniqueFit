@@ -43,6 +43,7 @@ export default function ScheduleCalendar() {
       backgroundColor: '#222d35',
       width: '350px',
       height: '400px',
+      border: 'none'
     },
     overlay: {
       zIndex: 1000,
@@ -110,9 +111,6 @@ export default function ScheduleCalendar() {
         }}
         initialView="dayGridMonth"
         initialDate={initialDate}
-        editable={true}
-        selectable={false}
-        selectMirror={true}
         weekends={true}
         events={events}
         eventClick={handleEventClick}

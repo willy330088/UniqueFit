@@ -273,6 +273,7 @@ function DragAndDrop({ plan, setPlan }) {
                               <StyledWeightInput
                                 placeholder={'0'}
                                 type="number"
+                                min="0"
                                 value={item.weight}
                                 onChange={(e) => {
                                   setPlan({
@@ -296,6 +297,7 @@ function DragAndDrop({ plan, setPlan }) {
                               <StyledWeightInput
                                 placeholder={'0'}
                                 type="number"
+                                min="0"
                                 value={item.reps}
                                 onChange={(e) => {
                                   setPlan({

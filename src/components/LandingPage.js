@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import HomePageBackground from '../images/homePageImage.jpeg';
+import LandingPageBackground from '../images/landingPageBackground.jpeg'
 import Fit from '../images/fit.jpeg';
-import Logo from '../images/logo.png';
-import Facebook from '../images/facebook.png';
-import Google from '../images/google.png';
+import LogoDumbbell from '../images/logoDumbbell.png';
 import styled, {keyframes} from 'styled-components';
 import Popup from 'reactjs-popup';
 import firebase from '../utils/firebase';
@@ -11,30 +9,86 @@ import 'firebase/auth';
 import { facebookProvider, googleProvider } from '../utils/authMethod';
 import socialMediaAuth from '../utils/auth';
 import { useHistory } from 'react-router-dom';
+import { FcGoogle } from 'react-icons/fc';
+import { BsFacebook } from 'react-icons/bs';
 
-const StyledBackGround = styled.img`
-  width: 100%;
+
+
+const StyledLandingPageContainer = styled.div`
+  background-image: url(${LandingPageBackground});
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100vw;
   height: 100vh;
-  object-fit: cover;
+  background-position-x: 35%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media (min-width: 950px) {
+    background-position-x: center;
+  }
 `;
 
-const StyledLogo = styled.img`
-  width: 50%;
+const StyledLogoContainer = styled.div`
   position: absolute;
   top: 30%;
-  left: 25%;
+`;
+
+const StyledLogoText = styled.div`
+  font-size: 80px;
+  color: #1face1;
+
+  &:after {
+    content: "F T";
+    color: white;
+    letter-spacing: 10px;
+  }
+
+  @media (min-width: 700px) {
+    font-size: 120px;
+    &:after {
+      letter-spacing: 13px;
+    }
+  }
+
+  @media (min-width: 950px) {
+    font-size: 160px;
+  }
+`;
+
+const StyledLogoDumbbell = styled.img`
+  position: absolute;
+  width: 33px;
+  top: 13px;
+  right: 53px;
+
+  @media (min-width: 700px) {
+    width: 50px;
+    top: 20px;
+    right: 68px;
+  }
+
+  @media (min-width: 950px) {
+    width: 65px;
+    top: 28px;
+    right: 81px;
+  }
 `;
 
 const StyledSlogan = styled.div`
-  width: 50%;
   color: white;
   font-weight: bolder;
-  font-size: 35px;
+  font-size: 25px;
   position: absolute;
-  text-align: center;
   top: 55%;
-  left: 25%;
+  text-align: center;
   letter-spacing: 1px;
+
+  @media (min-width: 700px) {
+    font-size: 35px;
+  }
 `;
 
 const StyledLoginBtn = styled.button`
@@ -42,11 +96,10 @@ const StyledLoginBtn = styled.button`
   color: white;
   font-size: 20px;
   height: 40px;
-  width: 10%;
+  width: 150px;
   border-radius: 20px;
   border: solid 3px #1face1;
   top: 75%;
-  left: 45%;
   background-color: transparent;
   cursor: pointer;
   &:hover {
@@ -58,6 +111,11 @@ const StyledPopupImage = styled.img`
   height: 100%;
   width: 40%;
   object-fit: cover;
+  display: none;
+
+  @media (min-width: 500px) {
+    display: block;
+  }
 `;
 
 const StyledSignInTitle = styled.div`
@@ -71,6 +129,9 @@ const StyledInput = styled.input`
   width: 65%;
   margin: 0 auto 15px;
   height: 40px;
+  border: 2px solid #c9c9c9;
+  padding-left: 5px;
+  border-radius: 5px;
 `;
 
 const anvil = keyframes`
@@ -98,10 +159,18 @@ const StyledPopup = styled(Popup)`
   &-content {
     margin: auto;
     background: rgb(255, 255, 255);
-    width: 700px;
+    width: 350px;
     display: flex;
     height: 550px;
     animation: ${anvil} 0.6s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
+
+    @media (min-width: 500px) {
+      width: 500px;
+    }
+
+    @media (min-width: 700px) {
+      width: 700px;
+    }
   }
 `;
 
@@ -127,7 +196,7 @@ const StyledSeparator = styled.div`
     background-color: grey;
     top: 50%;
     right: 20px;
-    left: 270px;
+    left: 200px;
     height: 1px;
   }
 
@@ -137,8 +206,28 @@ const StyledSeparator = styled.div`
     background-color: grey;
     top: 50%;
     left: 20px;
-    right: 270px;
+    right: 200px;
     height: 1px;
+  }
+
+  @media (min-width: 500px) {
+    ::before {
+      left: 180px;
+    }
+
+    ::after {
+      right: 180px;
+    }
+  }
+
+  @media (min-width: 700px) {
+    ::before {
+      left: 270px;
+    }
+
+    ::after {
+      right: 270px;
+    }
   }
 `;
 
@@ -146,21 +235,40 @@ const StyledSignInBtn = styled.button`
   width: 55%;
   margin: 0 auto 25px;
   height: 40px;
+  font-size: 20px;
   background-color: #0c1863;
   color: white;
   cursor: pointer;
   border: none;
+  border-radius: 5px;
 `;
 
-const StyledSignInMediaBtn = styled.button`
+const StyledSignInMediaBtn = styled.div`
   width: 65%;
   margin: 0 auto 25px;
   height: 40px;
   background-color: #0c1863;
-  color: white;
   cursor: pointer;
-  border: none;
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+`;
+
+const StyledGoogleIcon = styled(FcGoogle)`
+  font-size: 20px;
+  margin-right: 10px;
+`
+
+const StyledFacebookIcon = styled(BsFacebook)`
+  font-size: 20px;
+  color: #1778F2;
+  margin-right: 10px;
+`
+
+const StyledSignInMediaText = styled.div`
+  color: white;
+  font-size: 18px;
 `;
 
 const StyledCloseBtn = styled.button`
@@ -171,6 +279,7 @@ const StyledCloseBtn = styled.button`
   position: absolute;
   right: 20px;
   bottom: 20px;
+  font-size: 18px;
 `;
 
 const StyledCreateAccountBtn = styled.button`
@@ -178,16 +287,10 @@ const StyledCreateAccountBtn = styled.button`
   color: #0c1863;
   cursor: pointer;
   border: none;
+  font-size: 18px;
   &:hover {
     text-decoration: underline;
   }
-`;
-
-const StyledSignInImage = styled.img`
-  position: absolute;
-  width: 30px;
-  left: 25px;
-  top: 5px;
 `;
 
 const StyledMessage = styled.div`
@@ -212,6 +315,10 @@ export default function LandingPage() {
 
   const onSubmit = () => {
     if (isSigningIn === false) {
+      if (name === '') {
+        setErrorMessage('Please fill in username');
+        return
+      }
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
@@ -262,9 +369,12 @@ export default function LandingPage() {
   };
 
   return (
-    <>
-      <StyledBackGround src={HomePageBackground} />
-      <StyledLogo src={Logo} />
+    <StyledLandingPageContainer>
+      <StyledLogoContainer>
+        <StyledLogoText>UNIQUE</StyledLogoText>
+        <StyledLogoDumbbell src={LogoDumbbell}/>
+      </StyledLogoContainer>
+      {/* <StyledLogo src={Logo} /> */}
       <StyledSlogan>COMMIT TO BE FIT <br/><br/> TOO UNIQUE TO QUIT</StyledSlogan>
       <StyledPopup
         trigger={<StyledLoginBtn>Join Now</StyledLoginBtn>}
@@ -295,14 +405,14 @@ export default function LandingPage() {
                   <StyledSignInMediaBtn
                     onClick={() => handleOnClick(facebookProvider)}
                   >
-                    <StyledSignInImage src={Facebook} />
-                    Facebook Sign In
+                    <StyledFacebookIcon />
+                    <StyledSignInMediaText>Facebook Sign In</StyledSignInMediaText>
                   </StyledSignInMediaBtn>
                   <StyledSignInMediaBtn
                     onClick={() => handleOnClick(googleProvider)}
                   >
-                    <StyledSignInImage src={Google} />
-                    Google Sign In
+                    <StyledGoogleIcon/>
+                    <StyledSignInMediaText>Google Sign In</StyledSignInMediaText>
                   </StyledSignInMediaBtn>
                   <StyledCreateAccountBtn
                     onClick={() => {
@@ -361,6 +471,6 @@ export default function LandingPage() {
           </>
         )}
       </StyledPopup>
-    </>
+    </StyledLandingPageContainer>
   );
 }
