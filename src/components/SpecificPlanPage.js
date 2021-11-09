@@ -18,8 +18,10 @@ import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/auth';
 import muscleGroups from '../utils/muscleGroup';
-import WorkoutPopup from './WorkoutPopup';
 import PlanComment from './PlanComment';
+import StopWatch from './Timer/StopWatch'
+import ProgressBar from "@ramonak/react-progress-bar";
+import SpecificPlanWorkoutItem from './SpecificPlanWorkoutItem';
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -124,73 +126,12 @@ const StyledPlanWorkouts = styled.div`
 
 const StyledPlanWorkoutsContainer = styled.div``;
 
-const StyledPlanWorkoutItemContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #e3e3e3;
-  height: 70px;
-  padding: 10px 20px;
-  margin-bottom: 10px;
-`;
-
-const StyledPlanWorkoutItemTitleContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const StyledPlanWorkoutName = styled.div`
-  font-size: 30px;
-  color: #1face1;
-  margin-left: 15px;
-`;
-
-const StyledPlanWorkoutImage = styled.img`
-  width: 40px;
-`;
-
-const StyledPlanWorkoutItemDetailContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const StyledPlanWorkoutItemWeightIcon = styled(FaWeightHanging)`
-  color: #222d35;
-  font-size: 20px;
-  margin-left: 10px;
-`;
-
-const StyledPlanWorkoutItemWeightNum = styled.div`
-  color: #222d35;
-  font-size: 20px;
-  margin-left: 5px;
-`;
-
-const StyledPlanWorkoutItemDumbbellIcon = styled(FaDumbbell)`
-  color: #222d35;
-  font-size: 22px;
-  margin-left: 10px;
-`;
-
 const StyledPlanCollectIcon = styled(BsBookmarkFill)`
   color: ${(props) => (props.isCollected ? '#1face1' : '#222d35')};
   font-size: 60px;
   position: absolute;
   top: 25px;
   left: 20px;
-  cursor: pointer;
-`;
-
-const StyledPlanWorkoutItemDumbbellNum = styled.div`
-  color: #222d35;
-  font-size: 20px;
-  margin-left: 5px;
-`;
-
-const StyledPlanPlayIcon = styled(ImPlay)`
-  color: #222d35;
-  font-size: 40px;
-  margin-right: 20px;
   cursor: pointer;
 `;
 
@@ -228,20 +169,6 @@ const StyledLeaveCommentBtn = styled.button`
   cursor: pointer;
 `;
 
-const StyledPopup = styled(Popup)`
-  &-overlay {
-    background: rgba(0, 0, 0, 0.6);
-  }
-
-  &-content {
-    margin: auto;
-    background: #222d35;
-    width: 700px;
-    height: 550px;
-    overflow-y: scroll;
-  }
-`;
-
 export default function SpecificPlanPage() {
   const { planId } = useParams();
   const [plan, setPlan] = useState({
@@ -254,6 +181,7 @@ export default function SpecificPlanPage() {
   const [commentContent, setCommentContent] = useState('');
   const [comments, setComments] = useState([]);
   const [currentUser, setCurrentUser] = useState();
+  const [completeNum, setCompleteNum] = useState(0);
 
   function toggleCollected() {
     const uid = firebase.auth().currentUser.uid;
@@ -417,43 +345,12 @@ export default function SpecificPlanPage() {
           <StyledPlanText>
             <RiArticleLine /> Description: {plan.description}
           </StyledPlanText>
+          <ProgressBar completed={Math.round((completeNum / workoutSet.length) * 100)} bgColor={'#1face1'} height={'40px'}/>
           <StyledPlanWorkouts>Workouts</StyledPlanWorkouts>
           <StyledPlanWorkoutsContainer>
             {workoutSet.map((workout, index) => {
               return (
-                <StyledPlanWorkoutItemContainer>
-                  <StyledPlanWorkoutItemTitleContainer>
-                    <StyledPlanWorkoutImage
-                      src={
-                        workoutSetDetails[index]
-                          ? muscleGroups.filter((muscleGroup) => {
-                              if (
-                                muscleGroup.name ===
-                                workoutSetDetails[index].targetMuscleGroup
-                              )
-                                return muscleGroup;
-                            })[0].src
-                          : null
-                      }
-                    />
-                    <StyledPlanWorkoutName>
-                      {workout.title}
-                    </StyledPlanWorkoutName>
-                  </StyledPlanWorkoutItemTitleContainer>
-                  <StyledPlanWorkoutItemDetailContainer>
-                    <StyledPopup trigger={<StyledPlanPlayIcon />} modal nested>
-                      <WorkoutPopup workout={workoutSetDetails[index]} />
-                    </StyledPopup>
-                    <StyledPlanWorkoutItemWeightIcon />
-                    <StyledPlanWorkoutItemWeightNum>
-                      {workout.weight}kg
-                    </StyledPlanWorkoutItemWeightNum>
-                    <StyledPlanWorkoutItemDumbbellIcon />
-                    <StyledPlanWorkoutItemDumbbellNum>
-                      {workout.reps}reps
-                    </StyledPlanWorkoutItemDumbbellNum>
-                  </StyledPlanWorkoutItemDetailContainer>
-                </StyledPlanWorkoutItemContainer>
+                <SpecificPlanWorkoutItem workout={workout} index={index} workoutSetDetails={workoutSetDetails} muscleGroups={muscleGroups} completeNum={completeNum} setCompleteNum={setCompleteNum}/>
               );
             })}
           </StyledPlanWorkoutsContainer>
@@ -480,6 +377,7 @@ export default function SpecificPlanPage() {
           </StyledCommentContainer>
         </StyledPlanContainer>
       </StyledSpecificPlanPageContainer>
+      <StopWatch/>
     </StyledBody>
   ) : <div>loading</div>;
 }
