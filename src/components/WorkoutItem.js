@@ -102,7 +102,7 @@ const StyledPopup = styled(Popup)`
   }
 `;
 
-export default function WorkoutItem({ workout, gymWorkoutTypeSelected }) {
+export default function WorkoutItem({ workout }) {
   return (
     <StyledExerciseItemContainer>
       <StyledExerciseItemImage

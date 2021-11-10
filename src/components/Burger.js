@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const StyledBurger = styled.button`
   position: absolute;
-  top: 35px;
+  top: 25px;
   left: 2rem;
   display: flex;
   flex-direction: column;
@@ -31,7 +31,7 @@ const StyledBurger = styled.button`
 
     :first-child {
       transform: ${({ open }) => open ? 'rotate(45deg)' : 'rotate(0)'};
-      background: ${({ open }) => open ? '#222d35' : 'white'};
+      /* background: ${({ open }) => open ? '#222d35' : 'white'}; */
     }
 
     :nth-child(2) {
@@ -41,11 +41,11 @@ const StyledBurger = styled.button`
 
     :nth-child(3) {
       transform: ${({ open }) => open ? 'rotate(-45deg)' : 'rotate(0)'};
-      background: ${({ open }) => open ? '#222d35' : 'white'};
+      /* background: ${({ open }) => open ? '#222d35' : 'white'}; */
     }
   }
 
-  @media (min-width: 950px) {
+  @media (min-width: 700px) {
     display: none;
   }
 `;

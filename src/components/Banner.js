@@ -5,16 +5,26 @@ import BannerImg from '../images/banner-1.jpeg'
 const StyledBanner = styled.div`
   background-image: url(${BannerImg});
   background-size: cover;
-  height: 300px;
+  height: 210px;
   width: 100%;
+  position: relative;
+
+  @media (min-width: 700px) {
+    height: 300px;
+  }
 `;
 
 const StyledBannerTitle = styled.div`
   font-size: 45px;
   color: white;
   position: absolute;
-  top: 250px;
-  left: 80px
+  top: 90px;
+  left: 60px;
+
+  @media (min-width: 700px) {
+    top: 160px;
+    left: 80px;
+  }
 `;
 
 export default function Banner({slogan}) {

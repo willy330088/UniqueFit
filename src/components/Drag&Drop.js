@@ -169,6 +169,8 @@ const copy = (source, destination, droppableSource, droppableDestination) => {
   const destClone = Array.from(destination);
   const item = sourceClone[droppableSource.index];
 
+  console.log(item)
+
   destClone.splice(droppableDestination.index, 0, {
     title: item.title,
     targetMuscleGroup: item.targetMuscleGroup,
@@ -185,7 +187,7 @@ function DragAndDrop({ plan, setPlan }) {
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
 
   function onDragEnd(result) {
-    const { source, destination } = result;
+    const { source, destination, draggableId } = result;
 
     if (!destination) {
       return;
@@ -200,14 +202,25 @@ function DragAndDrop({ plan, setPlan }) {
         ),
       });
     } else {
-      setPlan({
-        workoutSet: copy(
-          workoutData,
-          plan[destination.droppableId],
-          source,
-          destination
-        ),
-      });
+      if (draggableId === 'rest') {
+        const destClone = Array.from(plan[destination.droppableId]);
+
+        destClone.splice(destination.index, 0, {
+          title: 'rest',
+          time: 0
+        });
+        console.log(destClone)
+        return;
+      } else {
+        setPlan({
+          workoutSet: copy(
+            workoutData,
+            plan[destination.droppableId],
+            source,
+            destination
+          ),
+        })
+      };
     }
   }
 
@@ -367,6 +380,36 @@ function DragAndDrop({ plan, setPlan }) {
                   Home Workout
                 </StyledWorkoutTypeTag>
               </StyledBookmark>
+              {/* <Draggable
+                draggableId={'rest'}
+                index={100}
+              >
+                {(provided, snapshot) => (
+                  <>
+                    <Item
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      isDragging={snapshot.isDragging}
+                    >
+                      <StyledExerciseTitle>
+                        <StyledExerciseName>
+                          Rest
+                        </StyledExerciseName>
+                      </StyledExerciseTitle>
+                    </Item>
+                    {snapshot.isDragging && (
+                      <Clone>
+                        <StyledExerciseTitle>
+                          <StyledExerciseName>
+                            Rest
+                          </StyledExerciseName>
+                        </StyledExerciseTitle>
+                      </Clone>
+                    )}
+                  </>
+                )}
+              </Draggable> */}
               {workoutData.map((item, index) => {
                 if (gymWorkoutTypeSelected) {
                   if (item.type === 'Gymworkout') {
