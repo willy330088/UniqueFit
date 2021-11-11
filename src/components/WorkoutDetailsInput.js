@@ -1,29 +1,52 @@
-import React from 'react'
+import React from 'react';
 import styled from 'styled-components';
-import muscleGroupImage from '../utils/muscleGroup'
+import muscleGroupImage from '../utils/muscleGroup';
+import { GiCheckMark } from 'react-icons/gi';
 
 const StyledPlanDetails = styled.div`
   width: 100%;
 `;
 
 const StyledCreateLabel = styled.div`
-  color:#1face1;
-  font-size: 30px;
+  color: #1face1;
+  font-size: 20px;
   padding-bottom: 10px;
   width: 100%;
   border-bottom: 3px solid #1face1;
   margin-bottom: 20px;
+
+  @media (min-width: 500px) {
+    font-size: 30px;
+  } 
+
+  &::after {
+    content: '${(props) => props.reminder}';
+    color: #1face1;
+    font-size: 18px;
+    margin-left: 10px;
+    display: none;
+
+    @media (min-width: 650px) {
+      display: inline;
+    } 
+  }
 `;
 
-const StyledInput= styled.input`
+const StyledInput = styled.input`
   border: 1px solid #1face1;
   border-radius: 20px;
-  height: 50px;
-  font-size: 25px;
-  padding: 10px;
+  height: 30px;
+  font-size: 20px;
+  padding: 10px 0 10px 20px;
   outline: none;
   width: 100%;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
+
+  @media (min-width: 500px) {
+    margin-bottom: 50px;
+    height: 50px;
+    font-size: 25px;
+  } 
 `;
 
 const StyledTargetMuscleGroups = styled.div`
@@ -31,55 +54,127 @@ const StyledTargetMuscleGroups = styled.div`
   flex-wrap: wrap;
   width: 100%;
   border-radius: 5px;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
+
+  @media (min-width: 500px) {
+    margin-bottom: 50px;
+  } 
 `;
 
 const StyledMuscleGroupImage = styled.img`
-  /* flex: 1 25%; */
-  width: 70px;
+  width: 55px;
   cursor: pointer;
-  padding: 1px;
   border-radius: 50%;
-  border: ${(props) => props.selected ? '3px solid #1face1' : 'none'};
+
+  @media (min-width: 500px) {
+    width: 70px;
+  } 
+`;
+
+const StyledMuscleGroupContainer = styled.div`
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  margin: 5px;
+  position: relative;
+  cursor: pointer;
+
+  @media (min-width: 500px) {
+    width: 70px;
+    height: 70px;
+  } 
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: ${(props) =>
+      props.selected ? 'rgba(0, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0)'};
+    border-radius: 50%;
+  }
 
   &:hover {
-    border: 3px solid #1face1;
+    &::before {
+      background-color: rgba(0, 0, 0, 0.6);
+    }
   }
 `;
 
+const StyledCheckedIcon = styled(GiCheckMark)`
+  color: white;
+  position: absolute;
+  font-size: 30px;
+  right: calc(50% - 15px);
+  top: calc(50% - 15px);
+  display: ${(props) => props.selected ? 'block' : 'none'};;
+`
+
 const StyledDescriptionInput = styled.textarea`
   width: 100%;
-  height: 150px;
-  font-size: 20px;
+  height: 70px;
+  font-size: 22px;
   outline: none;
   margin-bottom: 20px;
+  padding: 20px 20px;
+  border-radius: 5px;
+
+  @media (min-width: 650px) {
+    height: 150px;
+  } 
 `;
 
-export default function PlanDetailsInput({ title, description, setTitle, setDescription, setTargetMuscleGroup, targetMuscleGroup }) {
+export default function PlanDetailsInput({
+  title,
+  description,
+  setTitle,
+  setDescription,
+  setTargetMuscleGroup,
+  targetMuscleGroup,
+}) {
   return (
     <StyledPlanDetails>
-      <StyledCreateLabel>Title of the Workout</StyledCreateLabel>
-      <StyledInput onChange={(e) => {
-        setTitle(e.target.value)
-      }}
+      <StyledCreateLabel reminder={'(Ex: Shoulder Press)'}>
+        Title of the Workout
+      </StyledCreateLabel>
+      <StyledInput
+        onChange={(e) => {
+          setTitle(e.target.value);
+        }}
         value={title}
+        maxLength={15}
       />
-      <StyledCreateLabel>Target Muscle Group</StyledCreateLabel>
+      <StyledCreateLabel reminder={'(Choose 1 main muscle group)'}>
+        {targetMuscleGroup === '' ? 'Target Muscle Group' : targetMuscleGroup}
+      </StyledCreateLabel>
       <StyledTargetMuscleGroups>
-        {
-          muscleGroupImage.map((muscle) => {
-            return <StyledMuscleGroupImage key={muscle.name} src={muscle.src} onClick={() => {
-              setTargetMuscleGroup(muscle.name)
-            }} selected={targetMuscleGroup === muscle.name} />
-          })
-        }
+        {muscleGroupImage.map((muscle) => {
+          return (
+            <StyledMuscleGroupContainer
+              onClick={() => {
+                setTargetMuscleGroup(muscle.name);
+              }}
+              selected={targetMuscleGroup === muscle.name}
+              key={muscle.name}
+            >
+              <StyledCheckedIcon selected={targetMuscleGroup === muscle.name}/>
+              <StyledMuscleGroupImage
+                src={muscle.src}
+              />
+            </StyledMuscleGroupContainer>
+          );
+        })}
       </StyledTargetMuscleGroups>
       <StyledCreateLabel>Description</StyledCreateLabel>
-      <StyledDescriptionInput onChange={(e) => {
-        setDescription(e.target.value)
-      }}
+      <StyledDescriptionInput
+        onChange={(e) => {
+          setDescription(e.target.value);
+        }}
         value={description}
       />
     </StyledPlanDetails>
-  )
+  );
 }

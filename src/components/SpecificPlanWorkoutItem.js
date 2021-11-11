@@ -7,13 +7,19 @@ import { FaWeightHanging } from 'react-icons/fa';
 import { FaDumbbell } from 'react-icons/fa';
 
 const StyledPlanWorkoutItemContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   background: #e3e3e3;
-  height: 70px;
   padding: 10px 20px;
   margin-bottom: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+
+  @media (min-width: 850px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 `;
 
 const StyledPlanWorkoutItemTitleContainer = styled.div`
@@ -24,22 +30,45 @@ const StyledPlanWorkoutItemTitleContainer = styled.div`
 const StyledPlanWorkoutName = styled.div`
   font-size: 30px;
   color: #1face1;
-  margin-left: 15px;
+
+  @media (min-width: 550px) {
+    margin-left: 15px;
+  }
 `;
 
 const StyledPlanWorkoutImage = styled.img`
-  width: 40px;
+  width: 55px;
+  display: none;
+
+  @media (min-width: 550px) {
+    display: block;
+  }
 `;
 
 const StyledPlanWorkoutItemDetailContainer = styled.div`
   display: flex;
   align-items: center;
+  margin-top: 10px;
+
+  @media (min-width: 850px) {
+    margin-top: 0px;
+  }
+`;
+
+const StyledPlanWorkoutItemWeightContainer = styled.div`
+  width: 80px;
+  display: flex;
+`;
+
+const StyledPlanWorkoutItemDumbbellContainer = styled.div`
+  width: 100px;
+  display: flex;
+  margin-right: 80px;
 `;
 
 const StyledPlanWorkoutItemWeightIcon = styled(FaWeightHanging)`
   color: #222d35;
   font-size: 20px;
-  margin-left: 10px;
 `;
 
 const StyledPlanWorkoutItemWeightNum = styled.div`
@@ -50,8 +79,7 @@ const StyledPlanWorkoutItemWeightNum = styled.div`
 
 const StyledPlanWorkoutItemDumbbellIcon = styled(FaDumbbell)`
   color: #222d35;
-  font-size: 22px;
-  margin-left: 10px;
+  font-size: 23px;
 `;
 
 const StyledPlanWorkoutItemDumbbellNum = styled.div`
@@ -63,8 +91,24 @@ const StyledPlanWorkoutItemDumbbellNum = styled.div`
 const StyledPlanPlayIcon = styled(ImPlay)`
   color: #222d35;
   font-size: 40px;
-  margin-right: 20px;
+  margin-right: 40px;
   cursor: pointer;
+  position: absolute;
+  right: 20px;
+  top: calc(50% - 20px);
+
+  &:hover {
+    color: #1face1;
+  }
+`;
+
+const StyledCheckbox = styled.input`
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+  top: calc(50% - 8.5px);
 `;
 
 const StyledPopup = styled(Popup)`
@@ -87,18 +131,18 @@ export default function SpecificPlanWorkoutItem({
   workoutSetDetails,
   muscleGroups,
   completeNum,
-  setCompleteNum
+  setCompleteNum,
+  trainingMode,
 }) {
-
-  const [checked, setChecked] = useState(false)
+  const [checked, setChecked] = useState(false);
 
   function toggleChecked() {
     if (checked === true) {
-      setCompleteNum(completeNum - 1)
+      setCompleteNum(completeNum - 1);
     } else {
-      setCompleteNum(completeNum + 1)
+      setCompleteNum(completeNum + 1);
     }
-    setChecked(!checked)
+    setChecked(!checked);
   }
 
   return (
@@ -120,19 +164,25 @@ export default function SpecificPlanWorkoutItem({
         <StyledPlanWorkoutName>{workout.title}</StyledPlanWorkoutName>
       </StyledPlanWorkoutItemTitleContainer>
       <StyledPlanWorkoutItemDetailContainer>
-        <StyledPopup trigger={<StyledPlanPlayIcon />} modal nested>
-          <WorkoutPopup workout={workoutSetDetails[index]} />
-        </StyledPopup>
-        <StyledPlanWorkoutItemWeightIcon />
-        <StyledPlanWorkoutItemWeightNum>
-          {workout.weight}kg
-        </StyledPlanWorkoutItemWeightNum>
-        <StyledPlanWorkoutItemDumbbellIcon />
-        <StyledPlanWorkoutItemDumbbellNum>
-          {workout.reps}reps
-        </StyledPlanWorkoutItemDumbbellNum>
+        <StyledPlanWorkoutItemWeightContainer>
+          <StyledPlanWorkoutItemWeightIcon />
+          <StyledPlanWorkoutItemWeightNum>
+            {workout.weight}kg
+          </StyledPlanWorkoutItemWeightNum>
+        </StyledPlanWorkoutItemWeightContainer>
+        <StyledPlanWorkoutItemDumbbellContainer>
+          <StyledPlanWorkoutItemDumbbellIcon />
+          <StyledPlanWorkoutItemDumbbellNum>
+            {workout.reps}reps
+          </StyledPlanWorkoutItemDumbbellNum>
+        </StyledPlanWorkoutItemDumbbellContainer>
       </StyledPlanWorkoutItemDetailContainer>
-      <input type="checkbox" checked={checked} onClick={toggleChecked}/>
+      <StyledPopup trigger={<StyledPlanPlayIcon />} modal nested>
+        <WorkoutPopup workout={workoutSetDetails[index]} />
+      </StyledPopup>
+      {trainingMode ? (
+        <StyledCheckbox type="checkbox" checked={checked} onClick={toggleChecked} />
+      ) : null}
     </StyledPlanWorkoutItemContainer>
   );
 }

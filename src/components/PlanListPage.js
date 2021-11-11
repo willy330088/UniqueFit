@@ -15,14 +15,21 @@ const StyledBody = styled.div`
 `;
 
 const StyledPlanListPageContainer = styled.div`
-  padding: 50px 16% 100px;
+  padding: 50px 5% 100px;
+
+  @media (min-width: 600px) {
+    padding: 50px 16% 100px;
+  };
 `;
 
 const StyledPlanListContainer = styled.div`
   margin-top: 80px;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+
+  @media (min-width: 1200px) {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  };
 `;
 
 const StyledPopup = styled(Popup)`

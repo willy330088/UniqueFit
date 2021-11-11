@@ -24,6 +24,10 @@ const StyledArrowRightIcon = styled(AiOutlineRightCircle)`
   bottom: 30px;
   right: 40px;
   display: ${(props) => (props.paging === 1 ? 'block' : 'none')};
+
+  &:hover {
+    color: #1face1;
+  }
 `;
 
 const StyledArrowLeftIcon = styled(AiOutlineLeftCircle)`
@@ -34,6 +38,10 @@ const StyledArrowLeftIcon = styled(AiOutlineLeftCircle)`
   bottom: 30px;
   left: 40px;
   display: ${(props) => (props.paging === 2 ? 'block' : 'none')};
+
+  &:hover {
+    color: #1face1;
+  }
 `;
 
 export default function CreateWorkoutPage({ workout }) {

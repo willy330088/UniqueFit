@@ -60,10 +60,11 @@ const StyledPlanInfoPublisherIcon = styled(HiUserCircle)`
 const StyledCommentToolContainer = styled.div`
   width: 120px;
   height: 80px;
-  background: #969696;
+  background: #d1d1d1;
   position: absolute;
   right: 0;
   top: 30px;
+  border-radius: 3px;
   display: ${(props) => (props.showTool ? 'block' : 'none')};
 `;
 
@@ -74,9 +75,11 @@ const StyledCommentToolBtn = styled.div`
   text-align: center;
   line-height: 40px;
   cursor: pointer;
+  border-radius: 3px;
 
   &:hover {
-    background: #1face1;
+    background: #5cc1e6;
+    color: white;
   }
 `;
 
@@ -84,11 +87,29 @@ const StyledCommentEditInput = styled.textarea`
   height: 50px;
   width: 100%;
   outline: none;
-  font-size: 20px;
+  font-size: 18px;
+  padding: 5px;
 `;
 
 const StyledCommentEditSaveBtn = styled.button`
-  height: 20px;
+  cursor: pointer;
+  color: ${(props) => (props.commentContent === '' ? '#d1d1d1' : '#1c2d9c')};
+  font-size: 15px;
+  height: 25px;
+  width: 60px;
+  border-radius: 5px;
+  border: ${(props) =>
+    props.commentContent === '' ? 'none' : 'solid 3px #1c2d9c'};
+  background-color: ${(props) =>
+    props.commentContent === '' ? '#969696' : 'transparent'};
+  cursor: ${(props) =>
+    props.commentContent === '' ? 'not-allowed' : 'pointer'};
+
+  &:hover {
+    color: ${(props) => (props.commentContent === '' ? '#d1d1d1' : 'white')};
+    background-color: ${(props) =>
+      props.commentContent === '' ? '#969696' : '#1c2d9c'};
+  }
 `;
 
 export default function PlanComment({ comment, planId }) {
@@ -150,7 +171,7 @@ export default function PlanComment({ comment, planId }) {
                 setCommentContent(e.target.value);
               }}
             />
-            <StyledCommentEditSaveBtn onClick={onSaveComment}>
+            <StyledCommentEditSaveBtn onClick={onSaveComment} commentContent={commentContent}>
               Save
             </StyledCommentEditSaveBtn>
           </>

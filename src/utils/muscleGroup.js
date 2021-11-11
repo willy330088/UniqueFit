@@ -15,12 +15,32 @@ const muscleGroupImage = [
     src: Abs
   },
   {
+    name: 'Chest',
+    src: Chest
+  },
+  {
+    name: 'Shoulder',
+    src: Shoulder
+  },
+  {
     name: 'Biceps',
     src: Biceps
   },
   {
-    name: 'Chest',
-    src: Chest
+    name: 'Quadriceps',
+    src: Quadriceps
+  },
+  {
+    name: 'Triceps',
+    src: Triceps
+  },
+  {
+    name: 'Back',
+    src: Back
+  },
+  {
+    name: 'Lowerback',
+    src: Lowerback
   },
   {
     name: 'Glutes',
@@ -30,26 +50,6 @@ const muscleGroupImage = [
     name: 'Hamstrings',
     src: Hamstrings
   },
-  {
-    name: 'Lowerback',
-    src: Lowerback
-  },
-    {
-    name: 'Quadriceps',
-    src: Quadriceps
-  },
-  {
-    name: 'Shoulder',
-    src: Shoulder
-  },
-  {
-    name: 'Triceps',
-    src: Triceps
-  },
-  {
-    name: 'Back',
-    src: Back
-  }
 ]
 
 export default muscleGroupImage

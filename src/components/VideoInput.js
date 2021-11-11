@@ -17,27 +17,54 @@ const StyledCreateLabel = styled.div`
 const StyledUploadArea = styled.div`
   background: #ededed;
   width: 100%;
-  height: 350px;
+  height: 120px;
   margin-bottom: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (min-width: 500px) {
+    height: 350px;
+  } 
 `;
 
 const StyledUploadIcon = styled.img`
-  width: 100px;
-  position: relative;
-  top: 120px;
-  left: calc(50% - 50px);
-  cursor: pointer;
+  width: 70px;
+  transition: ease-in-out 0.3s;
+
+  @media (min-width: 500px) {
+    width: ${(props) => (props.hover ? '200px' : '150px')};
+  }
 `;
 
 const StyledUploadVideo = styled.video`
   width: 100%;
+  border-radius: 10px;
 `;
 
-const StyledChangeVideoBtn = styled.button`
-  font-size: 25px;
-  height: 50px;
-  width: 200px;
-  margin-bottom: 20px;
+const StyledChangeVideoBtnContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const StyledChangeVideoBtn = styled.div`
+  font-size: 20px;
+  height: 30px;
+  width: 150px;
+  cursor: pointer;
+  color: #1c2d9c;
+  border-radius: 5px;
+  background-color: white;
+  text-align: center;
+  line-height: 30px;
+  margin: 10px 0;
+
+  &:hover {
+    color: white;
+    background-color: #1c2d9c;
+  }
 `;
 
 const StyledTypeInput = styled.input`
@@ -60,6 +87,7 @@ export default function VideoInput({
   setVideoFile,
 }) {
   const inputRef = useRef();
+  const [hover, setHover] = useState(false)
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -85,13 +113,15 @@ export default function VideoInput({
       {source ? (
         <>
           <StyledUploadVideo controls src={source} />
-          <StyledChangeVideoBtn onClick={handleChoose}>
-            Change Video
-          </StyledChangeVideoBtn>
+          <StyledChangeVideoBtnContainer>
+            <StyledChangeVideoBtn onClick={handleChoose}>
+              Change Video
+            </StyledChangeVideoBtn>
+          </StyledChangeVideoBtnContainer>
         </>
       ) : (
-        <StyledUploadArea>
-          <StyledUploadIcon src={Upload} onClick={handleChoose} />
+          <StyledUploadArea onClick={handleChoose}>
+            <StyledUploadIcon src={Upload} hover={hover} onMouseOver={() => { setHover(!hover) }} onMouseLeave={() => { setHover(!hover) }}/>
         </StyledUploadArea>
       )}
       <StyledCreateLabel>Type</StyledCreateLabel>

@@ -7,13 +7,38 @@ import firebase from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 
-const StyledCreateWorkoutBtn = styled.button`
-  width: 200px;
-  font-size: 30px;
-  margin-left: calc(50% - 100px);
-  margin-bottom: 100px;
-  margin-top: 50px;
+const StyledCreateWorkoutBtn = styled.div`
+  font-size: 20px;
+  height: 40px;
+  width: 120px;
   cursor: pointer;
+  color: #1c2d9c;
+  border-radius: 5px;
+  background-color: white;
+  text-align: center;
+  line-height: 40px;
+  margin: 10px 0;
+
+  &:hover {
+    color: white;
+    background-color: #1c2d9c;
+  }
+
+  @media (min-width: 500px) {
+    font-size: 35px;
+    height: 50px;
+    width: 200px;
+    line-height: 50px;
+  } 
+`;
+
+const StyledChangeWorkoutBtnContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  @media (min-width: 500px) {
+    margin-top: 50px;
+  } 
 `;
 
 const StyledArrowRightIcon = styled(AiOutlineRightCircle)`
@@ -24,6 +49,10 @@ const StyledArrowRightIcon = styled(AiOutlineRightCircle)`
   bottom: 30px;
   right: 40px;
   display: ${(props) => (props.paging === 1 ? 'block' : 'none')};
+
+  &:hover {
+    color: #1face1;
+  }
 `;
 
 const StyledArrowLeftIcon = styled(AiOutlineLeftCircle)`
@@ -34,9 +63,13 @@ const StyledArrowLeftIcon = styled(AiOutlineLeftCircle)`
   bottom: 30px;
   left: 40px;
   display: ${(props) => (props.paging === 2 ? 'block' : 'none')};
+
+  &:hover {
+    color: #1face1;
+  }
 `;
 
-export default function CreateWorkoutPage() {
+export default function CreateWorkoutPage({close}) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [targetMuscleGroup, setTargetMuscleGroup] = useState('');
@@ -73,6 +106,7 @@ export default function CreateWorkoutPage() {
       })
       .then(() => {
         alert('Created Successfully!');
+        close()
       });
   }
 
@@ -98,9 +132,11 @@ export default function CreateWorkoutPage() {
             source={source}
             setSource={setSource}
           />
-          <StyledCreateWorkoutBtn onClick={createWorkout}>
-            Create
-          </StyledCreateWorkoutBtn>
+          <StyledChangeWorkoutBtnContainer>
+            <StyledCreateWorkoutBtn onClick={createWorkout}>
+              Create
+            </StyledCreateWorkoutBtn>
+          </StyledChangeWorkoutBtnContainer>
         </>
       );
     }

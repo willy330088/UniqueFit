@@ -8,18 +8,19 @@ import WorkoutItem from './WorkoutItem';
 import firebase from '../utils/firebase';
 import 'firebase/firestore';
 import Filter from './Filter';
+import { MdAddCircleOutline } from 'react-icons/md';
 
 const StyledBody = styled.div`
   background: #222d35;
   min-height: 100vh;
 `;
 
-const StyledExerciseContainer = styled.div`
-  @media (min-width: 1380px) {
+const StyledWorkoutContainer = styled.div`
+  @media (min-width: 1400px) {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-  } ;
+  };
 `;
 
 const StyledWorkoutListContainer = styled.div`
@@ -49,12 +50,46 @@ const StyledWorkoutTypeSeparator = styled.div`
   margin-right: 20px;
 `;
 
-const StyledCreateWorkoutBtn = styled.button`
-  width: 200px;
-  height: 50px;
-  margin-left: auto;
-  font-size: 20px;
+const StyledCreateWorkoutContainer = styled.div`
+  width: 100%;
+  background-color: #374652;
+  height: 200px;
+  margin-bottom: 30px;
+  border-radius: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  @media (min-width: 1400px) {
+    max-width: 600px;
+    width: 48%;
+  };
 `;
+
+const StyledCreateWorkoutText = styled.div`
+  color: white;
+  font-size: 30px;
+  text-align: center;
+`;
+
+const StyledCreateWorkoutIcon = styled(MdAddCircleOutline)`
+  color: white;
+  font-size: 40px;
+  margin-right: 15px;
+  display: none;
+
+  @media (min-width: 600px) {
+    display: block;
+  };
+`;
+
 
 const StyledPopup = styled(Popup)`
   &-overlay {
@@ -64,10 +99,21 @@ const StyledPopup = styled(Popup)`
   &-content {
     margin: auto;
     background: #222d35;
-    width: 700px;
-    height: 800px;
-    padding: 50px 100px;
+    width: 350px;
+    height: 600px;
+    padding: 20px 30px;
     position: relative;
+    border-radius: 5px;
+
+    @media (min-width: 500px) {
+      width: 700px;
+      height: 800px;
+      border-radius: 10px;
+    } 
+
+    @media (min-width: 650px) {
+      padding: 50px 100px;
+    } 
   }
 `;
 
@@ -75,6 +121,8 @@ export default function WorkoutListPage() {
   const [workouts, setWorkouts] = useState([]);
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
   const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
 
   useEffect(() => {
     firebase
@@ -114,33 +162,26 @@ export default function WorkoutListPage() {
           >
             Home Workout
           </StyledWorkoutTypeTag>
-          <StyledPopup
-            trigger={
-              <StyledCreateWorkoutBtn>
-                Create Your Workout
-              </StyledCreateWorkoutBtn>
-            }
-            modal
-            nested
-          >
-            <CreateWorkoutPopup />
-          </StyledPopup>
         </StyledBookmark>
         <Filter
           filteredMuscleGroups={filteredMuscleGroups}
           setFilteredMuscleGroups={setFilteredMuscleGroups}
         />
-        <StyledExerciseContainer>
+        <StyledWorkoutContainer>
+          <StyledCreateWorkoutContainer onClick={()=>{setOpen(true)}}>
+            <StyledCreateWorkoutIcon/>
+            <StyledCreateWorkoutText>Click To Create Workout</StyledCreateWorkoutText>
+          </StyledCreateWorkoutContainer>
+          <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
+            <CreateWorkoutPopup close={closeModal}/>
+          </StyledPopup>
           {workouts.map((workout) => {
             if (filteredMuscleGroups.length !== 0) {
               if (filteredMuscleGroups.includes(workout.targetMuscleGroup)) {
                 if (gymWorkoutTypeSelected) {
                   if (workout.type === 'Gymworkout') {
                     return (
-                      <WorkoutItem
-                        workout={workout}
-                        gymWorkoutTypeSelected={gymWorkoutTypeSelected}
-                      />
+                      <WorkoutItem workout={workout} />
                     );
                   }
                 } else {
@@ -148,7 +189,6 @@ export default function WorkoutListPage() {
                     return (
                       <WorkoutItem
                         workout={workout}
-                        gymWorkoutTypeSelected={gymWorkoutTypeSelected}
                       />
                     );
                   }
@@ -160,7 +200,6 @@ export default function WorkoutListPage() {
                   return (
                     <WorkoutItem
                       workout={workout}
-                      gymWorkoutTypeSelected={gymWorkoutTypeSelected}
                     />
                   );
                 }
@@ -169,14 +208,13 @@ export default function WorkoutListPage() {
                   return (
                     <WorkoutItem
                       workout={workout}
-                      gymWorkoutTypeSelected={gymWorkoutTypeSelected}
                     />
                   );
                 }
               }
             }
           })}
-        </StyledExerciseContainer>
+        </StyledWorkoutContainer>
       </StyledWorkoutListContainer>
     </StyledBody>
   );

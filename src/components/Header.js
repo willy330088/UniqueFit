@@ -65,7 +65,7 @@ const StyledMenu = styled.nav`
 
 const StyledMenuLink = styled(NavLink)`
   color: white;
-  font-size: 40px;
+  font-size: 30px;
   text-decoration: none;
   line-height: 70px;
   margin: 0 20px 0 20px;
