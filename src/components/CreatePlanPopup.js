@@ -78,6 +78,7 @@ export default function CreatePlanPage({paging, setPaging}) {
           };
         }),
         collectedBy: [],
+        createdAt: firebase.firestore.Timestamp.now(),
       })
       .then(() => {
         alert('Created Successfully!');

@@ -2,18 +2,45 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import WorkoutDetailsInput from './WorkoutDetailsInput';
 import { AiOutlineRightCircle, AiOutlineLeftCircle } from 'react-icons/ai';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import VideoInput from './VideoInput';
 import firebase from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 
-const StyledCreateWorkoutBtn = styled.button`
-  width: 200px;
-  font-size: 30px;
-  margin-left: calc(50% - 100px);
-  margin-bottom: 100px;
-  margin-top: 50px;
+const StyledCreateWorkoutBtn = styled.div`
+  font-size: 20px;
+  height: 40px;
+  width: 120px;
   cursor: pointer;
+  color: #1c2d9c;
+  border-radius: 5px;
+  background-color: white;
+  text-align: center;
+  line-height: 40px;
+  margin: 10px 0;
+
+  &:hover {
+    color: white;
+    background-color: #1c2d9c;
+  }
+
+  @media (min-width: 500px) {
+    font-size: 35px;
+    height: 50px;
+    width: 200px;
+    line-height: 50px;
+  }
+`;
+
+const StyledChangeWorkoutBtnContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  @media (min-width: 500px) {
+    margin-top: 50px;
+  }
 `;
 
 const StyledArrowRightIcon = styled(AiOutlineRightCircle)`
@@ -44,7 +71,7 @@ const StyledArrowLeftIcon = styled(AiOutlineLeftCircle)`
   }
 `;
 
-export default function CreateWorkoutPage({ workout }) {
+export default function CreateWorkoutPage({ workout, close }) {
   const [title, setTitle] = useState(workout.title);
   const [description, setDescription] = useState(workout.description);
   const [targetMuscleGroup, setTargetMuscleGroup] = useState(
@@ -66,6 +93,24 @@ export default function CreateWorkoutPage({ workout }) {
       contentType: videoFile.type,
     };
 
+    if (title === '') {
+      toast.error('Please fill in title', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000,
+      });
+      return
+    } else if (description === '') {
+      toast.error('Please fill in description', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000,
+      });
+      return
+    }
+
+    const workoutEditing = toast.loading('Editing Workouts...', {
+      position: toast.POSITION.TOP_CENTER,
+    });
+
     if (videoFile === '') {
       documentRef
         .update({
@@ -75,7 +120,14 @@ export default function CreateWorkoutPage({ workout }) {
           type: type,
         })
         .then(() => {
-          alert('Updated Successfully!');
+          toast.update(workoutEditing, {
+            render: 'Edited Successfully',
+            type: 'success',
+            isLoading: false,
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+          })
+          close();
         });
     } else {
       fileRef
@@ -92,7 +144,14 @@ export default function CreateWorkoutPage({ workout }) {
           });
         })
         .then(() => {
-          alert('Updated Successfully!');
+          toast.update(workoutEditing, {
+            render: 'Edited Successfully',
+            type: 'success',
+            isLoading: false,
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+          })
+          close();
         });
     }
   }
@@ -119,9 +178,11 @@ export default function CreateWorkoutPage({ workout }) {
             source={source}
             setSource={setSource}
           />
-          <StyledCreateWorkoutBtn onClick={SaveWorkout}>
-            Save
-          </StyledCreateWorkoutBtn>
+          <StyledChangeWorkoutBtnContainer>
+            <StyledCreateWorkoutBtn onClick={SaveWorkout}>
+              Save
+            </StyledCreateWorkoutBtn>
+          </StyledChangeWorkoutBtnContainer>
         </>
       );
     }

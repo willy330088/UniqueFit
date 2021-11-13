@@ -11,43 +11,51 @@ const StyledCommentWrap = styled.div`
   display: flex;
   align-items: center;
   margin-top: 20px;
-  height: 120px;
+  min-height: 140px;
   position: relative;
+  background-color: #374652;
+  border-radius: 5px;
 `;
 
 const StyledCommentUserImage = styled.img`
-  width: 50px;
+  width: 40px;
   border-radius: 50%;
+  margin-left: 10px;
 `;
 
 const StyledNameCommentWrap = styled.div`
-  margin-left: 20px;
+  margin: 20px 20px 30px 20px;
   width: 100%;
 `;
 
 const StyledCommentUserName = styled.div`
   color: #1face1;
-  font-size: 25px;
+  font-size: 20px;
+  margin-bottom: 10px;
 `;
 
 const StyledCommentUserContext = styled.div`
   color: white;
   font-size: 18px;
   margin-top: 10px;
+  word-wrap: break-word;
+  width: 400px;
 `;
 
 const StyledCommentTimeStamp = styled.div`
   color: #969696;
   position: absolute;
-  right: 0;
+  right: 15px;
+  bottom: 10px;
 `;
 
 const StyledCommentThreeDot = styled(BsThreeDots)`
   color: white;
   position: absolute;
-  right: 0;
+  right: 15px;
   top: 15px;
   font-size: 20px;
+  cursor: pointer;
 `;
 
 const StyledPlanInfoPublisherIcon = styled(HiUserCircle)`
@@ -58,10 +66,11 @@ const StyledPlanInfoPublisherIcon = styled(HiUserCircle)`
 const StyledCommentToolContainer = styled.div`
   width: 120px;
   height: 80px;
-  background: #969696;
+  background: #d1d1d1;
   position: absolute;
-  right: 0;
+  right: 15px;
   top: 30px;
+  border-radius: 3px;
   display: ${(props) => (props.showTool ? 'block' : 'none')};
 `;
 
@@ -72,21 +81,47 @@ const StyledCommentToolBtn = styled.div`
   text-align: center;
   line-height: 40px;
   cursor: pointer;
+  border-radius: 3px;
 
   &:hover {
-    background: #1face1;
+    background: #5cc1e6;
+    color: white;
   }
 `;
 
-const StyledCommentEditInput = styled.textarea`
-  height: 50px;
-  width: 100%;
-  outline: none;
-  font-size: 20px;
+const StyledCommentEditInputContainer = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
-const StyledCommentEditSaveBtn = styled.button`
+const StyledCommentEditInput = styled.textarea`
+  height: 25px;
+  width: 70%;
+  outline: none;
+  font-size: 18px;
+  padding-left: 10px;
+`;
+
+const StyledCommentEditSaveBtn = styled.div`
+  cursor: pointer;
+  color: ${(props) => (props.commentContent === '' ? '#d1d1d1' : 'white')};
+  font-size: 15px;
   height: 20px;
+  width: 50px;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 20px;
+  margin-left: 10px;
+  background-color: ${(props) =>
+    props.commentContent === '' ? '#969696' : '#1c2d9c'};
+  cursor: ${(props) =>
+    props.commentContent === '' ? 'not-allowed' : 'pointer'};
+
+  &:hover {
+    color: ${(props) => (props.commentContent === '' ? '#d1d1d1' : 'white')};
+    background-color: ${(props) =>
+      props.commentContent === '' ? '#969696' : '#5160c4'};
+  }
 `;
 
 export default function WorkoutComment({ comment, workoutId}) {
@@ -140,7 +175,7 @@ export default function WorkoutComment({ comment, workoutId}) {
           {comment.publisher.displayName}
         </StyledCommentUserName>
         {isEditing ? (
-          <>
+          <StyledCommentEditInputContainer>
             {' '}
             <StyledCommentEditInput
               value={commentContent}
@@ -148,10 +183,10 @@ export default function WorkoutComment({ comment, workoutId}) {
                 setCommentContent(e.target.value);
               }}
             />
-            <StyledCommentEditSaveBtn onClick={onSaveComment}>
+            <StyledCommentEditSaveBtn onClick={onSaveComment} commentContent={commentContent}>
               Save
             </StyledCommentEditSaveBtn>
-          </>
+          </StyledCommentEditInputContainer>
         ) : (
           <StyledCommentUserContext>{comment.content}</StyledCommentUserContext>
         )}

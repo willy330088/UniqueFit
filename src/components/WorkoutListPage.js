@@ -106,13 +106,13 @@ const StyledPopup = styled(Popup)`
     border-radius: 5px;
 
     @media (min-width: 500px) {
-      width: 700px;
-      height: 800px;
+      width: 650px;
+      height: 700px;
       border-radius: 10px;
     } 
 
     @media (min-width: 650px) {
-      padding: 50px 100px;
+      padding: 30px 70px;
     } 
   }
 `;
@@ -128,6 +128,7 @@ export default function WorkoutListPage() {
     firebase
       .firestore()
       .collection('workouts')
+      .orderBy('createdAt', 'desc')
       .onSnapshot((collectionSnapshot) => {
         const data = collectionSnapshot.docs.map((docSnapshot) => {
           const id = docSnapshot.id;

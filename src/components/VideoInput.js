@@ -26,7 +26,10 @@ const StyledUploadArea = styled.div`
   align-items: center;
 
   @media (min-width: 500px) {
-    height: 350px;
+    width: 80%;
+    height: 250px;
+    margin: auto;
+    margin-bottom: 20px;
   } 
 `;
 
@@ -42,6 +45,18 @@ const StyledUploadIcon = styled.img`
 const StyledUploadVideo = styled.video`
   width: 100%;
   border-radius: 10px;
+
+  @media (min-width: 500px) {
+    width: 80%;
+    height: 250px;
+    margin: auto;
+  } 
+`;
+
+
+const StyledUploadVideoContainer = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 const StyledChangeVideoBtnContainer = styled.div`
@@ -112,7 +127,9 @@ export default function VideoInput({
       />
       {source ? (
         <>
-          <StyledUploadVideo controls src={source} />
+          <StyledUploadVideoContainer>
+            <StyledUploadVideo controls src={source} />
+          </StyledUploadVideoContainer>
           <StyledChangeVideoBtnContainer>
             <StyledChangeVideoBtn onClick={handleChoose}>
               Change Video

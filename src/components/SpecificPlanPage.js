@@ -471,7 +471,7 @@ export default function SpecificPlanPage() {
               </StyledLeaveCommentBtn>
             </StyledLeaveCommentBtnContainer>
             {comments.map((comment) => {
-              return <PlanComment comment={comment} planId={planId} />;
+              return <PlanComment comment={comment} planId={planId} key={comment.id}/>;
             })}
           </StyledCommentContainer>
         </StyledPlanContainer>

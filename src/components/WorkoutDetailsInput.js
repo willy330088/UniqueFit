@@ -43,8 +43,8 @@ const StyledInput = styled.input`
   margin-bottom: 20px;
 
   @media (min-width: 500px) {
-    margin-bottom: 50px;
-    height: 50px;
+    margin-bottom: 30px;
+    height: 40px;
     font-size: 25px;
   } 
 `;
@@ -57,7 +57,7 @@ const StyledTargetMuscleGroups = styled.div`
   margin-bottom: 20px;
 
   @media (min-width: 500px) {
-    margin-bottom: 50px;
+    margin-bottom: 20px;
   } 
 `;
 
@@ -123,7 +123,7 @@ const StyledDescriptionInput = styled.textarea`
   border-radius: 5px;
 
   @media (min-width: 650px) {
-    height: 150px;
+    height: 130px;
   } 
 `;
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import ProfileWorkout from './ProfileWorkout';
 import { BsFillPencilFill } from 'react-icons/bs';
@@ -46,14 +46,27 @@ const StyledPopup = styled(Popup)`
   &-content {
     margin: auto;
     background: #222d35;
-    width: 700px;
-    height: 800px;
-    padding: 50px 100px;
+    width: 350px;
+    height: 600px;
+    padding: 20px 30px;
     position: relative;
+    border-radius: 5px;
+
+    @media (min-width: 500px) {
+      width: 650px;
+      height: 700px;
+      border-radius: 10px;
+    } 
+
+    @media (min-width: 650px) {
+      padding: 30px 70px;
+    } 
   }
 `;
 
 export default function WorkoutCreation({ workout }) {
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
   function deleteWorkout() {
     firebase
       .firestore()
@@ -99,8 +112,9 @@ export default function WorkoutCreation({ workout }) {
   return (
     <StyledWorkoutCreationContainer>
       <ProfileWorkout workout={workout} />
-      <StyledPopup trigger={<StyledPencilIcon />} modal nested>
-        <EditWorkoutPopup workout={workout} />
+      <StyledPencilIcon onClick={()=>{setOpen(true)}}/>
+      <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
+        <EditWorkoutPopup workout={workout} close={closeModal}/>
       </StyledPopup>
       <StyledRemoveIcon onClick={deleteWorkout} />
     </StyledWorkoutCreationContainer>

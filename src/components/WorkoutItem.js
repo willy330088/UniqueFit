@@ -35,6 +35,7 @@ const StyledWorkoutItemContainer = styled.div`
   &:hover {
     &::before {
       background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(2px);
     }
   }
 
