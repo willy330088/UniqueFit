@@ -110,7 +110,7 @@ const StyledCheckedIcon = styled(GiCheckMark)`
   font-size: 30px;
   right: calc(50% - 15px);
   top: calc(50% - 15px);
-  display: ${(props) => props.selected ? 'block' : 'none'};;
+  display: ${(props) => props.selected ? 'block' : 'none'};
 `
 
 const StyledDescriptionInput = styled.textarea`

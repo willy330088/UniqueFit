@@ -4,20 +4,21 @@ import styled from 'styled-components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import RemoveIcon from '../images/remove.png';
 import { GoListUnordered } from 'react-icons/go';
+import { FaTrashAlt } from 'react-icons/fa';
 import firebase from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/auth';
 import muscleGroups from '../utils/muscleGroup';
 
 const Content = styled.div`
-  width: 550px
+  width: 550px;
+  overflow-y: scroll;
 `;
 
 const StyledDnDContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  overflow-y: scroll;
-  height: 550px;
+  height: 480px;
 `;
 
 const Item = styled.div`
@@ -31,7 +32,8 @@ const Item = styled.div`
   line-height: 1.5;
   border-radius: 3px;
   background: #fff;
-  border: 1px ${(props) => (props.isDragging ? 'dashed #000' : 'solid #ddd')};
+  /* border: 1px ${(props) => (props.isDragging ? 'dashed #000' : 'solid #ddd')}; */
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 `;
 
 const Clone = styled(Item)`
@@ -55,8 +57,8 @@ const Handle = styled.div`
 `;
 
 const List = styled.div`
-  border: 1px
-    ${(props) => (props.isDraggingOver ? 'dashed #000' : 'solid #ddd')};
+  border: 1px solid #ddd;
+    /* ${(props) => (props.isDraggingOver ? 'dashed #000' : 'solid #ddd')}; */
   background: #fff;
   padding: 0.5rem 0.5rem 0;
   border-radius: 3px;
@@ -68,7 +70,7 @@ const Kiosk = styled(List)`
   overflow-y: scroll;
   background: #ddd;
   border: none;
-  border-radius: 0;
+  border-radius: 5px;
 `;
 
 const Container = styled(List)`
@@ -83,14 +85,19 @@ const Notice = styled.div`
   justify-content: center;
   padding: 0.5rem;
   margin: 0 0.5rem 0.5rem;
+  font-size: 20px;
   border: 1px solid transparent;
   line-height: 1.5;
   color: #aaa;
 `;
 
-const StyledRemoveIcon = styled.img`
-  width: 50px;
+const StyledRemoveIcon = styled(FaTrashAlt)`
+  font-size: 20px;
   cursor: pointer;
+  color: #808080;
+  &:hover{
+    font-size: 22px;
+  }
 `;
 
 const StyledExerciseTitle = styled.div`
@@ -176,8 +183,8 @@ const copy = (source, destination, droppableSource, droppableDestination) => {
     targetMuscleGroup: item.targetMuscleGroup,
     id: uuid(),
     workoutId: item.id,
-    weight: 0,
-    reps: 0,
+    weight: undefined,
+    reps: undefined,
   });
   return destClone;
 };
@@ -333,7 +340,6 @@ function DragAndDrop({ plan, setPlan }) {
                               <StyledWeightLabel>reps</StyledWeightLabel>
                             </StyledWeightSet>
                             <StyledRemoveIcon
-                              src={RemoveIcon}
                               onClick={() => {
                                 setPlan({
                                   workoutSet: plan.workoutSet.filter((single) => {

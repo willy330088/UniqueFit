@@ -16,7 +16,7 @@ const StyledToastContainer = styled(ToastContainer).attrs({
   progressClassName: 'progress',
 })`
   /* .toast-container */
-  width: 300px;
+  width: 375px;
 
   /* .toast is passed to toastClassName */
   .toast {
@@ -29,7 +29,7 @@ const StyledToastContainer = styled(ToastContainer).attrs({
   /* .body is passed to bodyClassName */
   .body {
     color: white;
-    font-size: 20px;
+    font-size: 18px;
   }
 
   /* .progress is passed to progressClassName */

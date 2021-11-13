@@ -39,7 +39,15 @@ const StyledCommentUserContext = styled.div`
   font-size: 18px;
   margin-top: 10px;
   word-wrap: break-word;
-  width: 400px;
+  width: 100px;
+
+  @media (min-width: 500px) {
+    width: 250px;
+  }
+
+  @media (min-width: 700px) {
+    width: 400px;
+  } ;
 `;
 
 const StyledCommentTimeStamp = styled.div`

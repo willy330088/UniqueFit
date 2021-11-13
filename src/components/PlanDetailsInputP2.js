@@ -8,23 +8,34 @@ const StyledPlanDetails = styled.div`
 
 const StyledCreateLabel = styled.div`
   color: #1face1;
-  font-size: 30px;
+  font-size: 20px;
   padding-bottom: 10px;
+  width: 100%;
   border-bottom: 3px solid #1face1;
   margin-bottom: 20px;
+
+  @media (min-width: 500px) {
+    font-size: 30px;
+  } 
 `;
 
 const StyledDescriptionInput = styled.textarea`
   width: 100%;
-  height: 150px;
-  font-size: 20px;
+  height: 100px;
+  font-size: 22px;
   outline: none;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
+  padding: 20px 20px;
+  border-radius: 5px;
+
+  @media (min-width: 650px) {
+    height: 130px;
+  } 
 `;
 
 const StyledToggle = styled.button`
-  width: 80px;
-  height: 40px;
+  width: 60px;
+  height: 30px;
   position: relative;
   cursor: pointer;
   border-radius: 25px;
@@ -32,20 +43,35 @@ const StyledToggle = styled.button`
   background-color: ${(props) => (props.public ? '#1face1' : '#353b48')};
   border: 3px solid white;
 
+  @media (min-width: 500px) {
+    width: 80px;
+    height: 40px;
+  }
+
   &::after {
     content: '';
     position: absolute;
     top: 0px;
-    right: 5px;
+    right: -5px;
     will-change: transform;
-    transform: translate(${(props) => (props.public ? 5.5 : -35)}px);
+    transform: translate(${(props) => (props.public ? -5 : -35)}px);
     transition: transform 0.2s ease-out;
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     background: white;
     border: 2px solid #7f8fa6;
     outline: none;
     border-radius: 50%;
+
+    @media (min-width: 500px) {
+      top: 0px;
+      right: 5px;
+      will-change: transform;
+      transform: translate(${(props) => (props.public ? 5.5 : -35)}px);
+      transition: transform 0.2s ease-out;
+      width: 30px;
+      height: 30px;
+    }
   }
 `;
 
@@ -57,14 +83,21 @@ const StyledToggleSet = styled.div`
 
 const StyledPublicOnIcon = styled(MdPublic)`
   color: white;
-  font-size: 40px;
+  font-size: 30px;
   margin-right: 20px;
+
+  @media (min-width: 500px) {
+    font-size: 40px;
+  }
 `;
 
 const StyledPublicOffIcon = styled(MdPublicOff)`
   color: white;
-  font-size: 40px;
+  font-size: 30px;
   margin-right: 20px;
+  @media (min-width: 500px) {
+    font-size: 40px;
+  }
 `;
 
 export default function PlanDetailsInput({

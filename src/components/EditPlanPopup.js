@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { AiOutlineRightCircle, AiOutlineLeftCircle } from 'react-icons/ai';
 import PlanDetailsInputP1 from './PlanDetailsInputP1';
 import PlanDetailsInputP2 from './PlanDetailsInputP2';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import firebase from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
@@ -29,12 +31,38 @@ const StyledArrowLeftIcon = styled(AiOutlineLeftCircle)`
   display: ${(props) => (props.paging === 1 ? 'none' : 'block')};
 `;
 
-const StyledCreateWorkoutBtn = styled.button`
-  width: 200px;
-  font-size: 30px;
-  margin-left: calc(50% - 100px);
-  margin-top: 30px;
+const StyledCreateWorkoutBtn = styled.div`
+  font-size: 20px;
+  height: 40px;
+  width: 120px;
   cursor: pointer;
+  color: #1c2d9c;
+  border-radius: 5px;
+  background-color: white;
+  text-align: center;
+  line-height: 40px;
+  margin: 10px 0;
+
+  &:hover {
+    color: white;
+    background-color: #1c2d9c;
+  }
+
+  @media (min-width: 500px) {
+    font-size: 35px;
+    height: 50px;
+    width: 200px;
+    line-height: 50px;
+  }
+`;
+
+const StyledChangeWorkoutBtnContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  @media (min-width: 500px) {
+    margin-top: 25px;
+  }
 `;
 
 const StyledCreateLabel = styled.div`
@@ -85,25 +113,78 @@ export default function CreatePlanPage({ paging, setPaging, originalPlan }) {
 
   function savePlan() {
     const documentRef = firebase.firestore().collection('plans').doc(originalPlan.id);
-    documentRef
-      .update({
-        title: title,
-        public: publicity,
-        description: description,
-        targetMuscleGroup: targetMuscleGroup,
-        estimatedTrainingTime: estimatedTrainingTime,
-        workoutSet: plan.workoutSet.map((item) => {
-          return {
-            workoutId: item.workoutId,
-            reps: item.reps,
-            weight: item.weight,
-            title: item.title,
-          };
-        }),
-      })
-      .then(() => {
-        alert('Saved Successfully!');
+    let checked = false
+
+    if (title === '') {
+      toast.error('Please fill in title', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000,
       });
+      return
+    } else if (!estimatedTrainingTime) {
+      toast.error('Please fill in estimated training time', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000,
+      });
+      return
+    } else if (description === '') {
+      toast.error('Please fill in description', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000,
+      });
+      return
+    } else if (plan.workoutSet.length === 0) {
+      toast.error('Please add workouts', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000,
+      });
+      return
+    }
+
+    plan.workoutSet.every((workout) => {
+      checked = false;
+      if (!workout.reps || !workout.weight) {
+        toast.error(`Please fill in weights and reps`, {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
+        return false
+      }
+      checked = true;
+      return true
+    })
+
+    if (checked) {
+      const planEditing = toast.loading('Editing Plan...', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+
+      documentRef
+        .update({
+          title: title,
+          public: publicity,
+          description: description,
+          targetMuscleGroup: targetMuscleGroup,
+          estimatedTrainingTime: estimatedTrainingTime,
+          workoutSet: plan.workoutSet.map((item) => {
+            return {
+              workoutId: item.workoutId,
+              reps: item.reps,
+              weight: item.weight,
+              title: item.title,
+            };
+          }),
+        })
+        .then(() => {
+          toast.update(planEditing, {
+            render: 'Edited Successfully',
+            type: 'success',
+            isLoading: false,
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+          });
+        });
+    }
   }
 
   function showMainContent() {
@@ -132,9 +213,11 @@ export default function CreatePlanPage({ paging, setPaging, originalPlan }) {
         <>
           <StyledCreateLabel>Order Your Workouts</StyledCreateLabel>
           <DragandDrop plan={plan} setPlan={setPlan} />
-          <StyledCreateWorkoutBtn onClick={savePlan}>
-            Save
-          </StyledCreateWorkoutBtn>
+          <StyledChangeWorkoutBtnContainer>
+            <StyledCreateWorkoutBtn onClick={savePlan}>
+              Save
+            </StyledCreateWorkoutBtn>
+          </StyledChangeWorkoutBtnContainer>
         </>
       );
     }

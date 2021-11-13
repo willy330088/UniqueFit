@@ -140,9 +140,19 @@ const StyledPopup = styled(Popup)`
   &-content {
     margin: auto;
     background: #222d35;
-    width: 700px;
-    height: 550px;
+    width: 350px;
+    height: 300px;
     overflow-y: scroll;
+
+    @media (min-width: 500px) {
+      width: 500px;
+      height: 400px;  
+    };
+
+    @media (min-width: 700px) {
+      width: 700px;
+      height: 550px;
+    };
   }
 `;
 

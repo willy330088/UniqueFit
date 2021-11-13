@@ -162,7 +162,7 @@ const StyledPlanWorkouts = styled.div`
 const StyledPlanWorkoutsContainer = styled.div``;
 
 const StyledPlanCollectIcon = styled(BsBookmarkFill)`
-  color: ${(props) => (props.isCollected ? '#1face1' : '#222d35')};
+  color: ${(props) => (props.isCollected ? '#1face1' : '#808080')};
   font-size: 50px;
   position: absolute;
   top: 40px;

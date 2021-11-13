@@ -13,86 +13,203 @@ import Logo from '../images/logo.png';
 
 const StyledVideo = styled.video`
   position: fixed;
-  width: 700px;
-  height: 400px;
+  width: 350px;
+  height: 200px;
   object-fit: cover;
+
+  @media (min-width: 500px) {
+    width: 500px;
+    height: 300px;
+  }
+
+  @media (min-width: 700px) {
+    width: 700px;
+    height: 400px;
+  } ;
 `;
+//
 
 const StyledTitleContainer = styled.div`
   display: flex;
   align-items: center;
-  margin: 0px 0 35px 0px;
+  margin: 0px 0 25px 0px;
   padding-top: 20px;
+
+  @media (min-width: 500px) {
+    margin: 0px 0 20px 0px;
+    padding-top: 20px;
+  }
+
+  @media (min-width: 700px) {
+    margin: 0px 0 35px 0px;
+    padding-top: 20px;
+  } ;
 `;
 
 const StyledMuscleIcon = styled.img`
-  width: 100px;
+  width: 55px;
   margin-right: 30px;
+
+  @media (min-width: 500px) {
+    width: 60px;
+    margin-right: 20px;
+  }
+
+  @media (min-width: 700px) {
+    width: 100px;
+    margin-right: 30px;
+  } ;
 `;
+//
 
 const StyledTitle = styled.div`
   color: #1face1;
-  font-size: 60px;
+  font-size: 30px;
+
+  @media (min-width: 500px) {
+    font-size: 40px;
+  }
+
+  @media (min-width: 700px) {
+    font-size: 60px;
+  } ;
 `;
+//
 
 const StyledDetails = styled.div`
   background: #222d35;
-  height: 550px;
+  height: 300px;
   position: relative;
-  top: 400px;
+  top: 200px;
   padding: 0 5% 5%;
+
+  @media (min-width: 500px) {
+    height: 400px;
+    top: 300px;
+  }
+
+  @media (min-width: 700px) {
+    height: 550px;
+    top: 400px;
+  } ;
 `;
 
 const StyledPulisherContainer = styled.div`
   display: flex;
   align-items: center;
   color: white;
-  font-size: 30px;
+  font-size: 18px;
   margin: 0 0 20px 0px;
+
+  @media (min-width: 500px) {
+    font-size: 20px;
+  }
+
+  @media (min-width: 700px) {
+    font-size: 30px;
+  } ;
 `;
 
 const StyledTextContent = styled.div`
   color: white;
-  font-size: 30px;
+  font-size: 18px;
   margin: 0 0 20px 0px;
+
+  @media (min-width: 500px) {
+    font-size: 20px;
+  }
+
+  @media (min-width: 700px) {
+    font-size: 30px;
+  } ;
 `;
 
 const StyledPublisherIcon = styled(HiUserCircle)`
-  font-size: 50px;
+  font-size: 25px;
   margin-right: 10px;
+  @media (min-width: 500px) {
+    width: 30px;
+  }
+
+  @media (min-width: 700px) {
+    width: 50px;
+  } ;
 `;
 
 const StyledPublisherImage = styled.img`
   border-radius: 50%;
-  width: 50px;
+  width: 25px;
   margin-right: 10px;
+  @media (min-width: 500px) {
+    width: 30px;
+  }
+
+  @media (min-width: 700px) {
+    width: 50px;
+  } ;
 `;
 
 const StyledCollectionContainer = styled.div`
   display: flex;
   align-items: baseline;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+
+  @media (min-width: 500px) {
+    margin-bottom: 10px;
+  }
+
+  @media (min-width: 700px) {
+    margin-bottom: 20px;
+  } ;
 `;
 
 const StyledCollectIcon = styled(BsFillBookmarkHeartFill)`
   color: white;
-  font-size: 30px;
+  font-size: 20px;
+
+  @media (min-width: 500px) {
+    font-size: 25px;
+  }
+
+  @media (min-width: 700px) {
+    font-size: 30px;
+  } ;
 `;
 
 const StyledCollectionNum = styled.div`
   color: white;
-  font-size: 45px;
+  font-size: 30px;
   margin-left: 10px;
+
+  @media (min-width: 500px) {
+    font-size: 35px;
+  }
+
+  @media (min-width: 700px) {
+    font-size: 45px;
+  } ;
 `;
 
 const StyledAddToCollectIcon = styled(BsBookmarkFill)`
-  font-size: 50px;
+  font-size: 30px;
   color: ${(props) => (props.isCollected ? '#1face1' : 'white')};
   position: absolute;
-  right: 30px;
-  bottom: 50px;
+  right: 15px;
+  bottom: 40px;
   z-index: 20;
   cursor: pointer;
+
+  @media (min-width: 500px) {
+    font-size: 40px;
+    right: 30px;
+    bottom: 30px;
+  }
+
+  @media (min-width: 700px) {
+    font-size: 50px;
+    right: 30px;
+    bottom: 50px;
+  } ;
 `;
 
 const StyledCommentContainer = styled.div`
@@ -103,26 +220,55 @@ const StyledCommentContainer = styled.div`
 const StyledCommentTitleContainer = styled.div`
   display: flex;
   align-items: baseline;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  @media (min-width: 500px) {
+    margin-bottom: 10px;
+  }
+
+  @media (min-width: 700px) {
+    margin-bottom: 20px;
+  } ;
 `;
 
 const StyledCommentIcon = styled(RiMessage2Fill)`
   color: white;
-  font-size: 23px;
+  font-size: 18px;
+  @media (min-width: 500px) {
+    font-size: 20px;
+  }
+
+  @media (min-width: 700px) {
+    font-size: 23px;
+  } ;
 `;
 
 const StyledCommentTitleText = styled.div`
   color: white;
-  font-size: 30px;
+  font-size: 23px;
   margin-left: 10px;
+  @media (min-width: 500px) {
+    font-size: 25px;
+  }
+
+  @media (min-width: 700px) {
+    font-size: 30px;
+  } ;
 `;
 
 const StyledCommentInput = styled.textarea`
-  height: 70px;
+  height: 40px;
   font-size: 20px;
   outline: none;
   width: 100%;
   padding: 10px;
+
+  @media (min-width: 500px) {
+    height: 50px;
+  }
+
+  @media (min-width: 700px) {
+    height: 70px;
+  } ;
 `;
 
 const StyledCommentInputContainer = styled.div`
@@ -138,8 +284,16 @@ const StyledLeaveCommentBtnContainer = styled.div`
 
 const StyledContentContainer = styled.div`
   overflow-y: scroll;
-  height: 330px;
+  height: 180px;
   padding: 0 50px;
+
+  @media (min-width: 500px) {
+    height: 250px;
+  }
+
+  @media (min-width: 700px) {
+    height: 330px;
+  } ;
 `;
 
 const StyledLeaveCommentBtn = styled.div`
@@ -173,11 +327,11 @@ const StyledScrollDown = styled.span`
   border-left: 1px solid #fff;
   border-bottom: 1px solid #fff;
   transform: rotate(-45deg);
-  animation: sdb05 3s infinite;
+  animation: down 3s infinite;
   box-sizing: border-box;
   display: ${(props) => (props.scrollDown ? 'block' : 'none')};
 
-  @keyframes sdb05 {
+  @keyframes down {
     0% {
       transform: rotate(-45deg) translate(0, 0);
       opacity: 0;
@@ -190,6 +344,20 @@ const StyledScrollDown = styled.span`
       opacity: 0;
     }
   }
+
+  @media (min-width: 500px) {
+    top: 50px;
+    width: 16px;
+    height: 16px;
+    margin-left: -8px;
+  }
+
+  @media (min-width: 700px) {
+    top: 90px;
+    width: 24px;
+    height: 24px;
+    margin-left: -12px;
+  } ;
 `;
 
 const StyledOverlay = styled.div`
@@ -205,7 +373,6 @@ const StyledOverlay = styled.div`
 
 const StyledLogo = styled.img`
   width: 50%;
-
 `;
 
 export default function WorkoutPopup({ workout }) {
@@ -368,15 +535,19 @@ export default function WorkoutPopup({ workout }) {
               </StyledLeaveCommentBtnContainer>
               {comments.map((comment) => {
                 return (
-                  <WorkoutComment comment={comment} workoutId={workout.id} key={comment.id}/>
+                  <WorkoutComment
+                    comment={comment}
+                    workoutId={workout.id}
+                    key={comment.id}
+                  />
                 );
               })}
             </StyledCommentContainer>
           </StyledContentContainer>
         </StyledDetails>
       ) : (
-          <StyledOverlay>
-            <StyledLogo src={Logo}/>
+        <StyledOverlay>
+          <StyledLogo src={Logo} />
         </StyledOverlay>
       )}
     </>
