@@ -479,6 +479,9 @@ export default function SpecificPlanPage() {
       {/* <StopWatch /> */}
     </StyledBody>
   ) : (
-    <div>loading</div>
+    <StyledBody>
+      <Header />
+      <Banner slogan={'Explore Your Plan'} />
+    </StyledBody>
   );
 }

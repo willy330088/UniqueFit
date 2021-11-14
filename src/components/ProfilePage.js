@@ -175,8 +175,8 @@ export default function CreateWorkoutPage() {
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
-      setCurrentUser(user)
-    })
+      setCurrentUser(user);
+    });
   }, []);
 
   useEffect(() => {
@@ -206,23 +206,13 @@ export default function CreateWorkoutPage() {
             if (gymWorkoutTypeSelected) {
               if (workout.type === 'Gymworkout') {
                 if (workout.publisher.uid === firebase.auth().currentUser.uid) {
-                  return (
-                    <WorkoutCreation
-                      workout={workout}
-                      setMainContent={setMainContent}
-                    />
-                  );
+                  return <WorkoutCreation workout={workout} />;
                 }
               }
             } else {
               if (workout.type === 'Homeworkout') {
                 if (workout.publisher.uid === firebase.auth().currentUser.uid) {
-                  return (
-                    <WorkoutCreation
-                      workout={workout}
-                      setMainContent={setMainContent}
-                    />
-                  );
+                  return <WorkoutCreation workout={workout} />;
                 }
               }
             }
@@ -258,9 +248,7 @@ export default function CreateWorkoutPage() {
         <>
           {plans.map((plan) => {
             if (plan.publisher.uid === firebase.auth().currentUser.uid) {
-              return (
-                <PlanCreation plan={plan}/>
-              );
+              return <PlanCreation plan={plan} />;
             }
           })}
         </>
@@ -270,9 +258,7 @@ export default function CreateWorkoutPage() {
         <>
           {plans.map((plan) => {
             if (plan.collectedBy.includes(firebase.auth().currentUser.uid)) {
-              return (
-                <PlanCollection plan={plan}/>
-              );
+              return <PlanCollection plan={plan} />;
             }
           })}
         </>
@@ -306,9 +292,7 @@ export default function CreateWorkoutPage() {
                 <StyledPopupBtn>Save</StyledPopupBtn>
               </StyledPopup>
             </StyledPersonalName>
-            <StyledPersonalEmail>
-              {currentUser.email}
-            </StyledPersonalEmail>
+            <StyledPersonalEmail>{currentUser.email}</StyledPersonalEmail>
           </StyledPersonalInfo>
         </StyledPersonalInfoContainer>
         <StyledSideBar>
@@ -348,5 +332,10 @@ export default function CreateWorkoutPage() {
         </StyledProfileContentContainer>
       </StyledProfilePageContainer>
     </StyledBody>
-  ) : <div>loading</div>;
+  ) : (
+    <StyledBody>
+      <Header />
+      <Banner slogan={'My Profile'} />
+    </StyledBody>
+  );
 }

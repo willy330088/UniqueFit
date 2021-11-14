@@ -21,6 +21,7 @@ const StyledPencilIcon = styled(BsFillPencilFill)`
   margin-left: 10px;
   color: #7d7d7d;
   cursor: pointer;
+  margin-left: auto;
 
   &:hover {
     color: white;

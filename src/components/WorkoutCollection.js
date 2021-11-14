@@ -18,6 +18,7 @@ const StyledCollectIcon = styled(BsBookmarkFill)`
   margin-left: 40px;
   color: #1face1;
   cursor: pointer;
+  margin-left: auto;
 
   &:hover {
     color: white;
