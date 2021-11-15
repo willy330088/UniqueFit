@@ -118,7 +118,7 @@ const StyledConfirmYesBtn = styled.div`
   font-size: 30px;
   text-align: center;
   line-height: 60px;
-  background-color: hsla(129, 40%, 50%);
+  background-color: hsla(129, 40%, 35%);
   cursor: pointer;
   &:hover {
     background-color: hsla(129, 40%, 40%);
@@ -132,11 +132,11 @@ const StyledConfirmNoBtn = styled.div`
   font-size: 30px;
   text-align: center;
   line-height: 60px;
-  background-color: hsla(10, 100%, 50%);
+  background-color: hsla(148, 0%, 35%);
   cursor: pointer;
 
   &:hover {
-    background-color: hsla(10, 100%, 40%);
+    background-color: hsla(148, 0%, 40%);
   }
 `;
 

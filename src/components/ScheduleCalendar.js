@@ -25,7 +25,7 @@ const StyledAddTrainingContainer = styled.div`
   left: 250px;
   display: flex;
   align-items: center;
-  transition: ease-in-out 0.3s;
+  transition: ease-in-out 0.1s;
   cursor: pointer;
 `;
 
@@ -36,12 +36,14 @@ const StyledAddTrainingIcon = styled.div`
   background-image: ${(props) =>props.calendarHover ? `url(${CalendarHover})` : `url(${Calendar})`};
   background-repeat: no-repeat;
   background-size: contain;
+  transition: ease-in-out 0.1s;
 `;
 
 const StyledAddTrainingText = styled.div`
   margin-left: 10px;
   font-size: ${(props) =>props.calendarHover ? '27px' : '25px'};
   color: ${(props) => (props.calendarHover ? '#1face1' : 'black')};
+  transition: ease-in-out 0.3s;
 `;
 
 const StyledPopup = styled(Popup)`

@@ -28,6 +28,7 @@ const StyledLandingPageContainer = styled.div`
 
   @media (min-width: 950px) {
     background-position-x: center;
+    background-position-y: center;
   }
 `;
 
@@ -309,7 +310,7 @@ export default function LandingPage() {
 
   const handleOnClick = async (provider) => {
     const res = await socialMediaAuth(provider);
-    history.push('/workouts')
+    history.push('/home')
     console.log(res);
   };
 
@@ -328,7 +329,7 @@ export default function LandingPage() {
           })
         })
         .then(() => {
-          history.push('/workouts');
+          history.push('/home');
         })
         .catch((error) => {
           switch (error.code) {
@@ -349,7 +350,7 @@ export default function LandingPage() {
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-          history.push('/workouts');
+          history.push('/home');
         })
         .catch((error) => {
           switch (error.code) {

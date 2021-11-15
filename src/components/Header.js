@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { NavLink, useHistory } from 'react-router-dom';
 import Logo from '../images/logo.png';
@@ -12,7 +12,8 @@ const StyledHeader = styled.div`
   width: 100%;
   height: 80px;
   padding: 0 20px;
-  background-color: #222d35;
+  background-color: ${(props) => (props.headerColor ? 'hsla(205, 22%, 25%)' : 'hsla(205, 22%, 17%)')};
+  opacity: ${(props) => (props.headerColor ? '0.9' : '1')};
   align-items: center;
   justify-content: center;
   @media (min-width: 700px) {
@@ -84,6 +85,21 @@ const StyledMenuLink = styled(NavLink)`
 `;
 
 export default function Header() {
+  const [headerColor, setHeaderColor] = useState('false')
+  const changeBackground = () => {
+    if (window.scrollY >= 300) {
+      setHeaderColor(true);
+    } else {
+      setHeaderColor(false);
+    }
+  };
+
+  useEffect(() => {
+    changeBackground();
+    // adding the event when scroll change background
+    window.addEventListener("scroll", changeBackground);
+  });
+
   const history = useHistory();
   const activeStyle = {
     color: '#1face1',
@@ -94,7 +110,7 @@ export default function Header() {
 
   const [open, setOpen] = useState(false);
   return (
-    <StyledHeader>
+    <StyledHeader headerColor={headerColor}>
       <Burger open={open} setOpen={setOpen}/>
       <StyledMenu  open={open}>
         <StyledMenuLink to="/workouts" activeStyle={activeMenuStyle}>
@@ -108,7 +124,7 @@ export default function Header() {
         </StyledMenuLink>
       </StyledMenu>
       <StyledLogo src={Logo} onClick={() => {
-        history.push('/workouts')
+        history.push('/home')
       }}/>
       <StyledNavBar>
         <StyledLink to="/workouts" activeStyle={activeStyle}>

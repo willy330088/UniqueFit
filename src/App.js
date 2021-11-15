@@ -9,6 +9,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import ScrollToTop from './components/ScrollToTop';
+import HomePage from './components/HomePage';
 
 const StyledToastContainer = styled(ToastContainer).attrs({
   className: 'toast-container',
@@ -46,8 +47,11 @@ function App() {
       <Router>
         <ScrollToTop/>
         <Switch>
-          <Route exact path="/" exact>
+          <Route exact path="/" >
             <LandingPage />
+          </Route>
+          <Route exact path="/home" >
+            <HomePage />
           </Route>
           <Route path="/workouts" exact>
             <WorkoutListPage />

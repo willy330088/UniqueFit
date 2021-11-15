@@ -212,7 +212,7 @@ export default function CreateWorkoutPage() {
               if (workout.type === 'Gymworkout') {
                 if (workout.publisher.uid === firebase.auth().currentUser.uid) {
                   return <WorkoutCreation workout={workout} />;
-                }
+                } 
               }
             } else {
               if (workout.type === 'Homeworkout') {
