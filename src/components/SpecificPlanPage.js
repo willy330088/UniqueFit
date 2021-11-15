@@ -186,6 +186,10 @@ const StyledPlanCollectIcon = styled(BsBookmarkFill)`
   left: 20px;
   cursor: pointer;
 
+  &:hover{
+    color: #1face1;
+  }
+
   @media (min-width: 550px) {
     font-size: 70px;
   }

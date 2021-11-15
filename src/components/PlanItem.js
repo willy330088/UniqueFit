@@ -332,10 +332,10 @@ export default function PlanItem({ plan }) {
             }
           })}
         </StyledPlanWorkoutsContainer>
-        {plan.workoutSet.length > 5 ? (
-          <StyledAndMoreText>And More...</StyledAndMoreText>
-        ) : null}
       </StyledPlanMainContentContainer>
+      {plan.workoutSet.length > 5 ? (
+        <StyledAndMoreText>And More</StyledAndMoreText>
+      ) : null}
     </StyledPlanContainer>
   );
 }

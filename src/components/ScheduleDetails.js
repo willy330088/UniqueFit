@@ -17,7 +17,7 @@ const StyledLabel = styled.div`
 
 const StyledTitle = styled.div`
   color: white;
-  font-size: 30px;
+  font-size: 25px;
   padding-bottom: 10px;
   margin-bottom: 20px;
   width: 100%;
