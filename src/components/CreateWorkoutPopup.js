@@ -14,23 +14,24 @@ const StyledCreateWorkoutBtn = styled.div`
   height: 40px;
   width: 120px;
   cursor: pointer;
-  color: #1c2d9c;
+  color: #1face1;
   border-radius: 5px;
-  background-color: white;
+  background-color: transparent;
   text-align: center;
   line-height: 40px;
   margin: 10px 0;
+  border: 2px solid #1face1;
 
   &:hover {
     color: white;
-    background-color: #1c2d9c;
+    background-color: #1face1;
   }
 
   @media (min-width: 500px) {
     font-size: 35px;
     height: 50px;
     width: 200px;
-    line-height: 50px;
+    line-height: 46px;
   }
 `;
 

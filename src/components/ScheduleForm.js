@@ -5,6 +5,8 @@ import { v4 as uuid } from 'uuid';
 import 'react-datepicker/dist/react-datepicker.css';
 import firebase from '../utils/firebase';
 import styled from 'styled-components';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const StyledLabel = styled.div`
   color: #1face1;
@@ -17,6 +19,11 @@ const StyledLabel = styled.div`
 
 const StyledDatePicker = styled(DatePicker)`
   font-size: 22px;
+  width: 150px;
+  text-align: center;
+  outline: none;
+  border-radius: 3px;
+  border: none;
 `;
 
 const StyledDateContainer = styled.div`
@@ -24,11 +31,14 @@ const StyledDateContainer = styled.div`
 `;
 
 const StyledPlanContainer = styled.div`
-  margin-bottom: 70px;
+  margin-bottom: 50px;
 `;
 
 const StyledPlanSelect = styled.select`
   font-size: 22px;
+  outline: none;
+  border-radius: 3px;
+  border: none;
 `;
 
 const StyledAddTrainingContainer = styled.div`
@@ -38,6 +48,17 @@ const StyledAddTrainingContainer = styled.div`
 
 const StyledAddTrainingBtn = styled.button`
   font-size: 20px;
+  height: 40px;
+  cursor: pointer;
+  color: #1face1;
+  border-radius: 5px;
+  background-color: transparent;
+  border: solid 2px #1face1;
+
+  &:hover {
+    color: white;
+    background-color: #1face1;
+  }
 `;
 
 export default function ScheduleForm({ closeModal }) {
@@ -95,7 +116,10 @@ export default function ScheduleForm({ closeModal }) {
         }
       })
       .then(() => {
-        alert('Add successfully!');
+        toast.success('Added Successfully', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+        });
         setStartDateTime(new Date());
         closeModal();
       });
@@ -119,7 +143,7 @@ export default function ScheduleForm({ closeModal }) {
           }}
         >
           <option selected="true" disabled="disabled">
-            Choose A Plan
+            Choose A Collected Plan
           </option>
           {plans.map((plan) => {
             return <option value={[plan.id, plan.title]}>{plan.title}</option>;

@@ -306,14 +306,14 @@ const StyledLeaveCommentBtn = styled.div`
   text-align: center;
   line-height: 30px;
   background-color: ${(props) =>
-    props.commentContent === '' ? '#969696' : '#1c2d9c'};
+    props.commentContent === '' ? '#969696' : '#1face1'};
   cursor: ${(props) =>
     props.commentContent === '' ? 'not-allowed' : 'pointer'};
 
   &:hover {
     color: ${(props) => (props.commentContent === '' ? '#d1d1d1' : 'white')};
     background-color: ${(props) =>
-      props.commentContent === '' ? '#969696' : '#5160c4'};
+      props.commentContent === '' ? '#969696' : 'hsla(196, 76%, 60%)'};
   }
 `;
 

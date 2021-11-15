@@ -145,6 +145,10 @@ export default function WorkoutListPage() {
       <Header />
       <Banner slogan={'Collect Your Workouts'} />
       <StyledWorkoutListContainer>
+        <Filter
+          filteredMuscleGroups={filteredMuscleGroups}
+          setFilteredMuscleGroups={setFilteredMuscleGroups}
+        />
         <StyledBookmark>
           <StyledWorkoutTypeTag
             selected={gymWorkoutTypeSelected}
@@ -164,10 +168,6 @@ export default function WorkoutListPage() {
             Home Workout
           </StyledWorkoutTypeTag>
         </StyledBookmark>
-        <Filter
-          filteredMuscleGroups={filteredMuscleGroups}
-          setFilteredMuscleGroups={setFilteredMuscleGroups}
-        />
         <StyledWorkoutContainer>
           <StyledCreateWorkoutContainer onClick={()=>{setOpen(true)}}>
             <StyledCreateWorkoutIcon/>

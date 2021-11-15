@@ -9,6 +9,9 @@ import firebase from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/auth';
+import Delete from '../images/delete.png';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const StyledPlanCreationContainer = styled.div`
   display: flex;
@@ -58,17 +61,92 @@ const StyledPopup = styled(Popup)`
       padding: ${(props) => (props.paging === 3 ? '50px 50px' : '20px 30px')};
       border-radius: 10px;
       height: 700px;
-    } 
+    }
 
     @media (min-width: 650px) {
       width: ${(props) => (props.paging === 3 ? '1100px' : '650px')};
       padding: ${(props) => (props.paging === 3 ? '30px 70px' : '30px 70px')};
-    } 
+    }
+  }
+`;
+
+const StyledConfirmDeletePopup = styled(Popup)`
+  &-overlay {
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  &-content {
+    margin: auto;
+    background: #222d35;
+    width: 350px;
+    height: 200px;
+    position: relative;
+    border-radius: 5px;
+    position: relative;
+  }
+`;
+
+const StyledConfirmTextContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 250px;
+  position: absolute;
+  right: calc(50% - 125px);
+  top: 45px;
+`;
+
+const StyledConfirmDeleteIcon = styled.img`
+  width: 35px;
+  margin-right: 15px;
+`;
+
+const StyledConfirmDeleteText = styled.div`
+  font-size: 25px;
+  color: white;
+`;
+
+const StyledConfirmBtnContainer = styled.div`
+  width: 100%;
+  height: 60px;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+`;
+
+const StyledConfirmYesBtn = styled.div`
+  width: 50%;
+  height: 60px;
+  color: white;
+  font-size: 30px;
+  text-align: center;
+  line-height: 60px;
+  background-color: hsla(129, 40%, 50%);
+  cursor: pointer;
+  &:hover {
+    background-color: hsla(129, 40%, 40%);
+  }
+`;
+
+const StyledConfirmNoBtn = styled.div`
+  width: 50%;
+  height: 60px;
+  color: white;
+  font-size: 30px;
+  text-align: center;
+  line-height: 60px;
+  background-color: hsla(10, 100%, 50%);
+  cursor: pointer;
+
+  &:hover {
+    background-color: hsla(10, 100%, 40%);
   }
 `;
 
 export default function WorkoutCreation({ plan }) {
   const [paging, setPaging] = useState(1);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const closeConfirm = () => setConfirmOpen(false);
+
   function deletePlan() {
     firebase
       .firestore()
@@ -76,6 +154,11 @@ export default function WorkoutCreation({ plan }) {
       .doc(plan.id)
       .delete()
       .then(() => {
+        toast.success('Deleted Successfully', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+        });
+        closeConfirm()
         firebase
           .firestore()
           .collection('schedules')
@@ -97,9 +180,6 @@ export default function WorkoutCreation({ plan }) {
                 .update({
                   events: modified,
                 })
-                .then(() => {
-                  alert('Deleted Successfully!');
-                });
             });
           });
       });
@@ -108,15 +188,46 @@ export default function WorkoutCreation({ plan }) {
   return (
     <StyledPlanCreationContainer>
       <ProfilePlan plan={plan} />
-      <StyledPopup
-        trigger={<StyledPencilIcon />}
-        modal
-        nested
-        paging={paging}
-      >
-        <EditPlanPopup paging={paging} setPaging={setPaging} originalPlan={plan}/>
+      <StyledPopup trigger={<StyledPencilIcon />} modal nested paging={paging}>
+        <EditPlanPopup
+          paging={paging}
+          setPaging={setPaging}
+          originalPlan={plan}
+        />
       </StyledPopup>
-      <StyledRemoveIcon onClick={deletePlan}/>
+      <StyledRemoveIcon
+        onClick={() => {
+          setConfirmOpen(true);
+        }}
+      />
+      <StyledConfirmDeletePopup
+        open={confirmOpen}
+        closeOnDocumentClick
+        onClose={closeConfirm}
+      >
+        <StyledConfirmTextContainer>
+          <StyledConfirmDeleteIcon src={Delete} />
+          <StyledConfirmDeleteText>
+            Are you sure you want to delete?
+          </StyledConfirmDeleteText>
+        </StyledConfirmTextContainer>
+        <StyledConfirmBtnContainer>
+          <StyledConfirmYesBtn
+            onClick={() => {
+              deletePlan();
+            }}
+          >
+            Yes
+          </StyledConfirmYesBtn>
+          <StyledConfirmNoBtn
+            onClick={() => {
+              closeConfirm();
+            }}
+          >
+            No
+          </StyledConfirmNoBtn>
+        </StyledConfirmBtnContainer>
+      </StyledConfirmDeletePopup>
     </StyledPlanCreationContainer>
   );
 }

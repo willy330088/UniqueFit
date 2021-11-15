@@ -23,6 +23,7 @@ const StyledBody = styled.div`
 
 const StyledProfilePageContainer = styled.div`
   padding: 50px 10% 100px;
+  min-height: 800px;
 `;
 
 const StyledPersonalInfoContainer = styled.div`

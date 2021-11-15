@@ -4,22 +4,17 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import styled from 'styled-components';
-import Modal from "react-modal";
+import Popup from 'reactjs-popup';
 import ScheduleForm from './ScheduleForm'
 import ScheduleDetails from './ScheduleDetails'
 import firebase from '../utils/firebase';
+import CalendarHover from '../images/AddCalendar.png'
+import Calendar from '../images/AddCalendar-2.png'
 
 const StyledCalendarContainer = styled.div`
   background: white;
   padding: 20px;
   position: relative;
-`;
-
-const StyledCloseBtn = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  cursor: pointer;
 `;
 
 const StyledAddTrainingBtn = styled.button`
@@ -30,29 +25,43 @@ const StyledAddTrainingBtn = styled.button`
   font-size: 20px;
 `;
 
-export default function ScheduleCalendar() {
-  const customModalStyles = {
-    content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
-      position: 'relative',
-      backgroundColor: '#222d35',
-      width: '350px',
-      height: '400px',
-      border: 'none'
-    },
-    overlay: {
-      zIndex: 1000,
-      backgroundColor: 'rgba(0, 0, 0, 0.75)'
-    }
-  };
+const StyledAddTrainingIcon = styled.div`
+  position: absolute;
+  top: 20px;
+  left: 220px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  background-image: url(${Calendar});
+  background-repeat: no-repeat;
+  background-size: contain;
 
+  &:hover {
+    background-image: url(${CalendarHover});
+  }
+`;
+
+const StyledPopup = styled(Popup)`
+  &-overlay {
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  &-content {
+    margin: auto;
+    background: #222d35;
+    width: 350px;
+    height: 400px;
+    position: relative;
+    border-radius: 5px;
+    padding: 20px 30px
+  }
+`;
+
+export default function ScheduleCalendar() {
   // States
-  const [modalOpen, setModalOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
+  const openModal = () => setOpen(true);
   const [selectedModal, setSelectedModal] = useState("");
   const [selectedEvent, setSelectedEvent] = useState();
   const [events, setEvents] = useState([])
@@ -65,16 +74,6 @@ export default function ScheduleCalendar() {
     setSelectedModal("ScheduleForm");
     openModal();
   }
-
-  // Open Modal Function
-  const openModal = () => {
-    setModalOpen(true);
-  };
-
-  // Close Modal Function
-  const closeModal = () => {
-    setModalOpen(false);
-  };
 
   useEffect(() => {
     firebase
@@ -100,9 +99,7 @@ export default function ScheduleCalendar() {
 
   return (
     <StyledCalendarContainer>
-      <StyledAddTrainingBtn onClick={openForm}>
-        Add Training Plan
-      </StyledAddTrainingBtn>
+      <StyledAddTrainingIcon onClick={openForm}/>
       <FullCalendar
         plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
         headerToolbar={{
@@ -120,7 +117,15 @@ export default function ScheduleCalendar() {
           }
         }}
       />
-      {modalOpen && (
+      <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
+        {selectedModal === "ScheduleForm" ? 
+          <ScheduleForm closeModal={closeModal}/> : 
+          selectedModal === "ScheduleDetails" ? 
+          <ScheduleDetails selectedEvent={selectedEvent} closeModal={closeModal}/> :
+          null
+        }
+      </StyledPopup>
+      {/* {modalOpen && (
         <Modal 
           isOpen={true}
           onRequestClose={closeModal}
@@ -135,7 +140,7 @@ export default function ScheduleCalendar() {
             null
           }
         </Modal>
-      )}
+      )} */}
     </StyledCalendarContainer>
   );
 };

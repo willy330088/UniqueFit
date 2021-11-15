@@ -69,16 +69,17 @@ const StyledChangeVideoBtn = styled.div`
   height: 30px;
   width: 150px;
   cursor: pointer;
-  color: #1c2d9c;
+  color: #1face1;
   border-radius: 5px;
-  background-color: white;
+  background-color: transparent;
   text-align: center;
-  line-height: 30px;
+  line-height: 26px;
   margin: 10px 0;
+  border: 2px solid #1face1;
 
   &:hover {
     color: white;
-    background-color: #1c2d9c;
+    background-color: #1face1;
   }
 `;
 

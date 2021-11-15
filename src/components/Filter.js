@@ -10,7 +10,7 @@ const StyledFilterContainer = styled.div`
   @media (min-width: 800px) {
     width: 100%;
     height: 200px;
-    background-color: #ddd;
+    /* background-color: #ddd; */
     display: flex;
     margin: 30px auto 30px;
     align-items: center;
@@ -23,7 +23,7 @@ const StyledFilterMuscleGroups = styled.div`
   flex-wrap: wrap;
   width: 450px;
   height: 180px;
-  background: #ddd;
+  /* background: #ddd; */
   margin: 20px;
   border-radius: 5px;
 `;
@@ -41,7 +41,7 @@ const StyledMuscleGroupImage = styled.img`
 `;
 
 const StyledFilterMuscleIcons = styled.div`
-  background: #ddd;
+  /* background: #ddd; */
   border-radius: 5px;
   padding: 5px;
   margin: 20px;

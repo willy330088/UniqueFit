@@ -20,7 +20,7 @@ const StyledToastContainer = styled(ToastContainer).attrs({
 
   /* .toast is passed to toastClassName */
   .toast {
-    background-color: #222d35;
+    background-color: black;
   }
 
   button {

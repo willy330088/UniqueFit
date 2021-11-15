@@ -18,6 +18,7 @@ import PlanComment from './PlanComment';
 import StopWatch from './Timer/StopWatch';
 import ProgressBar from '@ramonak/react-progress-bar';
 import SpecificPlanWorkoutItem from './SpecificPlanWorkoutItem';
+import GymBackground from '../images/gym.jpeg';
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -41,6 +42,22 @@ const StyledPlanContainer = styled.div`
   background: white;
   padding: 60px 5%;
   position: relative;
+  /* z-index: 1; */
+/* 
+  &:before {
+    content: "";
+    background-image: url(${GymBackground});
+    background-position-x: 7%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute; 
+    z-index: -1;
+  }   */
 
   @media (min-width: 400px) {
     padding: 60px 12%;

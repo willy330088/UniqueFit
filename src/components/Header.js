@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import Logo from '../images/logo.png';
 import Burger from './Burger';
 
@@ -19,6 +19,7 @@ const StyledHeader = styled.div`
 
 const StyledLogo = styled.img`
   height: 40px;
+  cursor: pointer;
   @media (min-width: 700px) {
     margin-left: 60px;
     height: 50px;
@@ -52,6 +53,7 @@ const StyledMenu = styled.nav`
   width: 100%;
   height: 210px;
   position: absolute;
+  opacity: 0.9;
   top: 80px;
   left: 0;
   transition: transform 0.3s ease-in-out;
@@ -64,7 +66,7 @@ const StyledMenu = styled.nav`
 `;
 
 const StyledMenuLink = styled(NavLink)`
-  color: white;
+  color: #222d35;
   font-size: 30px;
   text-decoration: none;
   line-height: 70px;
@@ -78,8 +80,8 @@ const StyledMenuLink = styled(NavLink)`
   }
 `;
 
-
 export default function Header() {
+  const history = useHistory();
   const activeStyle = {
     color: '#1face1',
     borderBottom: '#1face1 4px solid'
@@ -102,7 +104,9 @@ export default function Header() {
           Profile
         </StyledMenuLink>
       </StyledMenu>
-      <StyledLogo src={Logo} />
+      <StyledLogo src={Logo} onClick={() => {
+        history.push('/workouts')
+      }}/>
       <StyledNavBar>
         <StyledLink to="/workouts" activeStyle={activeStyle}>
           Workouts
