@@ -65,7 +65,7 @@ const StyledPlanContainer = styled.div`
 
   @media (min-width: 1200px) {
     padding: 30px 50px;
-    width: 48%;
+    width: 45%;
   } ;
 `;
 

@@ -1,15 +1,15 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import styled from 'styled-components';
 import Popup from 'reactjs-popup';
-import ScheduleForm from './ScheduleForm'
-import ScheduleDetails from './ScheduleDetails'
+import ScheduleForm from './ScheduleForm';
+import ScheduleDetails from './ScheduleDetails';
 import firebase from '../utils/firebase';
-import CalendarHover from '../images/AddCalendar.png'
-import Calendar from '../images/AddCalendar-2.png'
+import CalendarHover from '../images/AddCalendar.png';
+import Calendar from '../images/AddCalendar-2.png';
 
 const StyledCalendarContainer = styled.div`
   background: white;
@@ -17,28 +17,31 @@ const StyledCalendarContainer = styled.div`
   position: relative;
 `;
 
-const StyledAddTrainingBtn = styled.button`
+const StyledAddTrainingContainer = styled.div`
+  width: 200px;
+  height: 40px;
   position: absolute;
-  top: 25px;
-  left: 220px;
+  top: 20px;
+  left: 250px;
+  display: flex;
+  align-items: center;
+  transition: ease-in-out 0.3s;
   cursor: pointer;
-  font-size: 20px;
 `;
 
 const StyledAddTrainingIcon = styled.div`
-  position: absolute;
-  top: 20px;
-  left: 220px;
   cursor: pointer;
-  width: 40px;
-  height: 40px;
-  background-image: url(${Calendar});
+  width: ${(props) =>props.calendarHover ? '45px' : '40px'};
+  height: ${(props) =>props.calendarHover ? '45px' : '40px'};
+  background-image: ${(props) =>props.calendarHover ? `url(${CalendarHover})` : `url(${Calendar})`};
   background-repeat: no-repeat;
   background-size: contain;
+`;
 
-  &:hover {
-    background-image: url(${CalendarHover});
-  }
+const StyledAddTrainingText = styled.div`
+  margin-left: 10px;
+  font-size: ${(props) =>props.calendarHover ? '27px' : '25px'};
+  color: ${(props) => (props.calendarHover ? '#1face1' : 'black')};
 `;
 
 const StyledPopup = styled(Popup)`
@@ -53,7 +56,7 @@ const StyledPopup = styled(Popup)`
     height: 400px;
     position: relative;
     border-radius: 5px;
-    padding: 20px 30px
+    padding: 20px 30px;
   }
 `;
 
@@ -62,18 +65,19 @@ export default function ScheduleCalendar() {
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
   const openModal = () => setOpen(true);
-  const [selectedModal, setSelectedModal] = useState("");
+  const [selectedModal, setSelectedModal] = useState('');
   const [selectedEvent, setSelectedEvent] = useState();
-  const [events, setEvents] = useState([])
+  const [events, setEvents] = useState([]);
+  const [calendarHover, setCalendarHover] = useState(false);
 
   // Initial Date
   let initialDate = new Date().toISOString();
 
   // Open appointment form
   const openForm = () => {
-    setSelectedModal("ScheduleForm");
+    setSelectedModal('ScheduleForm');
     openModal();
-  }
+  };
 
   useEffect(() => {
     firebase
@@ -81,66 +85,66 @@ export default function ScheduleCalendar() {
       .collection('schedules')
       .doc(firebase.auth().currentUser.uid)
       .onSnapshot((docSnapshot) => {
-        const data = docSnapshot.data()
+        const data = docSnapshot.data();
         if (data) {
-          setEvents(data.events)
+          setEvents(data.events);
         }
       });
   }, []);
 
   const handleEventClick = (clickInfo) => {
-    if(clickInfo.event) {
-      setSelectedModal("ScheduleDetails");
-      setSelectedEvent(clickInfo.event)
+    if (clickInfo.event) {
+      setSelectedModal('ScheduleDetails');
+      setSelectedEvent(clickInfo.event);
       openModal();
-      console.log(clickInfo.event._instance.range.start)
+      console.log(clickInfo.event._instance.range.start);
     }
-  }
+  };
 
   return (
     <StyledCalendarContainer>
-      <StyledAddTrainingIcon onClick={openForm}/>
+      <StyledAddTrainingContainer
+        onMouseOver={() => {
+          setCalendarHover(true);
+        }}
+        onMouseLeave={() => {
+          setCalendarHover(false);
+        }}
+        calendarHover={calendarHover}
+        onClick={openForm}
+      >
+        <StyledAddTrainingIcon calendarHover={calendarHover} />
+        <StyledAddTrainingText calendarHover={calendarHover}>
+          Add Training
+        </StyledAddTrainingText>
+      </StyledAddTrainingContainer>
       <FullCalendar
-        plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         headerToolbar={{
           left: 'title',
-          right: 'prevYear,prev,today,next,nextYear'
+          right: 'prevYear,prev,today,next,nextYear',
         }}
         initialView="dayGridMonth"
         initialDate={initialDate}
         weekends={true}
         events={events}
         eventClick={handleEventClick}
-        views= {{
+        views={{
           dayGrid: {
-            dayMaxEventRows: 4
-          }
+            dayMaxEventRows: 4,
+          },
         }}
       />
       <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
-        {selectedModal === "ScheduleForm" ? 
-          <ScheduleForm closeModal={closeModal}/> : 
-          selectedModal === "ScheduleDetails" ? 
-          <ScheduleDetails selectedEvent={selectedEvent} closeModal={closeModal}/> :
-          null
-        }
+        {selectedModal === 'ScheduleForm' ? (
+          <ScheduleForm closeModal={closeModal} />
+        ) : selectedModal === 'ScheduleDetails' ? (
+          <ScheduleDetails
+            selectedEvent={selectedEvent}
+            closeModal={closeModal}
+          />
+        ) : null}
       </StyledPopup>
-      {/* {modalOpen && (
-        <Modal 
-          isOpen={true}
-          onRequestClose={closeModal}
-          ariaHideApp={false}
-          style={customModalStyles}
-        >
-          <StyledCloseBtn onClick={closeModal}>X</StyledCloseBtn>
-          {selectedModal === "ScheduleForm" ? 
-            <ScheduleForm closeModal={closeModal}/> : 
-            selectedModal === "ScheduleDetails" ? 
-            <ScheduleDetails selectedEvent={selectedEvent} closeModal={closeModal}/> :
-            null
-          }
-        </Modal>
-      )} */}
     </StyledCalendarContainer>
   );
-};
+}

@@ -17,15 +17,15 @@ const StyledBody = styled.div`
 `;
 
 const StyledPlanListPageContainer = styled.div`
-  padding: 50px 5% 100px;
+  padding: 10px 5% 100px;
 
   @media (min-width: 600px) {
-    padding: 50px 16% 100px;
-  } ;
+    padding: 10px 16% 100px;
+  }
 `;
 
 const StyledPlanListContainer = styled.div`
-  margin-top: 80px;
+  margin-top: 40px;
 
   @media (min-width: 1200px) {
     display: flex;
@@ -61,13 +61,6 @@ const StyledPopup = styled(Popup)`
       padding: ${(props) => (props.paging === 3 ? '30px 70px' : '30px 70px')};
     }
   }
-`;
-
-const StyledCreatePlanBtn = styled.button`
-  width: 200px;
-  height: 50px;
-  margin-left: auto;
-  font-size: 20px;
 `;
 
 const StyledAddPlanContainer = styled.div`
@@ -128,7 +121,7 @@ const StyledAddPlanContainer = styled.div`
 
   @media (min-width: 1200px) {
     padding: 30px 50px;
-    width: 48%;
+    width: 45%;
   } ;
 `;
 

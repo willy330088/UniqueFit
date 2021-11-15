@@ -6,6 +6,9 @@ import Burger from './Burger';
 
 const StyledHeader = styled.div`
   display: flex;
+  position: fixed;
+  top: 0;
+  z-index: 999;
   width: 100%;
   height: 80px;
   padding: 0 20px;

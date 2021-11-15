@@ -12,9 +12,10 @@ const StyledSidebarLink = styled.div`
   text-decoration: none;
   font-size: 25px;
   background: white;
+  transition: ease-in-out 0.2s;
   &:hover {
     background: white;
-    border-left: 4px solid #1face1;
+    border-left: 6px solid #1face1;
     cursor: pointer;
   }
 `;
@@ -27,7 +28,7 @@ const StyledDropdownLink = styled.div`
   background: #414757;
   height: 60px;
   padding-left: 3rem;
-  display: flex;
+  display:${(props) => (props.subnav ? 'flex' : 'none')};;
   align-items: center;
   text-decoration: none;
   color: #f5f5f5;
@@ -38,21 +39,27 @@ const StyledDropdownLink = styled.div`
   }
 `;
 
+const StyledDropdownLinkContainer = styled.div`
+  height: ${(props) => (props.subnav ? '60px' : '0px')};
+  transition: ease-in-out 0.3s;
+  background: #414757;
+`;
+
 export default function ProfileSubMenu({ item, setMainContent }) {
   const [subnav, setSubnav] = useState(false);
   const showSubnav = () => setSubnav(!subnav);
 
   return (
     <>
-      <StyledSidebarLink onClick={item.subNav && showSubnav}>
+      <StyledSidebarLink onClick={() => {
+        if (item.subNav) {
+          showSubnav()
+        } else {
+          setMainContent(item.title); 
+        }
+      }}>
         <div>
-          <StyledSidebarLabel
-            onClick={() => {
-              if (item.title === 'My Nearby Gyms' || item.title === 'My Schedule') {
-                setMainContent(item.title);                
-              }
-            }}
-          >
+          <StyledSidebarLabel>
             {item.title}
           </StyledSidebarLabel>
         </div>
@@ -64,19 +71,22 @@ export default function ProfileSubMenu({ item, setMainContent }) {
             : null}
         </div>
       </StyledSidebarLink>
-      {subnav &&
+      {item.subNav ? 
         item.subNav.map((item, index) => {
           return (
-            <StyledDropdownLink
-              onClick={() => {
-                setMainContent(item.title);
-              }}
-              key={index}
-            >
-              <StyledSidebarLabel>{item.title}</StyledSidebarLabel>
-            </StyledDropdownLink>
+            <StyledDropdownLinkContainer subnav={subnav}>
+              <StyledDropdownLink
+                onClick={() => {
+                  setMainContent(item.title);
+                }}
+                key={index}
+                subnav={subnav}
+              >
+                <StyledSidebarLabel>{item.title}</StyledSidebarLabel>
+              </StyledDropdownLink>
+            </StyledDropdownLinkContainer>
           );
-        })}
+        }): null}
     </>
   );
 }

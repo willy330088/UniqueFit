@@ -29,25 +29,39 @@ const StyledWorkoutListContainer = styled.div`
 
 const StyledBookmark = styled.div`
   display: flex;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
   align-items: center;
 `;
 
 const StyledWorkoutTypeTag = styled.div`
   color: ${(props) => (props.selected ? '#1face1' : '#808080')};
-  font-size: 40px;
+  font-size: 30px;
   margin-right: 20px;
   cursor: pointer;
 
   &:hover {
     color: #1face1;
   }
+
+  @media (min-width: 800px) {
+    font-size: 40px;
+  }
 `;
 
 const StyledWorkoutTypeSeparator = styled.div`
   color: white;
-  font-size: 40px;
+  font-size: 30px;
   margin-right: 20px;
+  display: none;
+
+  @media (min-width: 620px) {
+    font-size: 30px;
+    display: block;
+  }
+
+  @media (min-width: 800px) {
+    font-size: 40px;
+  }
 `;
 
 const StyledCreateWorkoutContainer = styled.div`
@@ -145,10 +159,6 @@ export default function WorkoutListPage() {
       <Header />
       <Banner slogan={'Collect Your Workouts'} />
       <StyledWorkoutListContainer>
-        <Filter
-          filteredMuscleGroups={filteredMuscleGroups}
-          setFilteredMuscleGroups={setFilteredMuscleGroups}
-        />
         <StyledBookmark>
           <StyledWorkoutTypeTag
             selected={gymWorkoutTypeSelected}
@@ -168,6 +178,10 @@ export default function WorkoutListPage() {
             Home Workout
           </StyledWorkoutTypeTag>
         </StyledBookmark>
+        <Filter
+          filteredMuscleGroups={filteredMuscleGroups}
+          setFilteredMuscleGroups={setFilteredMuscleGroups}
+        />
         <StyledWorkoutContainer>
           <StyledCreateWorkoutContainer onClick={()=>{setOpen(true)}}>
             <StyledCreateWorkoutIcon/>

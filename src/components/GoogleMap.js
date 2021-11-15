@@ -7,6 +7,7 @@ import {
 } from '@react-google-maps/api';
 import Muscle from '../images/muscle.png';
 import styled from 'styled-components';
+import Logo from '../images/logo.png';
 
 const StyledInfoHeader = styled.h2`
   color: #3264a8;
@@ -31,18 +32,42 @@ const StyledInfoOpening = styled.h2`
   font-size: 15px;
 `;
 
-const StyledLocationBtn = styled.button`
-  margin-top: 30px;
-  margin-left: calc(50% - 75px);
-  width: 150px;
-  height: 50px;
+const StyledLocationBtn = styled.div`
   font-size: 20px;
+  height: 40px;
+  width: 120px;
+  cursor: pointer;
+  color: #1face1;
+  border-radius: 5px;
+  background-color: transparent;
+  text-align: center;
+  line-height: 40px;
+  margin: 30px 0;
+  border: solid 2px #1face1;
+
+  &:hover {
+    color: white;
+    background-color: #1face1;
+  }
+`;
+
+const StyledMapContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 `;
 
 const StyledLoadingContent = styled.div`
   height: 600px;
   width: 100%;
-  background: grey;
+  background: hsla(205, 22%, 30%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const StyledLogo = styled.img`
+  width: 50%;
 `;
 
 const libraries = ['places'];
@@ -123,9 +148,9 @@ export default function App() {
   console.log(selected);
 
   return isNavigating ? (
-    <StyledLoadingContent>loading</StyledLoadingContent>
+    <StyledLoadingContent><StyledLogo src={Logo}/></StyledLoadingContent>
   ) : (
-    <div>
+    <StyledMapContainer>
       <GoogleMap
         id="map"
         mapContainerStyle={mapContainerStyle}
@@ -190,7 +215,7 @@ export default function App() {
         setIsNavigating={setIsNavigating}
         setNearyby={setNearyby}
       />
-    </div>
+    </StyledMapContainer>
   );
 }
 

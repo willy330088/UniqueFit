@@ -22,7 +22,7 @@ const StyledDatePicker = styled(DatePicker)`
   width: 150px;
   text-align: center;
   outline: none;
-  border-radius: 3px;
+  border-radius: 20px;
   border: none;
 `;
 
@@ -39,6 +39,8 @@ const StyledPlanSelect = styled.select`
   outline: none;
   border-radius: 3px;
   border: none;
+  padding: 0 10px;
+  width: 100%;
 `;
 
 const StyledAddTrainingContainer = styled.div`
@@ -91,6 +93,14 @@ export default function ScheduleForm({ closeModal }) {
 
   // onSubmit Function
   const onSubmit = () => {
+    if (!selectedPlan) {
+      toast.error('Please select a plan!', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+      });
+      return
+    }
+
     const planId = selectedPlan.split(',')[0];
     const planTitle = selectedPlan.split(',')[1];
     const eventContent = {

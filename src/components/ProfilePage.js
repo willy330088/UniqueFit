@@ -162,6 +162,10 @@ export default function CreateWorkoutPage() {
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+  }, [mainContent])
+
+  useEffect(() => {
     firebase
       .firestore()
       .collection('workouts')

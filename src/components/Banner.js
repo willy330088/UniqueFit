@@ -8,6 +8,7 @@ const StyledBanner = styled.div`
   height: 210px;
   width: 100%;
   position: relative;
+  margin-top: 80px;
 
   @media (min-width: 700px) {
     height: 300px;

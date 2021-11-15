@@ -5,9 +5,10 @@ import WorkoutListPage from './components/WorkoutListPage';
 import ProfilePage from './components/ProfilePage';
 import PlanListPage from './components/PlanListPage';
 import SpecificPlanPage from './components/SpecificPlanPage';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
+import ScrollToTop from './components/ScrollToTop';
 
 const StyledToastContainer = styled(ToastContainer).attrs({
   className: 'toast-container',
@@ -43,6 +44,7 @@ function App() {
     <>
       <StyledToastContainer />
       <Router>
+        <ScrollToTop/>
         <Switch>
           <Route exact path="/" exact>
             <LandingPage />
