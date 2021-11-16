@@ -42,7 +42,7 @@ const StyledWorkoutItemContainer = styled.div`
   @media (min-width: 1400px) {
     max-width: 600px;
     width: 48%;
-  };
+  } ;
 `;
 
 const StyledWorkoutItemDescription = styled.div`
@@ -53,15 +53,15 @@ const StyledWorkoutItemDescription = styled.div`
   @media (min-width: 500px) {
     display: block;
     margin-left: 30px;
-  };
+  }
 
   @media (min-width: 700px) {
     margin-left: 50px;
-  };
+  }
 
   @media (min-width: 1400px) {
     margin-left: 30px;
-  };
+  } ;
 `;
 
 const StyledWorkoutItemTitle = styled.div`
@@ -80,7 +80,7 @@ const StyledWorkoutItemImage = styled.img`
   display: none;
   @media (min-width: 650px) {
     display: block;
-  };
+  } ;
 `;
 
 const StyledPublisherIcon = styled(HiUserCircle)`
@@ -108,7 +108,7 @@ const StyledWorkoutItemSocial = styled.div`
   @media (min-width: 500px) {
     display: flex;
     align-items: baseline;
-  };
+  } ;
 `;
 
 const StyledPlayIcon = styled(ImPlay)`
@@ -128,7 +128,7 @@ const StyledMessageIcon = styled(RiMessage2Fill)`
   font-size: 15px;
   @media (min-width: 500px) {
     margin: 0px 5px 0 10px;
-  };
+  } ;
 `;
 
 //popup
@@ -146,70 +146,72 @@ const StyledPopup = styled(Popup)`
 
     @media (min-width: 500px) {
       width: 500px;
-      height: 400px;  
-    };
+      height: 400px;
+    }
 
     @media (min-width: 700px) {
       width: 700px;
       height: 550px;
-    };
+    }
   }
 `;
 
 export default function WorkoutItem({ workout }) {
   const [hover, setHover] = useState(false);
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
 
   return (
-    <StyledPopup
-      trigger={
-        <StyledWorkoutItemContainer
-          onMouseOver={() => {
-            setHover(true);
-          }}
-          onMouseLeave={() => {
-            setHover(false);
-          }}
-        >
-          <StyledPlayIcon hover={hover}/>
-          <StyledWorkoutItemImage
-            src={
-              muscleGroups.filter((muscleGroup) => {
-                if (muscleGroup.name === workout.targetMuscleGroup)
-                  return muscleGroup;
-              })[0].src
-            }
-          />
-          <StyledWorkoutItemDescription>
-            <StyledWorkoutItemTitle>{workout.title}</StyledWorkoutItemTitle>
-            <StyledWorkoutItemPublisher>
-              {workout.publisher.photoURL ? (
-                <StyledPublisherImage src={workout.publisher.photoURL} />
-              ) : (
-                <StyledPublisherIcon />
-              )}
-              {workout.publisher.displayName ? (
-                <StyledPublisherName>
-                  {workout.publisher.displayName}
-                </StyledPublisherName>
-              ) : (
-                <StyledPublisherName>User</StyledPublisherName>
-              )}
-            </StyledWorkoutItemPublisher>
-            <StyledWorkoutItemSocial>
-              <div>
-                <StyledCollectIcon /> Collected ({workout.collectedBy.length}){' '}
-              </div>
-              <div>
-                <StyledMessageIcon /> Comments ({workout.commentsCount || 0})
-              </div>
-            </StyledWorkoutItemSocial>
-          </StyledWorkoutItemDescription>
-        </StyledWorkoutItemContainer>
-      }
-      modal
-      nested
-    >
-      <WorkoutPopup workout={workout} />
-    </StyledPopup>
+    <>
+      <StyledWorkoutItemContainer
+        onMouseOver={() => {
+          setHover(true);
+        }}
+        onMouseLeave={() => {
+          setHover(false);
+        }}
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        <StyledPlayIcon hover={hover} />
+        <StyledWorkoutItemImage
+          src={
+            muscleGroups.filter((muscleGroup) => {
+              if (muscleGroup.name === workout.targetMuscleGroup)
+                return muscleGroup;
+            })[0].src
+          }
+        />
+        <StyledWorkoutItemDescription>
+          <StyledWorkoutItemTitle>{workout.title}</StyledWorkoutItemTitle>
+          <StyledWorkoutItemPublisher>
+            {workout.publisher.photoURL ? (
+              <StyledPublisherImage src={workout.publisher.photoURL} />
+            ) : (
+              <StyledPublisherIcon />
+            )}
+            {workout.publisher.displayName ? (
+              <StyledPublisherName>
+                {workout.publisher.displayName}
+              </StyledPublisherName>
+            ) : (
+              <StyledPublisherName>User</StyledPublisherName>
+            )}
+          </StyledWorkoutItemPublisher>
+          <StyledWorkoutItemSocial>
+            <div>
+              <StyledCollectIcon /> Collected ({workout.collectedBy.length}){' '}
+            </div>
+            <div>
+              <StyledMessageIcon /> Comments ({workout.commentsCount || 0})
+            </div>
+          </StyledWorkoutItemSocial>
+        </StyledWorkoutItemDescription>
+      </StyledWorkoutItemContainer>
+      <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
+        <WorkoutPopup workout={workout} />
+      </StyledPopup>
+    </>
   );
 }

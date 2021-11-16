@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import WorkoutListPage from './components/WorkoutListPage';
@@ -10,6 +10,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import ScrollToTop from './components/ScrollToTop';
 import HomePage from './components/HomePage';
+import { useDispatch } from 'react-redux';
+import firebase from './utils/firebase';
+import 'firebase/firestore';
+import { getWorkouts } from '../src/redux/actions';
 
 const StyledToastContainer = styled(ToastContainer).attrs({
   className: 'toast-container',
@@ -17,30 +21,39 @@ const StyledToastContainer = styled(ToastContainer).attrs({
   bodyClassName: 'body',
   progressClassName: 'progress',
 })`
-  /* .toast-container */
   width: 375px;
-
-  /* .toast is passed to toastClassName */
   .toast {
     background-color: black;
   }
-
   button {
     color: white;
   }
-  /* .body is passed to bodyClassName */
   .body {
     color: white;
     font-size: 18px;
   }
-
-  /* .progress is passed to progressClassName */
   .progress {
     color: #1face1;
   }
 `;
 
 function App() {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection('workouts')
+      .orderBy('createdAt', 'desc')
+      .onSnapshot((collectionSnapshot) => {
+        const data = collectionSnapshot.docs.map((docSnapshot) => {
+          const id = docSnapshot.id;
+          return { ...docSnapshot.data(), id };
+        });
+        dispatch(getWorkouts(data))
+      });
+  }, []);
+  
   return (
     <>
       <StyledToastContainer />

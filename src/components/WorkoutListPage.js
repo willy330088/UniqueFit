@@ -9,6 +9,7 @@ import firebase from '../utils/firebase';
 import 'firebase/firestore';
 import Filter from './Filter';
 import { MdAddCircleOutline } from 'react-icons/md';
+import { useSelector } from 'react-redux';
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -20,7 +21,7 @@ const StyledWorkoutContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-  };
+  } ;
 `;
 
 const StyledWorkoutListContainer = styled.div`
@@ -84,7 +85,7 @@ const StyledCreateWorkoutContainer = styled.div`
   @media (min-width: 1400px) {
     max-width: 600px;
     width: 48%;
-  };
+  } ;
 `;
 
 const StyledCreateWorkoutText = styled.div`
@@ -101,9 +102,8 @@ const StyledCreateWorkoutIcon = styled(MdAddCircleOutline)`
 
   @media (min-width: 600px) {
     display: block;
-  };
+  } ;
 `;
-
 
 const StyledPopup = styled(Popup)`
   &-overlay {
@@ -123,36 +123,43 @@ const StyledPopup = styled(Popup)`
       width: 650px;
       height: 700px;
       border-radius: 10px;
-    } 
+    }
 
     @media (min-width: 650px) {
       padding: 30px 70px;
-    } 
+    }
   }
 `;
 
 export default function WorkoutListPage() {
-  const [workouts, setWorkouts] = useState([]);
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
   const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
+  const workouts = useSelector((state) => state.workouts);
 
-  useEffect(() => {
-    firebase
-      .firestore()
-      .collection('workouts')
-      .orderBy('createdAt', 'desc')
-      .onSnapshot((collectionSnapshot) => {
-        const data = collectionSnapshot.docs.map((docSnapshot) => {
-          const id = docSnapshot.id;
-          return { ...docSnapshot.data(), id };
-        });
-        setWorkouts(data);
-      });
-  }, []);
+  const gymWorkouts = workouts.filter(
+    (workout) => workout.type === 'Gymworkout'
+  );
+  const homeWorkouts = workouts.filter(
+    (workout) => workout.type === 'Homeworkout'
+  );
 
-  console.log(filteredMuscleGroups);
+  function showWorkoutList() {
+    if (filteredMuscleGroups.length === 0 && gymWorkoutTypeSelected) {
+      return gymWorkouts;
+    } else if (filteredMuscleGroups.length === 0 && !gymWorkoutTypeSelected) {
+      return homeWorkouts;
+    } else if (filteredMuscleGroups.length !== 0 && gymWorkoutTypeSelected) {
+      return gymWorkouts.filter((workout) =>
+        filteredMuscleGroups.includes(workout.targetMuscleGroup)
+      );
+    } else {
+      return homeWorkouts.filter((workout) =>
+        filteredMuscleGroups.includes(workout.targetMuscleGroup)
+      );
+    }
+  }
 
   return (
     <StyledBody>
@@ -183,51 +190,21 @@ export default function WorkoutListPage() {
           setFilteredMuscleGroups={setFilteredMuscleGroups}
         />
         <StyledWorkoutContainer>
-          <StyledCreateWorkoutContainer onClick={()=>{setOpen(true)}}>
-            <StyledCreateWorkoutIcon/>
-            <StyledCreateWorkoutText>Click To Create Workout</StyledCreateWorkoutText>
+          <StyledCreateWorkoutContainer
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            <StyledCreateWorkoutIcon />
+            <StyledCreateWorkoutText>
+              Click To Create Workout
+            </StyledCreateWorkoutText>
           </StyledCreateWorkoutContainer>
           <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
-            <CreateWorkoutPopup close={closeModal}/>
+            <CreateWorkoutPopup close={closeModal} />
           </StyledPopup>
-          {workouts.map((workout) => {
-            if (filteredMuscleGroups.length !== 0) {
-              if (filteredMuscleGroups.includes(workout.targetMuscleGroup)) {
-                if (gymWorkoutTypeSelected) {
-                  if (workout.type === 'Gymworkout') {
-                    return (
-                      <WorkoutItem workout={workout} />
-                    );
-                  }
-                } else {
-                  if (workout.type === 'Homeworkout') {
-                    return (
-                      <WorkoutItem
-                        workout={workout}
-                      />
-                    );
-                  }
-                }
-              }
-            } else {
-              if (gymWorkoutTypeSelected) {
-                if (workout.type === 'Gymworkout') {
-                  return (
-                    <WorkoutItem
-                      workout={workout}
-                    />
-                  );
-                }
-              } else {
-                if (workout.type === 'Homeworkout') {
-                  return (
-                    <WorkoutItem
-                      workout={workout}
-                    />
-                  );
-                }
-              }
-            }
+          {showWorkoutList().map((workout) => {
+            return <WorkoutItem workout={workout} />;
           })}
         </StyledWorkoutContainer>
       </StyledWorkoutListContainer>
