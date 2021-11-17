@@ -18,7 +18,7 @@ import PlanComment from './PlanComment';
 import StopWatch from './Timer/StopWatch';
 import ProgressBar from '@ramonak/react-progress-bar';
 import SpecificPlanWorkoutItem from './SpecificPlanWorkoutItem';
-import GymBackground from '../images/gym.jpeg';
+import SignInPopup from './SignInPopup';
 import { useSelector } from 'react-redux';
 import LogoDumbbell from '../images/logoDumbbell.png';
 
@@ -44,22 +44,6 @@ const StyledPlanContainer = styled.div`
   background: white;
   padding: 60px 5%;
   position: relative;
-  /* z-index: 1; */
-/* 
-  &:before {
-    content: "";
-    background-image: url(${GymBackground});
-    background-position-x: 7%;
-    background-repeat: no-repeat;
-    background-size: cover;
-    opacity: 0.5;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    position: absolute; 
-    z-index: -1;
-  }   */
 
   @media (min-width: 400px) {
     padding: 60px 12%;
@@ -188,7 +172,7 @@ const StyledPlanCollectIcon = styled(BsBookmarkFill)`
   left: 20px;
   cursor: pointer;
 
-  &:hover{
+  &:hover {
     color: #1face1;
   }
 
@@ -361,35 +345,40 @@ export default function SpecificPlanPage() {
   const [trainingMode, setTrainingMode] = useState(false);
   const plans = useSelector((state) => state.plans);
   const workouts = useSelector((state) => state.workouts);
-  let plan = plans.filter(plan => plan.id === planId)[0]
+  let plan = plans.filter((plan) => plan.id === planId)[0];
+  const [signInOpen, setSignInOpen] = useState(false);
+  const closeSignIn = () => setSignInOpen(false);
 
   if (!plan) {
     plan = {
       collectedBy: [],
       publisher: [],
-      workoutSet: []
-    }
+      workoutSet: [],
+    };
   }
-  const workoutSet = plan.workoutSet
+  const workoutSet = plan.workoutSet;
   const workoutSetDetails = plan.workoutSet.map((workoutSet) => {
-    return workouts.filter(workout => workout.id === workoutSet.workoutId)[0]
-  })
+    return workouts.filter((workout) => workout.id === workoutSet.workoutId)[0];
+  });
 
   const isCollected = plan.collectedBy?.includes(currentUser?.uid);
   const planRef = firebase.firestore().collection('plans').doc(planId);
 
   function toggleCollected() {
-    const uid = firebase.auth().currentUser.uid;
-    if (isCollected) {
-      planRef.update({
-        collectedBy: firebase.firestore.FieldValue.arrayRemove(uid),
-      });
+    if (currentUser) {
+      const uid = currentUser.uid;
+      if (isCollected) {
+        planRef.update({
+          collectedBy: firebase.firestore.FieldValue.arrayRemove(uid),
+        });
+      } else {
+        planRef.update({
+          collectedBy: firebase.firestore.FieldValue.arrayUnion(uid),
+        });
+      }
     } else {
-      planRef.update({
-        collectedBy: firebase.firestore.FieldValue.arrayUnion(uid),
-      });
+      setSignInOpen(true)
     }
-    console.log(isCollected);
   }
 
   useEffect(() => {
@@ -406,46 +395,49 @@ export default function SpecificPlanPage() {
   }, []);
 
   function onSubmitComment() {
-    if (commentContent === '') {
-      return;
+    if (currentUser) {
+      if (commentContent === '') {
+        return;
+      } else {
+        const firestore = firebase.firestore();
+
+        const batch = firestore.batch();
+
+        batch.update(planRef, {
+          commentsCount: firebase.firestore.FieldValue.increment(1),
+        });
+
+        const commentRef = planRef.collection('comments').doc();
+        batch.set(commentRef, {
+          content: commentContent,
+          createdAt: firebase.firestore.Timestamp.now(),
+          publisher: {
+            uid: firebase.auth().currentUser.uid,
+            displayName: firebase.auth().currentUser.displayName || '',
+            photoURL: firebase.auth().currentUser.photoURL || '',
+          },
+        });
+
+        batch.commit().then(() => {
+          setCommentContent('');
+        });
+      }
     } else {
-      const firestore = firebase.firestore();
-
-      const batch = firestore.batch();
-
-      batch.update(planRef, {
-        commentsCount: firebase.firestore.FieldValue.increment(1),
-      });
-
-      const commentRef = planRef.collection('comments').doc();
-      batch.set(commentRef, {
-        content: commentContent,
-        createdAt: firebase.firestore.Timestamp.now(),
-        publisher: {
-          uid: firebase.auth().currentUser.uid,
-          displayName: firebase.auth().currentUser.displayName || '',
-          photoURL: firebase.auth().currentUser.photoURL || '',
-        },
-      });
-
-      batch.commit().then(() => {
-        setCommentContent('');
-      });
+      setSignInOpen(true)
     }
   }
-
-  console.log(plan)
 
   return plan.publisher.length !== 0 ? (
     <StyledBody>
       <Header />
       <Banner slogan={'Explore Your Plan'} />
+      <SignInPopup open={signInOpen} closeModal={closeSignIn} />
       <StyledSpecificPlanPageContainer>
         <StyledPlanContainer>
-        {currentUser ? <StyledPlanCollectIcon
+          <StyledPlanCollectIcon
             onClick={toggleCollected}
             isCollected={isCollected}
-          /> : null}
+          />
           <StyledPlanInfoContainer>
             <StyledPlanInfoImage
               src={
@@ -527,11 +519,12 @@ export default function SpecificPlanPage() {
                   completeNum={completeNum}
                   setCompleteNum={setCompleteNum}
                   trainingMode={trainingMode}
+                  setSignInOpen={setSignInOpen}
                 />
               );
             })}
           </StyledPlanWorkoutsContainer>
-          { currentUser ? <StyledCommentContainer>
+          <StyledCommentContainer>
             <StyledPlanComments>
               Comments ({plan.commentsCount || 0})
             </StyledPlanComments>
@@ -541,6 +534,7 @@ export default function SpecificPlanPage() {
                 onChange={(e) => {
                   setCommentContent(e.target.value);
                 }}
+                placeholder='your comment...'
               />
             </StyledCommentInputContainer>
             <StyledLeaveCommentBtnContainer>
@@ -552,9 +546,16 @@ export default function SpecificPlanPage() {
               </StyledLeaveCommentBtn>
             </StyledLeaveCommentBtnContainer>
             {comments.map((comment) => {
-              return <PlanComment comment={comment} planId={planId} key={comment.id}/>;
+              return (
+                <PlanComment
+                  comment={comment}
+                  planId={planId}
+                  key={comment.id}
+                  currentUser={currentUser}
+                />
+              );
             })}
-          </StyledCommentContainer> : null}
+          </StyledCommentContainer>
         </StyledPlanContainer>
       </StyledSpecificPlanPageContainer>
       {/* <StopWatch /> */}

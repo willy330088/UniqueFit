@@ -15,10 +15,11 @@ import 'firebase/auth';
 import ProfileSubMenu from './ProfileSubMenu';
 import SidebarData from '../utils/profileSidebarData';
 import { HiUserCircle } from 'react-icons/hi';
+import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import NoResult from './NoResult';
 import { useHistory } from 'react-router-dom';
-
+import ConfirmPopup from './ConfirmPopup';
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -36,6 +37,7 @@ const StyledPersonalInfoContainer = styled.div`
   align-items: center;
   padding-bottom: 20px;
   border-bottom: 3px solid #1face1;
+  position: relative;
 `;
 
 const StyledPersonalImage = styled.img`
@@ -44,7 +46,8 @@ const StyledPersonalImage = styled.img`
   margin-right: 40px;
 `;
 
-const StyledPersonalInfo = styled.div``;
+const StyledPersonalInfo = styled.div`
+`;
 
 const StyledPersonalName = styled.div`
   color: #1face1;
@@ -58,10 +61,23 @@ const StyledPersonalEmail = styled.div`
 `;
 
 const StyledPencilIcon = styled(BsFillPencilFill)`
-  font-size: 30px;
-  margin-left: 10px;
+  font-size: 40px;
+  margin-left: 40px;
   color: #7d7d7d;
   cursor: pointer;
+
+  &:hover {
+    color: white;
+  }
+`;
+
+const StyledSignOutIcon = styled(RiLogoutBoxRLine)`
+  font-size: 50px;
+  margin-left: 40px;
+  color: #7d7d7d;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
 
   &:hover {
     color: white;
@@ -165,6 +181,10 @@ export default function CreateWorkoutPage() {
   const currentUser = useSelector((state) => state.currentUser);
   const [mainContent, setMainContent] = useState('My Workout Creations');
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const closeConfirm = () => setConfirmOpen(false);
   const gymWorkouts = workouts.filter(
     (workout) => workout.type === 'Gymworkout'
   );
@@ -173,22 +193,30 @@ export default function CreateWorkoutPage() {
   );
 
   useEffect(() => {
-    window.scrollTo({ top: 300, left: 0, behavior: 'smooth' })
-  }, [mainContent])
+    window.scrollTo({ top: 300, left: 0, behavior: 'smooth' });
+  }, [mainContent]);
 
   function showCreationWorkout() {
     if (gymWorkoutTypeSelected) {
-      return gymWorkouts.filter(workout => workout.publisher.uid === firebase.auth().currentUser.uid);
+      return gymWorkouts.filter(
+        (workout) => workout.publisher.uid === firebase.auth().currentUser.uid
+      );
     } else {
-      return homeWorkouts.filter(workout => workout.publisher.uid === firebase.auth().currentUser.uid);
+      return homeWorkouts.filter(
+        (workout) => workout.publisher.uid === firebase.auth().currentUser.uid
+      );
     }
   }
 
   function showCollectionWorkout() {
     if (gymWorkoutTypeSelected) {
-      return gymWorkouts.filter(workout => workout.collectedBy.includes(firebase.auth().currentUser.uid));
+      return gymWorkouts.filter((workout) =>
+        workout.collectedBy.includes(firebase.auth().currentUser.uid)
+      );
     } else {
-      return homeWorkouts.filter(workout => workout.collectedBy.includes(firebase.auth().currentUser.uid));
+      return homeWorkouts.filter((workout) =>
+        workout.collectedBy.includes(firebase.auth().currentUser.uid)
+      );
     }
   }
 
@@ -201,19 +229,19 @@ export default function CreateWorkoutPage() {
       );
     } else if (mainContent === 'My Workout Creations') {
       if (showCreationWorkout().length === 0) {
-        return (<NoResult type={'workout'}/>)
+        return <NoResult type={'workout'} />;
       } else {
         return (
           <>
             {showCreationWorkout().map((workout) => {
-              return <WorkoutCreation workout={workout} />
+              return <WorkoutCreation workout={workout} />;
             })}
           </>
         );
       }
     } else if (mainContent === 'My Workout Collections') {
       if (showCollectionWorkout().length === 0) {
-        return (<NoResult type={'workout'}/>)
+        return <NoResult type={'workout'} />;
       } else {
         return (
           <>
@@ -224,26 +252,42 @@ export default function CreateWorkoutPage() {
         );
       }
     } else if (mainContent === 'My Plan Creations') {
-      if (plans.filter(plan => plan.publisher.uid === firebase.auth().currentUser.uid).length === 0) {
-        return (<NoResult type={'plan'}/>)
+      if (
+        plans.filter(
+          (plan) => plan.publisher.uid === firebase.auth().currentUser.uid
+        ).length === 0
+      ) {
+        return <NoResult type={'plan'} />;
       } else {
         return (
           <>
-            {plans.filter(plan => plan.publisher.uid === firebase.auth().currentUser.uid).map((plan) => {
-              return <PlanCreation plan={plan} />;
-            })}
+            {plans
+              .filter(
+                (plan) => plan.publisher.uid === firebase.auth().currentUser.uid
+              )
+              .map((plan) => {
+                return <PlanCreation plan={plan} />;
+              })}
           </>
         );
       }
     } else if (mainContent === 'My Plan Collections') {
-      if (plans.filter(plan => plan.collectedBy.includes(firebase.auth().currentUser.uid)).length === 0) {
-        return (<NoResult type={'plan'}/>)
+      if (
+        plans.filter((plan) =>
+          plan.collectedBy.includes(firebase.auth().currentUser.uid)
+        ).length === 0
+      ) {
+        return <NoResult type={'plan'} />;
       } else {
         return (
           <>
-            {plans.filter(plan => plan.collectedBy.includes(firebase.auth().currentUser.uid)).map((plan) => {
-              return <PlanCollection plan={plan} />;
-            })}
+            {plans
+              .filter((plan) =>
+                plan.collectedBy.includes(firebase.auth().currentUser.uid)
+              )
+              .map((plan) => {
+                return <PlanCollection plan={plan} />;
+              })}
           </>
         );
       }
@@ -256,15 +300,16 @@ export default function CreateWorkoutPage() {
     }
   }
 
+  function signOut() {
+    firebase.auth().signOut();
+    history.push('/home');
+  }
+
   return currentUser ? (
     <StyledBody>
       <Header />
       <Banner slogan={'My Profile'} />
       <StyledProfilePageContainer>
-        <div onClick={() => {
-          firebase.auth().signOut()
-          history.push('/home');
-        }}>logout</div>
         <StyledPersonalInfoContainer>
           {currentUser.photoURL ? (
             <StyledPersonalImage src={currentUser.photoURL} />
@@ -272,22 +317,40 @@ export default function CreateWorkoutPage() {
             <StyledPersonalIcon />
           )}
           <StyledPersonalInfo>
-            <StyledPersonalName>
-              {currentUser.displayName}
-              <StyledPopup trigger={<StyledPencilIcon />} modal nested>
-                <StyledPopupTitle>Edit Your Name</StyledPopupTitle>
-                <StyledPopupInput />
-                <StyledPopupBtn>Save</StyledPopupBtn>
-              </StyledPopup>
-            </StyledPersonalName>
+            <StyledPersonalName>{currentUser.displayName}</StyledPersonalName>
             <StyledPersonalEmail>{currentUser.email}</StyledPersonalEmail>
           </StyledPersonalInfo>
+          <StyledPencilIcon
+            onClick={() => {
+              setOpen(true);
+            }}
+          />
+          <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
+            <StyledPopupTitle>Edit Your Name</StyledPopupTitle>
+            <StyledPopupInput />
+            <StyledPopupBtn>Save</StyledPopupBtn>
+          </StyledPopup>
+          <StyledSignOutIcon
+            onClick={() => {
+              setConfirmOpen(true);
+            }}
+          />
+          <ConfirmPopup
+            confirmOpen={confirmOpen}
+            closeConfirm={closeConfirm}
+            action={signOut}
+            type={'signOut'}
+          />
         </StyledPersonalInfoContainer>
         <StyledSideBar>
           <StyledSideBarContainer>
             {SidebarData.map((item) => {
               return (
-                <ProfileSubMenu item={item} setMainContent={setMainContent} mainContent={mainContent}/>
+                <ProfileSubMenu
+                  item={item}
+                  setMainContent={setMainContent}
+                  mainContent={mainContent}
+                />
               );
             })}
           </StyledSideBarContainer>

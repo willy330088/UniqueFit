@@ -131,32 +131,7 @@ const StyledMessageIcon = styled(RiMessage2Fill)`
   } ;
 `;
 
-//popup
-const StyledPopup = styled(Popup)`
-  &-overlay {
-    background: rgba(0, 0, 0, 0.6);
-  }
-
-  &-content {
-    margin: auto;
-    background: #222d35;
-    width: 350px;
-    height: 300px;
-    overflow-y: scroll;
-
-    @media (min-width: 500px) {
-      width: 500px;
-      height: 400px;
-    }
-
-    @media (min-width: 700px) {
-      width: 700px;
-      height: 550px;
-    }
-  }
-`;
-
-export default function WorkoutItem({ workout }) {
+export default function WorkoutItem({ workout, setSignInOpen }) {
   const [hover, setHover] = useState(false);
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
@@ -209,9 +184,7 @@ export default function WorkoutItem({ workout }) {
           </StyledWorkoutItemSocial>
         </StyledWorkoutItemDescription>
       </StyledWorkoutItemContainer>
-      <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
-        <WorkoutPopup workout={workout} />
-      </StyledPopup>
+      <WorkoutPopup workout={workout} close={closeModal} open={open} setSignInOpen={setSignInOpen}/>
     </>
   );
 }

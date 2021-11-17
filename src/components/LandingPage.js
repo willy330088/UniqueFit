@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import LandingPageBackground from '../images/landingPageBackground.jpeg';
 import LogoDumbbell from '../images/logoDumbbell.png';
-import styled, { keyframes } from 'styled-components';
-import Popup from 'reactjs-popup';
+import styled from 'styled-components';
 import 'firebase/auth';
 import { useHistory } from 'react-router-dom';
 import AOS from 'aos';
@@ -127,47 +126,6 @@ const StyledGuestBtn = styled.button`
   }
 `;
 
-const anvil = keyframes`
-  0% {
-    transform: scale(1) translateY(0px);
-    opacity: 0;
-    box-shadow: 0 0 0 rgba(241, 241, 241, 0);
-  }
-  1% {
-    transform: scale(0.96) translateY(10px);
-    opacity: 0;
-    box-shadow: 0 0 0 rgba(241, 241, 241, 0);
-  }
-  100% {
-    transform: scale(1) translateY(0px);
-    opacity: 1;
-    box-shadow: 0 0 500px rgba(241, 241, 241, 0);
-  }
-`;
-
-const StyledPopup = styled(Popup)`
-  &-overlay {
-    background: rgba(0, 0, 0, 0.6);
-  }
-
-  &-content {
-    margin: auto;
-    background: rgb(255, 255, 255);
-    width: 350px;
-    display: flex;
-    height: 550px;
-    animation: ${anvil} 0.6s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
-
-    @media (min-width: 500px) {
-      width: 500px;
-    }
-
-    @media (min-width: 700px) {
-      width: 700px;
-    }
-  }
-`;
-
 export default function LandingPage() {
   AOS.init();
   const history = useHistory();
@@ -206,9 +164,7 @@ export default function LandingPage() {
           Guest
         </StyledGuestBtn>
       </StyledBtnContainer>
-      <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
-        <SignInPopup closeModal={closeModal}/>
-      </StyledPopup>
+      <SignInPopup open={open} closeModal={closeModal}/>
     </StyledLandingPageContainer>
   );
 }

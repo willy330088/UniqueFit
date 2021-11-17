@@ -4,8 +4,7 @@ import Banner from './Banner';
 import CreatePlanPopup from './CreatePlanPopup';
 import styled from 'styled-components';
 import Popup from 'reactjs-popup';
-import firebase from '../utils/firebase';
-import 'firebase/firestore';
+import SignInPopup from './SignInPopup';
 import PlanItem from './PlanItem';
 import Filter from './Filter';
 import GymBackground from '../images/gym.jpeg';
@@ -151,6 +150,8 @@ export default function PlanListPage() {
   const [hover, setHover] = useState(false);
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
+  const [signInOpen, setSignInOpen] = useState(false);
+  const closeSignIn = () => setSignInOpen(false);
   const plans = useSelector((state) => state.plans);
   const currentUser = useSelector((state) => state.currentUser);
   console.log(plans)
@@ -177,18 +178,25 @@ export default function PlanListPage() {
           setFilteredMuscleGroups={setFilteredMuscleGroups}
         />
         <StyledPlanListContainer>
-          {currentUser ? <StyledAddPlanContainer
+         <StyledAddPlanContainer
             onMouseOver={() => {
               setHover(true);
             }}
             onMouseLeave={() => {
               setHover(false);
             }}
-            onClick={()=>{setOpen(true)}}
+            onClick={() => {
+              if (currentUser) {
+                setOpen(true);
+              } else {
+                setSignInOpen(true)
+              }
+            }}
           >
             <StyledCreatePlanIcon hover={hover}/>
             <StyledCreatePlanText hover={hover}>Click To Create Plan</StyledCreatePlanText>
-          </StyledAddPlanContainer> : null}
+          </StyledAddPlanContainer>
+          <SignInPopup open={signInOpen} closeModal={closeSignIn}/>
           <StyledPopup open={open} closeOnDocumentClick onClose={closeModal} paging={paging}>
             <CreatePlanPopup paging={paging} setPaging={setPaging} close={closeModal}/>
           </StyledPopup>

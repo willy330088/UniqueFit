@@ -132,7 +132,7 @@ const StyledCommentEditSaveBtn = styled.div`
   }
 `;
 
-export default function WorkoutComment({ comment, workoutId}) {
+export default function WorkoutComment({ comment, workoutId, currentUser}) {
   const [showTool, setShowTool] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [commentContent, setCommentContent] = useState(comment.content);
@@ -201,7 +201,7 @@ export default function WorkoutComment({ comment, workoutId}) {
         <StyledCommentTimeStamp>
           {comment.createdAt.toDate().toLocaleString()}
         </StyledCommentTimeStamp>
-        {comment.publisher.uid === firebase.auth().currentUser.uid ? (
+        {comment.publisher.uid === currentUser?.uid ? (
           <StyledCommentThreeDot
             onClick={() => {
               setShowTool(!showTool);

@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from './Header';
 import Banner from './Banner';
 import CreateWorkoutPopup from './CreateWorkoutPopup';
 import styled from 'styled-components';
 import Popup from 'reactjs-popup';
 import WorkoutItem from './WorkoutItem';
-import firebase from '../utils/firebase';
-import 'firebase/firestore';
+import SignInPopup from './SignInPopup';
 import Filter from './Filter';
 import { MdAddCircleOutline } from 'react-icons/md';
 import { useSelector } from 'react-redux';
@@ -136,6 +135,8 @@ export default function WorkoutListPage() {
   const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
+  const [signInOpen, setSignInOpen] = useState(false);
+  const closeSignIn = () => setSignInOpen(false);
   const workouts = useSelector((state) => state.workouts);
   const currentUser = useSelector((state) => state.currentUser);
 
@@ -191,21 +192,26 @@ export default function WorkoutListPage() {
           setFilteredMuscleGroups={setFilteredMuscleGroups}
         />
         <StyledWorkoutContainer>
-          {currentUser ? <StyledCreateWorkoutContainer
+          <StyledCreateWorkoutContainer
             onClick={() => {
-              setOpen(true);
+              if (currentUser) {
+                setOpen(true);
+              } else {
+                setSignInOpen(true)
+              }
             }}
           >
             <StyledCreateWorkoutIcon />
             <StyledCreateWorkoutText>
               Click To Create Workout
             </StyledCreateWorkoutText>
-          </StyledCreateWorkoutContainer> : null}
+          </StyledCreateWorkoutContainer>
+          <SignInPopup open={signInOpen} closeModal={closeSignIn}/>
           <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
             <CreateWorkoutPopup close={closeModal} />
           </StyledPopup>
           {showWorkoutList().map((workout) => {
-            return <WorkoutItem workout={workout} />;
+            return <WorkoutItem workout={workout} setSignInOpen={setSignInOpen}/>;
           })}
         </StyledWorkoutContainer>
       </StyledWorkoutListContainer>

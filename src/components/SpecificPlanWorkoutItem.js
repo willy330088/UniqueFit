@@ -111,20 +111,6 @@ const StyledCheckbox = styled.input`
   top: calc(50% - 8.5px);
 `;
 
-const StyledPopup = styled(Popup)`
-  &-overlay {
-    background: rgba(0, 0, 0, 0.6);
-  }
-
-  &-content {
-    margin: auto;
-    background: #222d35;
-    width: 700px;
-    height: 550px;
-    overflow-y: scroll;
-  }
-`;
-
 export default function SpecificPlanWorkoutItem({
   workout,
   index,
@@ -133,6 +119,7 @@ export default function SpecificPlanWorkoutItem({
   completeNum,
   setCompleteNum,
   trainingMode,
+  setSignInOpen
 }) {
   const [checked, setChecked] = useState(false);
   const [open, setOpen] = useState(false);
@@ -184,9 +171,7 @@ export default function SpecificPlanWorkoutItem({
           setOpen(true);
         }}
       />
-      <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
-        <WorkoutPopup workout={workoutSetDetails[index]} />
-      </StyledPopup>
+      <WorkoutPopup workout={workoutSetDetails[index]} close={closeModal} open={open} setSignInOpen={setSignInOpen}/>
       {trainingMode ? (
         <StyledCheckbox
           type="checkbox"

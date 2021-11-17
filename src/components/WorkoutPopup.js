@@ -11,6 +11,7 @@ import WorkoutComment from './WorkoutComment';
 import { Waypoint } from 'react-waypoint';
 import LogoDumbbell from '../images/logoDumbbell.png';
 import { useSelector } from 'react-redux';
+import Popup from 'reactjs-popup';
 
 const StyledVideo = styled.video`
   position: fixed;
@@ -441,7 +442,31 @@ const StyledLogoDumbbell = styled.div`
   margin: 0 5px;
 `;
 
-export default function WorkoutPopup({ workout }) {
+const StyledPopup = styled(Popup)`
+  &-overlay {
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  &-content {
+    margin: auto;
+    background: #222d35;
+    width: 350px;
+    height: 300px;
+    overflow-y: scroll;
+
+    @media (min-width: 500px) {
+      width: 500px;
+      height: 400px;
+    }
+
+    @media (min-width: 700px) {
+      width: 700px;
+      height: 550px;
+    }
+  }
+`;
+
+export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
   const [commentContent, setCommentContent] = useState('');
   const [comments, setComments] = useState([]);
   const [scrollDown, setScrollDown] = useState(true);
@@ -467,63 +492,72 @@ export default function WorkoutPopup({ workout }) {
   }, []);
 
   function onSubmitComment() {
-    const firestore = firebase.firestore();
-    const batch = firestore.batch();
-    const planRef = firestore.collection('workouts').doc(workout.id);
+    if (currentUser) {
+      const firestore = firebase.firestore();
+      const batch = firestore.batch();
+      const planRef = firestore.collection('workouts').doc(workout.id);
 
-    if (commentContent === '') {
-      return;
+      if (commentContent === '') {
+        return;
+      } else {
+        batch.update(planRef, {
+          commentsCount: firebase.firestore.FieldValue.increment(1),
+        });
+
+        const commentRef = planRef.collection('comments').doc();
+        batch.set(commentRef, {
+          content: commentContent,
+          createdAt: firebase.firestore.Timestamp.now(),
+          publisher: {
+            uid: firebase.auth().currentUser.uid,
+            displayName: firebase.auth().currentUser.displayName || '',
+            photoURL: firebase.auth().currentUser.photoURL || '',
+          },
+        });
+
+        batch.commit().then(() => {
+          setCommentContent('');
+        });
+      }
     } else {
-      batch.update(planRef, {
-        commentsCount: firebase.firestore.FieldValue.increment(1),
-      });
-
-      const commentRef = planRef.collection('comments').doc();
-      batch.set(commentRef, {
-        content: commentContent,
-        createdAt: firebase.firestore.Timestamp.now(),
-        publisher: {
-          uid: firebase.auth().currentUser.uid,
-          displayName: firebase.auth().currentUser.displayName || '',
-          photoURL: firebase.auth().currentUser.photoURL || '',
-        },
-      });
-
-      batch.commit().then(() => {
-        setCommentContent('');
-      });
+      close()
+      setSignInOpen(true)
     }
   }
 
   function toggleCollected() {
-    const uid = firebase.auth().currentUser.uid;
-    console.log('hi');
-    if (isCollected) {
-      firebase
-        .firestore()
-        .collection('workouts')
-        .doc(workout.id)
-        .update({
-          collectedBy: firebase.firestore.FieldValue.arrayRemove(uid),
-        });
+    if (currentUser) {
+      const uid = currentUser.uid;
+      if (isCollected) {
+        firebase
+          .firestore()
+          .collection('workouts')
+          .doc(workout.id)
+          .update({
+            collectedBy: firebase.firestore.FieldValue.arrayRemove(uid),
+          });
+      } else {
+        firebase
+          .firestore()
+          .collection('workouts')
+          .doc(workout.id)
+          .update({
+            collectedBy: firebase.firestore.FieldValue.arrayUnion(uid),
+          });
+      }
     } else {
-      firebase
-        .firestore()
-        .collection('workouts')
-        .doc(workout.id)
-        .update({
-          collectedBy: firebase.firestore.FieldValue.arrayUnion(uid),
-        });
+      close()
+      setSignInOpen(true)
     }
   }
 
   return (
-    <>
+    <StyledPopup open={open} closeOnDocumentClick onClose={close}>
       <input type="text" autofocus="autofocus" style={{ display: 'none' }} />
-      {currentUser ? <StyledAddToCollectIcon
+      <StyledAddToCollectIcon
         onClick={toggleCollected}
         isCollected={isCollected}
-      /> : null}
+      />
       <StyledVideo
         src={workout.videoURL}
         autoPlay
@@ -576,7 +610,7 @@ export default function WorkoutPopup({ workout }) {
             <StyledTextContent>
               Description : {workout.description}
             </StyledTextContent>
-            {currentUser ? <StyledCommentContainer>
+            <StyledCommentContainer>
               <StyledCommentTitleContainer>
                 <StyledCommentIcon />{' '}
                 <StyledCommentTitleText>
@@ -589,6 +623,7 @@ export default function WorkoutPopup({ workout }) {
                   onChange={(e) => {
                     setCommentContent(e.target.value);
                   }}
+                  placeholder='your comment...'
                 />
               </StyledCommentInputContainer>
               <StyledLeaveCommentBtnContainer>
@@ -605,10 +640,11 @@ export default function WorkoutPopup({ workout }) {
                     comment={comment}
                     workoutId={workout.id}
                     key={comment.id}
+                    currentUser={currentUser}
                   />
                 );
               })}
-            </StyledCommentContainer> : null}
+            </StyledCommentContainer>
           </StyledContentContainer>
         </StyledDetails>
       ) : (
@@ -626,6 +662,6 @@ export default function WorkoutPopup({ workout }) {
           </StyledLogoContainer>
         </StyledOverlay>
       )}
-    </>
+    </StyledPopup>
   );
 }

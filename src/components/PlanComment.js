@@ -112,7 +112,7 @@ const StyledCommentEditSaveBtn = styled.button`
   }
 `;
 
-export default function PlanComment({ comment, planId }) {
+export default function PlanComment({ comment, planId, currentUser }) {
   const [showTool, setShowTool] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [commentContent, setCommentContent] = useState(comment.content);
@@ -181,7 +181,7 @@ export default function PlanComment({ comment, planId }) {
         <StyledCommentTimeStamp>
           {comment.createdAt.toDate().toLocaleString()}
         </StyledCommentTimeStamp>
-        {comment.publisher.uid === firebase.auth().currentUser.uid ? (
+        {comment.publisher.uid === currentUser?.uid ? (
           <StyledCommentThreeDot
             onClick={() => {
               setShowTool(!showTool);

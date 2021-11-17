@@ -6,7 +6,7 @@ import firebase from '../utils/firebase';
 import 'firebase/auth';
 import { facebookProvider, googleProvider } from '../utils/authMethod';
 import socialMediaAuth from '../utils/auth';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { BsFacebook } from 'react-icons/bs';
 
@@ -162,8 +162,50 @@ const StyledMessage = styled.div`
   margin: 0 auto 10px;
 `;
 
-export default function SignInPopup({closeModal}) {
+const anvil = keyframes`
+  0% {
+    transform: scale(1) translateY(0px);
+    opacity: 0;
+    box-shadow: 0 0 0 rgba(241, 241, 241, 0);
+  }
+  1% {
+    transform: scale(0.96) translateY(10px);
+    opacity: 0;
+    box-shadow: 0 0 0 rgba(241, 241, 241, 0);
+  }
+  100% {
+    transform: scale(1) translateY(0px);
+    opacity: 1;
+    box-shadow: 0 0 500px rgba(241, 241, 241, 0);
+  }
+`;
+
+const StyledPopup = styled(Popup)`
+  &-overlay {
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  &-content {
+    margin: auto;
+    background: rgb(255, 255, 255);
+    width: 350px;
+    display: flex;
+    height: 550px;
+    animation: ${anvil} 0.6s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
+
+    @media (min-width: 500px) {
+      width: 500px;
+    }
+
+    @media (min-width: 700px) {
+      width: 700px;
+    }
+  }
+`;
+
+export default function SignInPopup({ open, closeModal }) {
   const history = useHistory();
+  const location = useLocation();
   const [isSigningIn, setIsSigningIn] = useState(true);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -172,7 +214,11 @@ export default function SignInPopup({closeModal}) {
 
   const handleOnClick = async (provider) => {
     const res = await socialMediaAuth(provider);
-    history.push('/home');
+    if (location.pathname === '/') {
+      history.push('/home');
+    } else {
+      closeModal();
+    }
     console.log(res);
   };
 
@@ -191,7 +237,11 @@ export default function SignInPopup({closeModal}) {
           });
         })
         .then(() => {
-          history.push('/home');
+          if (location.pathname === '/') {
+            history.push('/home');
+          } else {
+            closeModal();
+          }
         })
         .catch((error) => {
           switch (error.code) {
@@ -212,7 +262,11 @@ export default function SignInPopup({closeModal}) {
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-          history.push('/home');
+          if (location.pathname === '/') {
+            history.push('/home');
+          } else {
+            closeModal();
+          }
         })
         .catch((error) => {
           switch (error.code) {
@@ -231,7 +285,7 @@ export default function SignInPopup({closeModal}) {
     }
   };
   return (
-    <>
+    <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
       <StyledPopupImage src={Fit} />
       <StyledContainer>
         {isSigningIn ? (
@@ -253,13 +307,9 @@ export default function SignInPopup({closeModal}) {
               onClick={() => handleOnClick(facebookProvider)}
             >
               <StyledFacebookIcon />
-              <StyledSignInMediaText>
-                Facebook Sign In
-              </StyledSignInMediaText>
+              <StyledSignInMediaText>Facebook Sign In</StyledSignInMediaText>
             </StyledSignInMediaBtn>
-            <StyledSignInMediaBtn
-              onClick={() => handleOnClick(googleProvider)}
-            >
+            <StyledSignInMediaBtn onClick={() => handleOnClick(googleProvider)}>
               <StyledGoogleIcon />
               <StyledSignInMediaText>Google Sign In</StyledSignInMediaText>
             </StyledSignInMediaBtn>
@@ -315,6 +365,6 @@ export default function SignInPopup({closeModal}) {
           </>
         )}
       </StyledContainer>
-    </>
-  )
+    </StyledPopup>
+  );
 }
