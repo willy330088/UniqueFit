@@ -137,6 +137,7 @@ export default function WorkoutListPage() {
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
   const workouts = useSelector((state) => state.workouts);
+  const currentUser = useSelector((state) => state.currentUser);
 
   const gymWorkouts = workouts.filter(
     (workout) => workout.type === 'Gymworkout'
@@ -190,7 +191,7 @@ export default function WorkoutListPage() {
           setFilteredMuscleGroups={setFilteredMuscleGroups}
         />
         <StyledWorkoutContainer>
-          <StyledCreateWorkoutContainer
+          {currentUser ? <StyledCreateWorkoutContainer
             onClick={() => {
               setOpen(true);
             }}
@@ -199,7 +200,7 @@ export default function WorkoutListPage() {
             <StyledCreateWorkoutText>
               Click To Create Workout
             </StyledCreateWorkoutText>
-          </StyledCreateWorkoutContainer>
+          </StyledCreateWorkoutContainer> : null}
           <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
             <CreateWorkoutPopup close={closeModal} />
           </StyledPopup>

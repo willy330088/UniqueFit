@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import WorkoutListPage from './components/WorkoutListPage';
 import ProfilePage from './components/ProfilePage';
@@ -10,10 +10,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import ScrollToTop from './components/ScrollToTop';
 import HomePage from './components/HomePage';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import firebase from './utils/firebase';
 import 'firebase/firestore';
-import { getWorkouts, getPlans, getSchedules } from '../src/redux/actions';
+import { getWorkouts, getPlans, getSchedules, getCurrentUser } from '../src/redux/actions';
 
 const StyledToastContainer = styled(ToastContainer).attrs({
   className: 'toast-container',
@@ -39,6 +39,7 @@ const StyledToastContainer = styled(ToastContainer).attrs({
 
 function App() {
   const dispatch = useDispatch()
+  const currentUser = useSelector((state) => state.currentUser);
 
   useEffect(() => {
     firebase
@@ -80,6 +81,12 @@ function App() {
         dispatch(getSchedules(data))
       });
   }, []);
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      dispatch(getCurrentUser(user))
+    });
+  }, []);
   
   return (
     <>
@@ -100,7 +107,7 @@ function App() {
             <PlanListPage />
           </Route>
           <Route path="/profile" exact>
-            <ProfilePage />
+            { currentUser ? (<ProfilePage />) : (<Redirect to='/'/>)}
           </Route>
           <Route path="/plans/:planId" exact>
             <SpecificPlanPage />

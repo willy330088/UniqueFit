@@ -356,7 +356,7 @@ export default function SpecificPlanPage() {
   const { planId } = useParams();
   const [commentContent, setCommentContent] = useState('');
   const [comments, setComments] = useState([]);
-  const [currentUser, setCurrentUser] = useState();
+  const currentUser = useSelector((state) => state.currentUser);
   const [completeNum, setCompleteNum] = useState(0);
   const [trainingMode, setTrainingMode] = useState(false);
   const plans = useSelector((state) => state.plans);
@@ -391,12 +391,6 @@ export default function SpecificPlanPage() {
     }
     console.log(isCollected);
   }
-
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      setCurrentUser(user);
-    });
-  }, []);
 
   useEffect(() => {
     planRef
@@ -442,16 +436,16 @@ export default function SpecificPlanPage() {
 
   console.log(plan)
 
-  return currentUser && plan.publisher.length !== 0 ? (
+  return plan.publisher.length !== 0 ? (
     <StyledBody>
       <Header />
       <Banner slogan={'Explore Your Plan'} />
       <StyledSpecificPlanPageContainer>
         <StyledPlanContainer>
-          <StyledPlanCollectIcon
+        {currentUser ? <StyledPlanCollectIcon
             onClick={toggleCollected}
             isCollected={isCollected}
-          />
+          /> : null}
           <StyledPlanInfoContainer>
             <StyledPlanInfoImage
               src={
@@ -537,7 +531,7 @@ export default function SpecificPlanPage() {
               );
             })}
           </StyledPlanWorkoutsContainer>
-          <StyledCommentContainer>
+          { currentUser ? <StyledCommentContainer>
             <StyledPlanComments>
               Comments ({plan.commentsCount || 0})
             </StyledPlanComments>
@@ -560,7 +554,7 @@ export default function SpecificPlanPage() {
             {comments.map((comment) => {
               return <PlanComment comment={comment} planId={planId} key={comment.id}/>;
             })}
-          </StyledCommentContainer>
+          </StyledCommentContainer> : null}
         </StyledPlanContainer>
       </StyledSpecificPlanPageContainer>
       {/* <StopWatch /> */}

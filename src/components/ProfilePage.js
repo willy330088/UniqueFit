@@ -17,6 +17,7 @@ import SidebarData from '../utils/profileSidebarData';
 import { HiUserCircle } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import NoResult from './NoResult';
+import { useHistory } from 'react-router-dom';
 
 
 const StyledBody = styled.div`
@@ -158,9 +159,10 @@ const StyledPersonalIcon = styled(HiUserCircle)`
 `;
 
 export default function CreateWorkoutPage() {
+  const history = useHistory();
   const workouts = useSelector((state) => state.workouts);
   const plans = useSelector((state) => state.plans);
-  const [currentUser, setCurrentUser] = useState();
+  const currentUser = useSelector((state) => state.currentUser);
   const [mainContent, setMainContent] = useState('My Workout Creations');
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
   const gymWorkouts = workouts.filter(
@@ -173,12 +175,6 @@ export default function CreateWorkoutPage() {
   useEffect(() => {
     window.scrollTo({ top: 300, left: 0, behavior: 'smooth' })
   }, [mainContent])
-
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      setCurrentUser(user);
-    });
-  }, []);
 
   function showCreationWorkout() {
     if (gymWorkoutTypeSelected) {
@@ -265,6 +261,10 @@ export default function CreateWorkoutPage() {
       <Header />
       <Banner slogan={'My Profile'} />
       <StyledProfilePageContainer>
+        <div onClick={() => {
+          firebase.auth().signOut()
+          history.push('/home');
+        }}>logout</div>
         <StyledPersonalInfoContainer>
           {currentUser.photoURL ? (
             <StyledPersonalImage src={currentUser.photoURL} />

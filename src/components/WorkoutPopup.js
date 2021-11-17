@@ -10,6 +10,7 @@ import 'firebase/firestore';
 import WorkoutComment from './WorkoutComment';
 import { Waypoint } from 'react-waypoint';
 import LogoDumbbell from '../images/logoDumbbell.png';
+import { useSelector } from 'react-redux';
 
 const StyledVideo = styled.video`
   position: fixed;
@@ -445,10 +446,9 @@ export default function WorkoutPopup({ workout }) {
   const [comments, setComments] = useState([]);
   const [scrollDown, setScrollDown] = useState(true);
   const [videoReady, setVideoReady] = useState(false);
+  const currentUser = useSelector((state) => state.currentUser);
 
-  const isCollected = workout.collectedBy?.includes(
-    firebase.auth().currentUser.uid
-  );
+  const isCollected = workout.collectedBy?.includes(currentUser?.uid);
 
   useEffect(() => {
     firebase
@@ -520,10 +520,10 @@ export default function WorkoutPopup({ workout }) {
   return (
     <>
       <input type="text" autofocus="autofocus" style={{ display: 'none' }} />
-      <StyledAddToCollectIcon
+      {currentUser ? <StyledAddToCollectIcon
         onClick={toggleCollected}
         isCollected={isCollected}
-      />
+      /> : null}
       <StyledVideo
         src={workout.videoURL}
         autoPlay
@@ -576,7 +576,7 @@ export default function WorkoutPopup({ workout }) {
             <StyledTextContent>
               Description : {workout.description}
             </StyledTextContent>
-            <StyledCommentContainer>
+            {currentUser ? <StyledCommentContainer>
               <StyledCommentTitleContainer>
                 <StyledCommentIcon />{' '}
                 <StyledCommentTitleText>
@@ -608,7 +608,7 @@ export default function WorkoutPopup({ workout }) {
                   />
                 );
               })}
-            </StyledCommentContainer>
+            </StyledCommentContainer> : null}
           </StyledContentContainer>
         </StyledDetails>
       ) : (

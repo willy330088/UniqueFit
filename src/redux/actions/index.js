@@ -18,3 +18,10 @@ export const getSchedules = (schedules) => {
     payload: schedules
   }
 }
+
+export const getCurrentUser = (currentUser) => {
+  return {
+    type: 'GET_CURRENTUSER',
+    payload: currentUser
+  }
+}

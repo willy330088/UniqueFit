@@ -152,6 +152,7 @@ export default function PlanListPage() {
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
   const plans = useSelector((state) => state.plans);
+  const currentUser = useSelector((state) => state.currentUser);
   console.log(plans)
 
   const publicPlans = plans.filter(
@@ -176,7 +177,7 @@ export default function PlanListPage() {
           setFilteredMuscleGroups={setFilteredMuscleGroups}
         />
         <StyledPlanListContainer>
-          <StyledAddPlanContainer
+          {currentUser ? <StyledAddPlanContainer
             onMouseOver={() => {
               setHover(true);
             }}
@@ -187,7 +188,7 @@ export default function PlanListPage() {
           >
             <StyledCreatePlanIcon hover={hover}/>
             <StyledCreatePlanText hover={hover}>Click To Create Plan</StyledCreatePlanText>
-          </StyledAddPlanContainer>
+          </StyledAddPlanContainer> : null}
           <StyledPopup open={open} closeOnDocumentClick onClose={closeModal} paging={paging}>
             <CreatePlanPopup paging={paging} setPaging={setPaging} close={closeModal}/>
           </StyledPopup>
