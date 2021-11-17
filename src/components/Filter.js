@@ -9,7 +9,7 @@ import SpinHover from '../images/spin-hover.png';
 import Spin from '../images/spin.png';
 
 const StyledFilterContainer = styled.div`
-  width: 100%;
+  width: fit-content;
   height: 50px;
   margin: 20px 0 30px 0;
   transition: ease-in-out 0.3s;

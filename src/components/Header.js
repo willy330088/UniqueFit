@@ -24,9 +24,17 @@ const StyledHeader = styled.div`
 const StyledLogo = styled.img`
   height: 40px;
   cursor: pointer;
+  transition: ease-in-out 0.2s;
   @media (min-width: 700px) {
     margin-left: 60px;
     height: 50px;
+  }
+  &:hover {
+    height: 45px;
+    @media (min-width: 700px) {
+      margin-left: 50px;
+      height: 55px;
+    }
   }
 `;
 
@@ -35,6 +43,7 @@ const StyledLink = styled(NavLink)`
   font-size: 25px;
   text-decoration: none;
   margin: 0 20px 0 20px;
+  transition: ease-in-out 0.2s;
   &:hover {
     color: #1face1;
     border-bottom: #1face1 4px solid; 

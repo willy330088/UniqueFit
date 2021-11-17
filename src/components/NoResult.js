@@ -6,10 +6,13 @@ import { useHistory } from 'react-router-dom';
 
 const StyledNoResultContainer = styled.div`
   width: 100%;
-  height: 400px;
   display: flex;
+  padding: 50px;
   flex-direction: column;
   align-items: center;
+  margin-top: 50px;
+  background-color: hsla(205, 22%, 30%);
+  border-radius: 5px;
 `;
 
 

@@ -13,8 +13,8 @@ const StyledSidebarLink = styled.div`
   font-size: 25px;
   background: white;
   transition: ease-in-out 0.2s;
+  border-left: ${(props) => (props.selected ? '6px solid #1face1' : 'none')};
   &:hover {
-    background: white;
     border-left: 6px solid #1face1;
     cursor: pointer;
   }
@@ -28,7 +28,7 @@ const StyledDropdownLink = styled.div`
   background: #414757;
   height: 60px;
   padding-left: 3rem;
-  display:${(props) => (props.subnav ? 'flex' : 'none')};;
+  display:${(props) => (props.subnav ? 'flex' : 'none')};
   align-items: center;
   text-decoration: none;
   color: #f5f5f5;
@@ -45,19 +45,40 @@ const StyledDropdownLinkContainer = styled.div`
   background: #414757;
 `;
 
-export default function ProfileSubMenu({ item, setMainContent }) {
+export default function ProfileSubMenu({ item, setMainContent, mainContent }) {
   const [subnav, setSubnav] = useState(false);
   const showSubnav = () => setSubnav(!subnav);
+  
+  console.log(mainContent)
+
+  function defineSelected() {
+    if (mainContent === 'My Workout Creations' || mainContent === 'My Workout Collections') {
+      if (item.title === 'My Workouts') {
+        return true
+      } else {
+        return false
+      }
+    } else if (mainContent === 'My Plan Creations' || mainContent === 'My Plan Collections') {
+      if (item.title === 'My Plans') {
+        return true
+      } else {
+        return false
+      }
+    } else if (mainContent === item.title) {
+      return true
+    }
+  }
 
   return (
     <>
       <StyledSidebarLink onClick={() => {
+        console.log(item.title)
         if (item.subNav) {
           showSubnav()
         } else {
           setMainContent(item.title); 
         }
-      }}>
+      }} selected = {defineSelected()}>
         <div>
           <StyledSidebarLabel>
             {item.title}
@@ -81,6 +102,7 @@ export default function ProfileSubMenu({ item, setMainContent }) {
                 }}
                 key={index}
                 subnav={subnav}
+                selected={mainContent===item.title}
               >
                 <StyledSidebarLabel>{item.title}</StyledSidebarLabel>
               </StyledDropdownLink>

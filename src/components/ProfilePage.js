@@ -285,9 +285,9 @@ export default function CreateWorkoutPage() {
         </StyledPersonalInfoContainer>
         <StyledSideBar>
           <StyledSideBarContainer>
-            {SidebarData.map((item, index) => {
+            {SidebarData.map((item) => {
               return (
-                <ProfileSubMenu item={item} setMainContent={setMainContent} />
+                <ProfileSubMenu item={item} setMainContent={setMainContent} mainContent={mainContent}/>
               );
             })}
           </StyledSideBarContainer>

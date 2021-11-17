@@ -55,6 +55,7 @@ const StyledScrollToDownIcon= styled.span`
   border-radius: 100%;
   box-sizing: border-box;
   z-index: 1;
+  cursor: pointer;
 
   &:after{
     position: absolute;
@@ -170,7 +171,9 @@ export default function HomePage() {
       <StyledBanner src={Homepage} />
       <StyledMainTextContainer>
         <StyledMainText>BUILD YOUR <StyledMainTextWord>UNIQUE</StyledMainTextWord> FITNESS</StyledMainText>
-        <StyledScrollToDownIcon></StyledScrollToDownIcon>
+        <StyledScrollToDownIcon onClick={() => {
+          window.scrollTo({ top: 1500, left: 0, behavior: 'smooth' })
+        }}></StyledScrollToDownIcon>
         <StyledScrollToDownText>GUIDE</StyledScrollToDownText>
       </StyledMainTextContainer>
       <StyledMainContainer>
