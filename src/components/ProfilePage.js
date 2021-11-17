@@ -16,6 +16,8 @@ import ProfileSubMenu from './ProfileSubMenu';
 import SidebarData from '../utils/profileSidebarData';
 import { HiUserCircle } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
+import NoResult from './NoResult';
+
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -169,7 +171,7 @@ export default function CreateWorkoutPage() {
   );
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    window.scrollTo({ top: 300, left: 0, behavior: 'smooth' })
   }, [mainContent])
 
   useEffect(() => {
@@ -202,37 +204,53 @@ export default function CreateWorkoutPage() {
         </>
       );
     } else if (mainContent === 'My Workout Creations') {
-      return (
-        <>
-          {showCreationWorkout().map((workout) => {
-            return <WorkoutCreation workout={workout} />
-          })}
-        </>
-      );
+      if (showCreationWorkout().length === 0) {
+        return (<NoResult type={'workout'}/>)
+      } else {
+        return (
+          <>
+            {showCreationWorkout().map((workout) => {
+              return <WorkoutCreation workout={workout} />
+            })}
+          </>
+        );
+      }
     } else if (mainContent === 'My Workout Collections') {
-      return (
-        <>
-          {showCollectionWorkout().map((workout) => {
-            return <WorkoutCollection workout={workout} />;
-          })}
-        </>
-      );
+      if (showCollectionWorkout().length === 0) {
+        return (<NoResult type={'workout'}/>)
+      } else {
+        return (
+          <>
+            {showCollectionWorkout().map((workout) => {
+              return <WorkoutCollection workout={workout} />;
+            })}
+          </>
+        );
+      }
     } else if (mainContent === 'My Plan Creations') {
-      return (
-        <>
-          {plans.filter(plan => plan.publisher.uid === firebase.auth().currentUser.uid).map((plan) => {
-            return <PlanCreation plan={plan} />;
-          })}
-        </>
-      );
+      if (plans.filter(plan => plan.publisher.uid === firebase.auth().currentUser.uid).length === 0) {
+        return (<NoResult type={'plan'}/>)
+      } else {
+        return (
+          <>
+            {plans.filter(plan => plan.publisher.uid === firebase.auth().currentUser.uid).map((plan) => {
+              return <PlanCreation plan={plan} />;
+            })}
+          </>
+        );
+      }
     } else if (mainContent === 'My Plan Collections') {
-      return (
-        <>
-          {plans.filter(plan => plan.collectedBy.includes(firebase.auth().currentUser.uid)).map((plan) => {
-            return <PlanCreation plan={plan} />;
-          })}
-        </>
-      );
+      if (plans.filter(plan => plan.collectedBy.includes(firebase.auth().currentUser.uid)).length === 0) {
+        return (<NoResult type={'plan'}/>)
+      } else {
+        return (
+          <>
+            {plans.filter(plan => plan.collectedBy.includes(firebase.auth().currentUser.uid)).map((plan) => {
+              return <PlanCollection plan={plan} />;
+            })}
+          </>
+        );
+      }
     } else if (mainContent === 'My Schedule') {
       return (
         <>
