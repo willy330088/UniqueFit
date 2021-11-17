@@ -73,7 +73,7 @@ const StyledTextIcon = styled(RiArticleLine)`
 
 export default function ScheduleDetails({ closeModal, selectedEvent }) {
 
-  const onCancel = () => {
+  const onRemove = () => {
     const eventContent = {
       title: selectedEvent._def.title,
       id: selectedEvent._def.publicId,
@@ -87,7 +87,7 @@ export default function ScheduleDetails({ closeModal, selectedEvent }) {
       .update({
         events: firebase.firestore.FieldValue.arrayRemove(eventContent),
       }).then(() => {
-        toast.success('Cancelled successfully!', {
+        toast.success('Removed successfully!', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 2000,
         })
@@ -107,7 +107,7 @@ export default function ScheduleDetails({ closeModal, selectedEvent }) {
         }}>
           Checkout
         </StyledCheckoutBtn>
-        <StyledCancelBtn onClick={onCancel}>Cancel</StyledCancelBtn>
+        <StyledCancelBtn onClick={onRemove}>Remove</StyledCancelBtn>
       </StyledBtnContainer>
     </>
   );

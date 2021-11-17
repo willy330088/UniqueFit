@@ -10,6 +10,7 @@ import ScheduleDetails from './ScheduleDetails';
 import firebase from '../utils/firebase';
 import CalendarHover from '../images/AddCalendar.png';
 import Calendar from '../images/AddCalendar-2.png';
+import { useSelector } from 'react-redux';
 
 const StyledCalendarContainer = styled.div`
   background: white;
@@ -69,37 +70,23 @@ export default function ScheduleCalendar() {
   const openModal = () => setOpen(true);
   const [selectedModal, setSelectedModal] = useState('');
   const [selectedEvent, setSelectedEvent] = useState();
-  const [events, setEvents] = useState([]);
   const [calendarHover, setCalendarHover] = useState(false);
+  const schedules = useSelector((state) => state.schedules);
 
-  // Initial Date
   let initialDate = new Date().toISOString();
 
-  // Open appointment form
   const openForm = () => {
     setSelectedModal('ScheduleForm');
     openModal();
   };
-
-  useEffect(() => {
-    firebase
-      .firestore()
-      .collection('schedules')
-      .doc(firebase.auth().currentUser.uid)
-      .onSnapshot((docSnapshot) => {
-        const data = docSnapshot.data();
-        if (data) {
-          setEvents(data.events);
-        }
-      });
-  }, []);
+  const events = schedules.filter(schedule => schedule.id === firebase.auth().currentUser.uid)[0]
 
   const handleEventClick = (clickInfo) => {
     if (clickInfo.event) {
       setSelectedModal('ScheduleDetails');
       setSelectedEvent(clickInfo.event);
       openModal();
-      console.log(clickInfo.event._instance.range.start);
+      console.log(clickInfo.event);
     }
   };
 

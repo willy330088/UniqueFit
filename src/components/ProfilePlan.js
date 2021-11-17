@@ -5,7 +5,6 @@ import { BsFillBookmarkHeartFill } from 'react-icons/bs';
 import { RiMessage2Fill } from 'react-icons/ri';
 import { FaWeightHanging } from 'react-icons/fa';
 import { FaDumbbell } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
 import muscleGroups from '../utils/muscleGroup';
 import CheckoutIcon from '../images/details.png';
 import GymBackground from '../images/gym.jpeg';

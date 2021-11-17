@@ -414,7 +414,7 @@ const StyledLogoContainer = styled.div`
       filter: blur(0);
     }
     100% {
-      filter: blur(6px)
+      filter: blur(6px);
     }
   }
 `;
@@ -497,7 +497,7 @@ export default function WorkoutPopup({ workout }) {
 
   function toggleCollected() {
     const uid = firebase.auth().currentUser.uid;
-    console.log('hi')
+    console.log('hi');
     if (isCollected) {
       firebase
         .firestore()
@@ -614,15 +614,15 @@ export default function WorkoutPopup({ workout }) {
       ) : (
         <StyledOverlay>
           <StyledLogoContainer>
-          <StyledLogoText1>U</StyledLogoText1>
-          <StyledLogoText1>N</StyledLogoText1>
-          <StyledLogoText1>I</StyledLogoText1>
-          <StyledLogoText1>Q</StyledLogoText1>
-          <StyledLogoText1>U</StyledLogoText1>
-          <StyledLogoText1>E</StyledLogoText1>
-          <StyledLogoText2>F</StyledLogoText2>
-          <StyledLogoDumbbell src={LogoDumbbell}/>
-          <StyledLogoText2>T</StyledLogoText2>
+            <StyledLogoText1>U</StyledLogoText1>
+            <StyledLogoText1>N</StyledLogoText1>
+            <StyledLogoText1>I</StyledLogoText1>
+            <StyledLogoText1>Q</StyledLogoText1>
+            <StyledLogoText1>U</StyledLogoText1>
+            <StyledLogoText1>E</StyledLogoText1>
+            <StyledLogoText2>F</StyledLogoText2>
+            <StyledLogoDumbbell src={LogoDumbbell} />
+            <StyledLogoText2>T</StyledLogoText2>
           </StyledLogoContainer>
         </StyledOverlay>
       )}

@@ -67,10 +67,6 @@ const StyledLoadingContent = styled.div`
   justify-content: center;
 `;
 
-const StyledLogo = styled.img`
-  width: 50%;
-`;
-
 const StyledLogoContainer = styled.div`
   display: flex;
   align-items: center;
@@ -159,7 +155,7 @@ export default function App() {
 
   const [isNavigating, setIsNavigating] = useState(true);
   const [selected, setSelected] = useState(null);
-  const [nearby, setNearyby] = useState([]);
+  const [nearby, setNearyby] = useState();
   // const mapRef = useRef();
   // const onMapLoad = useCallback((map) => {
   //   mapRef.current = map;
@@ -217,7 +213,7 @@ export default function App() {
   console.log(nearby);
   console.log(selected);
 
-  return isNavigating ? (
+  return isNavigating || !nearby ? (
     <StyledLoadingContent>
       <StyledLogoContainer>
         <StyledLogoText1>U</StyledLogoText1>

@@ -12,6 +12,7 @@ import 'firebase/auth';
 import Delete from '../images/delete.png';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from 'react-redux';
 
 const StyledWorkoutCreationContainer = styled.div`
   display: flex;
@@ -145,45 +146,49 @@ export default function WorkoutCreation({ workout }) {
   const closeModal = () => setOpen(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const closeConfirm = () => setConfirmOpen(false);
+  const plans = useSelector((state) => state.plans);
 
   function deleteWorkout() {
+    const workoutDeleting = toast.loading('Deleting Workout...', {
+      position: toast.POSITION.TOP_CENTER,
+    });
+
     firebase
       .firestore()
       .collection('workouts')
       .doc(workout.id)
       .delete()
       .then(() => {
-        console.log('h1');
         firebase
           .storage()
           .ref('workout-videos/' + workout.id)
           .delete()
           .then(() => {
-            console.log('h2');
-            firebase
-              .firestore()
-              .collection('plans')
-              .get()
-              .then((collectionSnapshot) => {
-                toast.success('Deleted Successfully',{
-                  position: toast.POSITION.TOP_CENTER,
-                  autoClose: 2000,
-                });
-                closeConfirm();
-                collectionSnapshot.docs.forEach((docSnapshot) => {
-                  const id = docSnapshot.id;
-                  const plan = docSnapshot.data();
-                  const workoutContents = plan.workoutSet;
-                  const modified = workoutContents.filter((workoutContent) => {
-                    if (workoutContent.workoutId !== workout.id) {
-                      return workoutContent;
-                    }
-                  });
-                  firebase.firestore().collection('plans').doc(id).update({
-                    workoutSet: modified,
-                  });
-                });
+            const batch = firebase.firestore().batch();
+            plans.forEach((plan) => {
+              const workoutContents = plan.workoutSet;
+              const modified = workoutContents.filter((workoutContent) => {
+                if (workoutContent.workoutId !== workout.id) {
+                  return workoutContent;
+                }
               });
+              batch.update(
+                firebase.firestore().collection('plans').doc(plan.id),
+                {
+                  workoutSet: modified,
+                }
+              );
+            });
+            batch.commit().then(() => {
+              toast.update(workoutDeleting, {
+                render: 'Deleted Successfully',
+                type: 'success',
+                isLoading: false,
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 2000,
+              });
+              closeConfirm();
+            });
           });
       });
   }

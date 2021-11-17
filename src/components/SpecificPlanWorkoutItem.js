@@ -135,6 +135,8 @@ export default function SpecificPlanWorkoutItem({
   trainingMode,
 }) {
   const [checked, setChecked] = useState(false);
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
 
   function toggleChecked() {
     if (checked === true) {
@@ -177,11 +179,20 @@ export default function SpecificPlanWorkoutItem({
           </StyledPlanWorkoutItemDumbbellNum>
         </StyledPlanWorkoutItemDumbbellContainer>
       </StyledPlanWorkoutItemDetailContainer>
-      <StyledPopup trigger={<StyledPlanPlayIcon />} modal nested>
+      <StyledPlanPlayIcon
+        onClick={() => {
+          setOpen(true);
+        }}
+      />
+      <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
         <WorkoutPopup workout={workoutSetDetails[index]} />
       </StyledPopup>
       {trainingMode ? (
-        <StyledCheckbox type="checkbox" checked={checked} onClick={toggleChecked} />
+        <StyledCheckbox
+          type="checkbox"
+          checked={checked}
+          onClick={toggleChecked}
+        />
       ) : null}
     </StyledPlanWorkoutItemContainer>
   );

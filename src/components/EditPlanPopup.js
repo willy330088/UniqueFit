@@ -75,7 +75,7 @@ const StyledCreateLabel = styled.div`
   width: 100%;
 `;
 
-export default function CreatePlanPage({ paging, setPaging, originalPlan }) {
+export default function CreatePlanPage({ paging, setPaging, originalPlan, close }) {
   const [title, setTitle] = useState(originalPlan.title);
   const [description, setDescription] = useState(originalPlan.description);
   const [targetMuscleGroup, setTargetMuscleGroup] = useState(
@@ -184,6 +184,7 @@ export default function CreatePlanPage({ paging, setPaging, originalPlan }) {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 2000,
           });
+          close()
         });
     }
   }

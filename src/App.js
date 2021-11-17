@@ -13,7 +13,7 @@ import HomePage from './components/HomePage';
 import { useDispatch } from 'react-redux';
 import firebase from './utils/firebase';
 import 'firebase/firestore';
-import { getWorkouts } from '../src/redux/actions';
+import { getWorkouts, getPlans, getSchedules } from '../src/redux/actions';
 
 const StyledToastContainer = styled(ToastContainer).attrs({
   className: 'toast-container',
@@ -51,6 +51,33 @@ function App() {
           return { ...docSnapshot.data(), id };
         });
         dispatch(getWorkouts(data))
+      });
+  }, []);
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection('plans')
+      .orderBy('createdAt', 'desc')
+      .onSnapshot((collectionSnapshot) => {
+        const data = collectionSnapshot.docs.map((docSnapshot) => {
+          const id = docSnapshot.id;
+          return { ...docSnapshot.data(), id };
+        });
+        dispatch(getPlans(data))
+      });
+  }, []);
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection('schedules')
+      .onSnapshot((collectionSnapshot) => {
+        const data = collectionSnapshot.docs.map((docSnapshot) => {
+          const id = docSnapshot.id;
+          return { ...docSnapshot.data(), id };
+        });
+        dispatch(getSchedules(data))
       });
   }, []);
   

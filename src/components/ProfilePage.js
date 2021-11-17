@@ -15,6 +15,7 @@ import 'firebase/auth';
 import ProfileSubMenu from './ProfileSubMenu';
 import SidebarData from '../utils/profileSidebarData';
 import { HiUserCircle } from 'react-icons/hi';
+import { useSelector } from 'react-redux';
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -155,28 +156,21 @@ const StyledPersonalIcon = styled(HiUserCircle)`
 `;
 
 export default function CreateWorkoutPage() {
-  const [workouts, setWorkouts] = useState([]);
-  const [plans, setPlans] = useState([]);
+  const workouts = useSelector((state) => state.workouts);
+  const plans = useSelector((state) => state.plans);
   const [currentUser, setCurrentUser] = useState();
   const [mainContent, setMainContent] = useState('My Workout Creations');
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
+  const gymWorkouts = workouts.filter(
+    (workout) => workout.type === 'Gymworkout'
+  );
+  const homeWorkouts = workouts.filter(
+    (workout) => workout.type === 'Homeworkout'
+  );
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }, [mainContent])
-
-  useEffect(() => {
-    firebase
-      .firestore()
-      .collection('workouts')
-      .onSnapshot((collectionSnapshot) => {
-        const data = collectionSnapshot.docs.map((docSnapshot) => {
-          const id = docSnapshot.id;
-          return { ...docSnapshot.data(), id };
-        });
-        setWorkouts(data);
-      });
-  }, []);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -184,18 +178,21 @@ export default function CreateWorkoutPage() {
     });
   }, []);
 
-  useEffect(() => {
-    firebase
-      .firestore()
-      .collection('plans')
-      .onSnapshot((collectionSnapshot) => {
-        const data = collectionSnapshot.docs.map((docSnapshot) => {
-          const id = docSnapshot.id;
-          return { ...docSnapshot.data(), id };
-        });
-        setPlans(data);
-      });
-  }, []);
+  function showCreationWorkout() {
+    if (gymWorkoutTypeSelected) {
+      return gymWorkouts.filter(workout => workout.publisher.uid === firebase.auth().currentUser.uid);
+    } else {
+      return homeWorkouts.filter(workout => workout.publisher.uid === firebase.auth().currentUser.uid);
+    }
+  }
+
+  function showCollectionWorkout() {
+    if (gymWorkoutTypeSelected) {
+      return gymWorkouts.filter(workout => workout.collectedBy.includes(firebase.auth().currentUser.uid));
+    } else {
+      return homeWorkouts.filter(workout => workout.collectedBy.includes(firebase.auth().currentUser.uid));
+    }
+  }
 
   function showMainContent() {
     if (mainContent === 'My Nearby Gyms') {
@@ -207,64 +204,32 @@ export default function CreateWorkoutPage() {
     } else if (mainContent === 'My Workout Creations') {
       return (
         <>
-          {workouts.map((workout) => {
-            if (gymWorkoutTypeSelected) {
-              if (workout.type === 'Gymworkout') {
-                if (workout.publisher.uid === firebase.auth().currentUser.uid) {
-                  return <WorkoutCreation workout={workout} />;
-                } 
-              }
-            } else {
-              if (workout.type === 'Homeworkout') {
-                if (workout.publisher.uid === firebase.auth().currentUser.uid) {
-                  return <WorkoutCreation workout={workout} />;
-                }
-              }
-            }
+          {showCreationWorkout().map((workout) => {
+            return <WorkoutCreation workout={workout} />
           })}
         </>
       );
     } else if (mainContent === 'My Workout Collections') {
       return (
         <>
-          {workouts.map((workout) => {
-            if (gymWorkoutTypeSelected) {
-              if (workout.type === 'Gymworkout') {
-                if (
-                  workout.collectedBy.includes(firebase.auth().currentUser.uid)
-                ) {
-                  return <WorkoutCollection workout={workout} />;
-                }
-              }
-            } else {
-              if (workout.type === 'Homeworkout') {
-                if (
-                  workout.collectedBy.includes(firebase.auth().currentUser.uid)
-                ) {
-                  return <WorkoutCollection workout={workout} />;
-                }
-              }
-            }
+          {showCollectionWorkout().map((workout) => {
+            return <WorkoutCollection workout={workout} />;
           })}
         </>
       );
     } else if (mainContent === 'My Plan Creations') {
       return (
         <>
-          {plans.map((plan) => {
-            if (plan.publisher.uid === firebase.auth().currentUser.uid) {
-              return <PlanCreation plan={plan} />;
-            }
+          {plans.filter(plan => plan.publisher.uid === firebase.auth().currentUser.uid).map((plan) => {
+            return <PlanCreation plan={plan} />;
           })}
         </>
       );
     } else if (mainContent === 'My Plan Collections') {
       return (
         <>
-          {plans.map((plan) => {
-            if (plan.collectedBy.includes(firebase.auth().currentUser.uid)) {
-              return <PlanCollection plan={plan} />;
-            }
+          {plans.filter(plan => plan.collectedBy.includes(firebase.auth().currentUser.uid)).map((plan) => {
+            return <PlanCreation plan={plan} />;
           })}
         </>
       );

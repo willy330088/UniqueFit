@@ -12,6 +12,7 @@ import 'firebase/auth';
 import Delete from '../images/delete.png';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from 'react-redux';
 
 const StyledPlanCreationContainer = styled.div`
   display: flex;
@@ -142,10 +143,13 @@ const StyledConfirmNoBtn = styled.div`
   }
 `;
 
-export default function WorkoutCreation({ plan }) {
+export default function PlanCreation({ plan }) {
   const [paging, setPaging] = useState(1);
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const closeConfirm = () => setConfirmOpen(false);
+  const schedules = useSelector((state) => state.schedules);
 
   function deletePlan() {
     firebase
@@ -154,45 +158,45 @@ export default function WorkoutCreation({ plan }) {
       .doc(plan.id)
       .delete()
       .then(() => {
-        toast.success('Deleted Successfully', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 2000,
-        });
-        closeConfirm()
-        firebase
-          .firestore()
-          .collection('schedules')
-          .get()
-          .then((collectionSnapshot) => {
-            collectionSnapshot.docs.forEach((docSnapshot) => {
-              const id = docSnapshot.id;
-              const schedule = docSnapshot.data();
-              const scheduleEvents = schedule.events;
-              const modified = scheduleEvents.filter((scheduleEvent) => {
-                if (scheduleEvent.id !== plan.id) {
-                  return scheduleEvent;
-                }
-              });
-              firebase
-                .firestore()
-                .collection('schedules')
-                .doc(id)
-                .update({
-                  events: modified,
-                })
-            });
+        const batch = firebase.firestore().batch();
+        schedules.forEach((schedule) => {
+          const scheduleEvents = schedule.events;
+          const modified = scheduleEvents.filter((scheduleEvent) => {
+            if (scheduleEvent.id !== plan.id) {
+              return scheduleEvent;
+            }
           });
+          batch.update(
+            firebase.firestore().collection('schedules').doc(schedule.id),
+            {
+              events: modified,
+            }
+          );
+        });
+        batch.commit().then(() => {
+          toast.success('Deleted Successfully', {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+          });
+          closeConfirm();
+        });
       });
   }
 
   return (
     <StyledPlanCreationContainer>
       <ProfilePlan plan={plan} />
-      <StyledPopup trigger={<StyledPencilIcon />} modal nested paging={paging}>
+      <StyledPencilIcon
+        onClick={() => {
+          setOpen(true);
+        }}
+      />
+      <StyledPopup open={open} closeOnDocumentClick onClose={closeModal} paging={paging}>
         <EditPlanPopup
           paging={paging}
           setPaging={setPaging}
           originalPlan={plan}
+          close={closeModal}
         />
       </StyledPopup>
       <StyledRemoveIcon

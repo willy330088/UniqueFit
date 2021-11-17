@@ -10,6 +10,7 @@ import PlanItem from './PlanItem';
 import Filter from './Filter';
 import GymBackground from '../images/gym.jpeg';
 import { MdAddCircleOutline } from 'react-icons/md';
+import { useSelector } from 'react-redux';
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -145,27 +146,25 @@ const StyledCreatePlanIcon = styled(MdAddCircleOutline)`
 `;
 
 export default function PlanListPage() {
-  const [plans, setPlans] = useState([]);
   const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
   const [paging, setPaging] = useState(1);
   const [hover, setHover] = useState(false);
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
+  const plans = useSelector((state) => state.plans);
+  console.log(plans)
 
-  useEffect(() => {
-    firebase
-      .firestore()
-      .collection('plans')
-      .where('public', '==', true)
-      .orderBy('createdAt', 'desc')
-      .onSnapshot((collectionSnapshot) => {
-        const data = collectionSnapshot.docs.map((docSnapshot) => {
-          const id = docSnapshot.id;
-          return { ...docSnapshot.data(), id };
-        });
-        setPlans(data);
-      });
-  }, []);
+  const publicPlans = plans.filter(
+    (plan) => plan.public === true
+  );
+
+  function showPlanList() {
+    if (filteredMuscleGroups.length === 0) {
+      return publicPlans
+    } else {
+      return publicPlans.filter(plan => filteredMuscleGroups.includes(plan.targetMuscleGroup))
+    }
+  }
 
   return (
     <StyledBody>
@@ -192,14 +191,8 @@ export default function PlanListPage() {
           <StyledPopup open={open} closeOnDocumentClick onClose={closeModal} paging={paging}>
             <CreatePlanPopup paging={paging} setPaging={setPaging} close={closeModal}/>
           </StyledPopup>
-          {plans.map((plan) => {
-            if (filteredMuscleGroups.length !== 0) {
-              if (filteredMuscleGroups.includes(plan.targetMuscleGroup)) {
-                return <PlanItem plan={plan} />;
-              }
-            } else {
-              return <PlanItem plan={plan} />;
-            }
+          {showPlanList().map((plan) => {
+            return <PlanItem plan={plan} />;
           })}
         </StyledPlanListContainer>
       </StyledPlanListPageContainer>
