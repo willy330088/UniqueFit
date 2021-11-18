@@ -1,5 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+  useHistory
+} from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import WorkoutListPage from './components/WorkoutListPage';
 import ProfilePage from './components/ProfilePage';
@@ -13,7 +19,13 @@ import HomePage from './components/HomePage';
 import { useDispatch, useSelector } from 'react-redux';
 import firebase from './utils/firebase';
 import 'firebase/firestore';
-import { getWorkouts, getPlans, getSchedules, getCurrentUser } from '../src/redux/actions';
+import {
+  getWorkouts,
+  getPlans,
+  getSchedules,
+  getCurrentUser,
+} from '../src/redux/actions';
+import FullPageLoading from './components/FullPageLoading';
 
 const StyledToastContainer = styled(ToastContainer).attrs({
   className: 'toast-container',
@@ -38,9 +50,10 @@ const StyledToastContainer = styled(ToastContainer).attrs({
 `;
 
 function App() {
-  const dispatch = useDispatch()
-  // const [currentUser, setCurrentUser] = useState()
-  const currentUser = useSelector((state) => state.currentUser);
+  const dispatch = useDispatch();
+  const [currentUser, setCurrentUser] = useState();
+  const history = useHistory()
+  // const currentUser = useSelector((state) => state.currentUser);
 
   useEffect(() => {
     firebase
@@ -52,7 +65,7 @@ function App() {
           const id = docSnapshot.id;
           return { ...docSnapshot.data(), id };
         });
-        dispatch(getWorkouts(data))
+        dispatch(getWorkouts(data));
       });
   }, []);
 
@@ -66,7 +79,7 @@ function App() {
           const id = docSnapshot.id;
           return { ...docSnapshot.data(), id };
         });
-        dispatch(getPlans(data))
+        dispatch(getPlans(data));
       });
   }, []);
 
@@ -79,39 +92,59 @@ function App() {
           const id = docSnapshot.id;
           return { ...docSnapshot.data(), id };
         });
-        dispatch(getSchedules(data))
+        dispatch(getSchedules(data));
       });
   }, []);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
-      dispatch(getCurrentUser(user))
+      dispatch(getCurrentUser(user));
+      setCurrentUser(user);
     });
   }, []);
-  
+
+  console.log(currentUser);
   return (
     <>
       <StyledToastContainer />
       <Router>
-        <ScrollToTop/>
+        <ScrollToTop />
         <Switch>
-          <Route exact path="/" >
-            { currentUser ? (<Redirect to='/home'/>) : (<LandingPage />)}
+          <Route exact path="/">
+            {currentUser !== null ? (
+              currentUser !== undefined ? (
+                <Redirect to="/home" />
+              ) : (
+                <FullPageLoading />
+              )
+            ) : (
+              <LandingPage />
+            )}
           </Route>
-          <Route exact path="/home" >
-            <HomePage />
+
+          <Route path="/profile" exact>
+            {currentUser !== null ? (
+              currentUser !== undefined ? (
+                <ProfilePage />
+              ) : (
+                <FullPageLoading />
+              )
+            ) : (
+              <Redirect to="/" />
+            )}
+          </Route>
+
+          <Route exact path="/home">
+            <HomePage currentUser={currentUser}/>
           </Route>
           <Route path="/workouts" exact>
-            <WorkoutListPage />
+            <WorkoutListPage currentUser={currentUser}/>
           </Route>
           <Route path="/plans" exact>
-            <PlanListPage />
-          </Route>
-          <Route path="/profile" exact>
-            { currentUser ? (<ProfilePage />) : (<Redirect to='/'/>)}
+            <PlanListPage currentUser={currentUser}/>
           </Route>
           <Route path="/plans/:planId" exact>
-            <SpecificPlanPage />
+            <SpecificPlanPage currentUser={currentUser}/>
           </Route>
         </Switch>
       </Router>

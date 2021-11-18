@@ -10,6 +10,7 @@ import Filter from './Filter';
 import GymBackground from '../images/gym.jpeg';
 import { MdAddCircleOutline } from 'react-icons/md';
 import { useSelector } from 'react-redux';
+import FullPageLoading from './FullPageLoading';
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -144,7 +145,7 @@ const StyledCreatePlanIcon = styled(MdAddCircleOutline)`
   } ;
 `;
 
-export default function PlanListPage() {
+export default function PlanListPage({currentUser}) {
   const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
   const [paging, setPaging] = useState(1);
   const [hover, setHover] = useState(false);
@@ -153,7 +154,7 @@ export default function PlanListPage() {
   const [signInOpen, setSignInOpen] = useState(false);
   const closeSignIn = () => setSignInOpen(false);
   const plans = useSelector((state) => state.plans);
-  const currentUser = useSelector((state) => state.currentUser);
+  // const currentUser = useSelector((state) => state.currentUser);
   console.log(plans)
 
   const publicPlans = plans.filter(
@@ -168,7 +169,7 @@ export default function PlanListPage() {
     }
   }
 
-  return (
+  return currentUser !== undefined ? (
     <StyledBody>
       <Header />
       <Banner slogan={'Collect Your Plans'} />
@@ -206,5 +207,5 @@ export default function PlanListPage() {
         </StyledPlanListContainer>
       </StyledPlanListPageContainer>
     </StyledBody>
-  );
+  ): <FullPageLoading/>;
 }

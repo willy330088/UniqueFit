@@ -3,6 +3,7 @@ import Header from './Header';
 import styled from 'styled-components';
 import Homepage from '../images/Homepage.png';
 import Fitness from '../images/fitness.jpeg';
+import FullPageLoading from './FullPageLoading';
 
 const StyledBanner = styled.img`
   object-fit: cover;
@@ -164,8 +165,8 @@ const StyledStepTextContent = styled.div`
   color: #666666;
 `;
 
-export default function HomePage() {
-  return (
+export default function HomePage({currentUser}) {
+  return currentUser !== undefined ? (
     <>
       <Header />
       <StyledBanner src={Homepage} />
@@ -200,5 +201,5 @@ export default function HomePage() {
         </StyledMainWordContainer>
       </StyledMainContainer>
     </>
-  );
+  ) : <FullPageLoading/>;
 }

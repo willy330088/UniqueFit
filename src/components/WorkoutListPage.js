@@ -9,6 +9,7 @@ import SignInPopup from './SignInPopup';
 import Filter from './Filter';
 import { MdAddCircleOutline } from 'react-icons/md';
 import { useSelector } from 'react-redux';
+import FullPageLoading from './FullPageLoading';
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -130,7 +131,7 @@ const StyledPopup = styled(Popup)`
   }
 `;
 
-export default function WorkoutListPage() {
+export default function WorkoutListPage({currentUser}) {
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
   const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
   const [open, setOpen] = useState(false);
@@ -138,7 +139,7 @@ export default function WorkoutListPage() {
   const [signInOpen, setSignInOpen] = useState(false);
   const closeSignIn = () => setSignInOpen(false);
   const workouts = useSelector((state) => state.workouts);
-  const currentUser = useSelector((state) => state.currentUser);
+  // const currentUser = useSelector((state) => state.currentUser);
 
   const gymWorkouts = workouts.filter(
     (workout) => workout.type === 'Gymworkout'
@@ -163,7 +164,7 @@ export default function WorkoutListPage() {
     }
   }
 
-  return (
+  return currentUser !== undefined ? (
     <StyledBody>
       <Header />
       <Banner slogan={'Collect Your Workouts'} />
@@ -216,5 +217,5 @@ export default function WorkoutListPage() {
         </StyledWorkoutContainer>
       </StyledWorkoutListContainer>
     </StyledBody>
-  );
+  ) : <FullPageLoading/>;
 }

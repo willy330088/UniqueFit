@@ -3,6 +3,11 @@ import styled from 'styled-components';
 import Popup from 'reactjs-popup';
 import { useSelector } from 'react-redux';
 import { BsCameraFill } from 'react-icons/bs';
+import { HiUserCircle } from 'react-icons/hi';
+import firebase from '../utils/firebase';
+import 'firebase/auth';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const StyledPopup = styled(Popup)`
   &-overlay {
@@ -12,7 +17,7 @@ const StyledPopup = styled(Popup)`
   &-content {
     background: #222d35;
     width: 400px;
-    height: 400px;
+    height: 450px;
     border-radius: 10px;
     padding: 20px 50px;
   }
@@ -21,6 +26,7 @@ const StyledPopup = styled(Popup)`
 const StyledPhotoContainer = styled.div`
   display: flex;
   justify-content: center;
+  margin: 20px 0;
 `;
 
 const StyledPhoto = styled.div`
@@ -65,13 +71,12 @@ const StyledPhotoIcon = styled(BsCameraFill)`
 `;
 
 const StyledPopupTitle = styled.div`
-  font-size: 40px;
-  color: white;
-  text-align: center;
+  font-size: 30px;
+  color: #1face1;
   width: 100%;
-  padding-bottom: 15px;
-  margin: 20px 0px;
-  border-bottom: 3px white solid;
+  padding-bottom: 10px;
+  margin: 0 0 10px 0;
+  border-bottom: 3px #1face1 solid;
 `;
 
 const StyledPopupInput = styled.input`
@@ -80,22 +85,59 @@ const StyledPopupInput = styled.input`
   outline: none;
   font-size: 30px;
   margin-bottom: 30px;
+  background: #222d35;
+  border: none;
+  color: white;
+
+  &:focus {
+    background: hsla(196, 76%, 80%);
+    color: black;
+    padding-left: 10px;
+  }
 `;
 
-const StyledPopupBtn = styled.button`
-  width: 100px;
+const StyledPopupBtn = styled.div`
+  font-size: 25px;
   height: 40px;
-  font-size: 30px;
-  margin-left: calc(50% - 50px);
+  width: 120px;
   cursor: pointer;
+  color: #1face1;
+  border-radius: 5px;
+  background-color: transparent;
+  text-align: center;
+  line-height: 40px;
+  margin: 10px 0;
+  border: 2px solid #1face1;
+
+  &:hover {
+    color: white;
+    background-color: #1face1;
+  }
+`;
+
+const StyledPopupBtnContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const StyledPersonalIcon = styled(HiUserCircle)`
+  font-size: 120px;
+  margin-right: 10px;
+  color: white;
+  cursor: pointer;
+
+  &:hover {
+    color: grey;
+  }
 `;
 
 export default function EditProfilePopup({ closeModal, open }) {
   const currentUser = useSelector((state) => state.currentUser);
   const [photoHover, setPhotoHover] = useState(false);
-  const [source, setSource] = useState(currentUser.photoURL)
-  const [photoFile, setPhotoFile] = useState()
   const inputPhotoRef = useRef();
+  const [source, setSource] = useState(currentUser?.photoURL);
+  const [userName, setUserName] = useState(currentUser?.displayName);
+  const [photoFile, setPhotoFile] = useState();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -104,25 +146,84 @@ export default function EditProfilePopup({ closeModal, open }) {
     setSource(url);
   };
 
+  function close() {
+    closeModal();
+    setSource(currentUser?.photoURL);
+  }
+
   const handleChoose = () => {
     inputPhotoRef.current.click();
   };
 
+  function onSave() {
+    const profileUpdating = toast.loading('Updating Profile...', {
+      position: toast.POSITION.TOP_CENTER,
+    });
+    if (photoFile) {
+      const fileRef = firebase.storage().ref('user-photos/' + currentUser.uid);
+      const metadata = { contentType: photoFile.type };
+
+      fileRef.put(photoFile, metadata).then(() => {
+        fileRef.getDownloadURL().then((imageURL) => {
+          firebase
+            .auth()
+            .currentUser.updateProfile({
+              displayName: userName,
+              photoURL: imageURL,
+            })
+            .then(() => {
+              setPhotoFile(null);
+              setSource(currentUser?.photoURL);
+              closeModal();
+              toast.update(profileUpdating, {
+                render: 'Updated Successfully',
+                type: 'success',
+                isLoading: false,
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 2000,
+              });
+            });
+        });
+      });
+    } else {
+      firebase
+        .auth()
+        .currentUser.updateProfile({
+          displayName: userName,
+        })
+        .then(() => {
+          closeModal();
+          toast.update(profileUpdating, {
+            render: 'Updated Successfully',
+            type: 'success',
+            isLoading: false,
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+          });
+        });
+    }
+  }
+
   return (
-    <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
+    <StyledPopup open={open} closeOnDocumentClick onClose={close}>
+      <StyledPopupTitle>Edit Your Photo</StyledPopupTitle>
       <StyledPhotoContainer>
-        <StyledPhoto
-          src={source}
-          onMouseOver={() => {
-            setPhotoHover(true);
-          }}
-          onMouseLeave={() => {
-            setPhotoHover(false);
-          }}
-          onClick={handleChoose}
-        >
-          <StyledPhotoIcon hover={photoHover} />
-        </StyledPhoto>
+        {source || currentUser?.photoURL ? (
+          <StyledPhoto
+            src={source}
+            onMouseOver={() => {
+              setPhotoHover(true);
+            }}
+            onMouseLeave={() => {
+              setPhotoHover(false);
+            }}
+            onClick={handleChoose}
+          >
+            <StyledPhotoIcon hover={photoHover} />
+          </StyledPhoto>
+        ) : (
+          <StyledPersonalIcon onClick={handleChoose} />
+        )}
         <input
           style={{ display: 'none' }}
           ref={inputPhotoRef}
@@ -132,8 +233,15 @@ export default function EditProfilePopup({ closeModal, open }) {
         />
       </StyledPhotoContainer>
       <StyledPopupTitle>Edit Your Name</StyledPopupTitle>
-      <StyledPopupInput />
-      <StyledPopupBtn>Save</StyledPopupBtn>
+      <StyledPopupInput
+        value={userName}
+        onChange={(e) => {
+          setUserName(e.target.value);
+        }}
+      />
+      <StyledPopupBtnContainer>
+        <StyledPopupBtn onClick={onSave}>Save</StyledPopupBtn>
+      </StyledPopupBtnContainer>
     </StyledPopup>
   );
 }

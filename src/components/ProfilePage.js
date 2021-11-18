@@ -10,7 +10,6 @@ import ScheduleCalendar from './ScheduleCalendar';
 import styled from 'styled-components';
 import firebase from '../utils/firebase';
 import { BsFillPencilFill } from 'react-icons/bs';
-import Popup from 'reactjs-popup';
 import 'firebase/auth';
 import ProfileSubMenu from './ProfileSubMenu';
 import SidebarData from '../utils/profileSidebarData';
@@ -21,6 +20,7 @@ import NoResult from './NoResult';
 import { useHistory } from 'react-router-dom';
 import ConfirmPopup from './ConfirmPopup';
 import EditProfilePopup from './EditProfilePopup';
+import FullPageLoading from './FullPageLoading';
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -135,7 +135,7 @@ const StyledPersonalIcon = styled(HiUserCircle)`
 `;
 
 export default function CreateWorkoutPage() {
-  const history = useHistory();
+  const history = useHistory()
   const workouts = useSelector((state) => state.workouts);
   const plans = useSelector((state) => state.plans);
   const currentUser = useSelector((state) => state.currentUser);
@@ -159,11 +159,11 @@ export default function CreateWorkoutPage() {
   function showCreationWorkout() {
     if (gymWorkoutTypeSelected) {
       return gymWorkouts.filter(
-        (workout) => workout.publisher.uid === firebase.auth().currentUser.uid
+        (workout) => workout.publisher.uid === currentUser?.uid
       );
     } else {
       return homeWorkouts.filter(
-        (workout) => workout.publisher.uid === firebase.auth().currentUser.uid
+        (workout) => workout.publisher.uid === currentUser?.uid
       );
     }
   }
@@ -171,11 +171,11 @@ export default function CreateWorkoutPage() {
   function showCollectionWorkout() {
     if (gymWorkoutTypeSelected) {
       return gymWorkouts.filter((workout) =>
-        workout.collectedBy.includes(firebase.auth().currentUser.uid)
+        workout.collectedBy.includes(currentUser?.uid)
       );
     } else {
       return homeWorkouts.filter((workout) =>
-        workout.collectedBy.includes(firebase.auth().currentUser.uid)
+        workout.collectedBy.includes(currentUser?.uid)
       );
     }
   }
@@ -214,7 +214,7 @@ export default function CreateWorkoutPage() {
     } else if (mainContent === 'My Plan Creations') {
       if (
         plans.filter(
-          (plan) => plan.publisher.uid === firebase.auth().currentUser.uid
+          (plan) => plan.publisher.uid === currentUser?.uid
         ).length === 0
       ) {
         return <NoResult type={'plan'} />;
@@ -223,7 +223,7 @@ export default function CreateWorkoutPage() {
           <>
             {plans
               .filter(
-                (plan) => plan.publisher.uid === firebase.auth().currentUser.uid
+                (plan) => plan.publisher.uid === currentUser?.uid
               )
               .map((plan) => {
                 return <PlanCreation plan={plan} />;
@@ -234,7 +234,7 @@ export default function CreateWorkoutPage() {
     } else if (mainContent === 'My Plan Collections') {
       if (
         plans.filter((plan) =>
-          plan.collectedBy.includes(firebase.auth().currentUser.uid)
+          plan.collectedBy.includes(currentUser?.uid)
         ).length === 0
       ) {
         return <NoResult type={'plan'} />;
@@ -243,7 +243,7 @@ export default function CreateWorkoutPage() {
           <>
             {plans
               .filter((plan) =>
-                plan.collectedBy.includes(firebase.auth().currentUser.uid)
+                plan.collectedBy.includes(currentUser?.uid)
               )
               .map((plan) => {
                 return <PlanCollection plan={plan} />;
@@ -266,20 +266,20 @@ export default function CreateWorkoutPage() {
       .signOut()
   }
 
-  return currentUser ? (
+  return workouts.length !==0 ? (
     <StyledBody>
       <Header />
       <Banner slogan={'My Profile'} />
       <StyledProfilePageContainer>
         <StyledPersonalInfoContainer>
-          {currentUser.photoURL ? (
-            <StyledPersonalImage src={currentUser.photoURL} />
+          {currentUser?.photoURL ? (
+            <StyledPersonalImage src={currentUser?.photoURL} />
           ) : (
             <StyledPersonalIcon />
           )}
           <StyledPersonalInfo>
-            <StyledPersonalName>{currentUser.displayName}</StyledPersonalName>
-            <StyledPersonalEmail>{currentUser.email}</StyledPersonalEmail>
+            <StyledPersonalName>{currentUser?.displayName}</StyledPersonalName>
+            <StyledPersonalEmail>{currentUser?.email}</StyledPersonalEmail>
           </StyledPersonalInfo>
           <StyledPencilIcon
             onClick={() => {
@@ -340,10 +340,5 @@ export default function CreateWorkoutPage() {
         </StyledProfileContentContainer>
       </StyledProfilePageContainer>
     </StyledBody>
-  ) : (
-    <StyledBody>
-      <Header />
-      <Banner slogan={'My Profile'} />
-    </StyledBody>
-  );
+  ) : <FullPageLoading/>
 }
