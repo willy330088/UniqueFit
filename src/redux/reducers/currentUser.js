@@ -3,7 +3,7 @@ const currentUserReducer = (state = null, action) => {
     case 'GET_CURRENTUSER':
       return action.payload
     default:
-      return state 
+      return state
   }
 }
 

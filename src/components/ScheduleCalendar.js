@@ -117,6 +117,7 @@ export default function ScheduleCalendar() {
         initialDate={initialDate}
         weekends={true}
         events={events}
+        
         eventClick={handleEventClick}
         views={{
           dayGrid: {

@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux';
 import NoResult from './NoResult';
 import { useHistory } from 'react-router-dom';
 import ConfirmPopup from './ConfirmPopup';
+import EditProfilePopup from './EditProfilePopup';
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -46,8 +47,7 @@ const StyledPersonalImage = styled.img`
   margin-right: 40px;
 `;
 
-const StyledPersonalInfo = styled.div`
-`;
+const StyledPersonalInfo = styled.div``;
 
 const StyledPersonalName = styled.div`
   color: #1face1;
@@ -82,46 +82,6 @@ const StyledSignOutIcon = styled(RiLogoutBoxRLine)`
   &:hover {
     color: white;
   }
-`;
-
-const StyledPopup = styled(Popup)`
-  &-overlay {
-    background: rgba(0, 0, 0, 0.6);
-  }
-
-  &-content {
-    background: #222d35;
-    width: 400px;
-    height: 250px;
-    border-radius: 20px;
-    padding: 0px 50px;
-  }
-`;
-
-const StyledPopupTitle = styled.div`
-  font-size: 40px;
-  color: white;
-  text-align: center;
-  width: 100%;
-  padding-bottom: 15px;
-  margin: 20px 0px;
-  border-bottom: 3px white solid;
-`;
-
-const StyledPopupInput = styled.input`
-  width: 100%;
-  height: 50px;
-  outline: none;
-  font-size: 30px;
-  margin-bottom: 30px;
-`;
-
-const StyledPopupBtn = styled.button`
-  width: 100px;
-  height: 40px;
-  font-size: 30px;
-  margin-left: calc(50% - 50px);
-  cursor: pointer;
 `;
 
 const StyledSideBar = styled.aside`
@@ -301,8 +261,9 @@ export default function CreateWorkoutPage() {
   }
 
   function signOut() {
-    firebase.auth().signOut();
-    history.push('/home');
+    firebase
+      .auth()
+      .signOut()
   }
 
   return currentUser ? (
@@ -325,11 +286,7 @@ export default function CreateWorkoutPage() {
               setOpen(true);
             }}
           />
-          <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
-            <StyledPopupTitle>Edit Your Name</StyledPopupTitle>
-            <StyledPopupInput />
-            <StyledPopupBtn>Save</StyledPopupBtn>
-          </StyledPopup>
+          <EditProfilePopup open={open} closeModal={closeModal}/>
           <StyledSignOutIcon
             onClick={() => {
               setConfirmOpen(true);

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import WorkoutListPage from './components/WorkoutListPage';
@@ -39,6 +39,7 @@ const StyledToastContainer = styled(ToastContainer).attrs({
 
 function App() {
   const dispatch = useDispatch()
+  // const [currentUser, setCurrentUser] = useState()
   const currentUser = useSelector((state) => state.currentUser);
 
   useEffect(() => {
@@ -95,7 +96,7 @@ function App() {
         <ScrollToTop/>
         <Switch>
           <Route exact path="/" >
-            <LandingPage />
+            { currentUser ? (<Redirect to='/home'/>) : (<LandingPage />)}
           </Route>
           <Route exact path="/home" >
             <HomePage />
