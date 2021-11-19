@@ -82,7 +82,7 @@ export default function ScheduleDetails({ closeModal, selectedEvent }) {
 
     firebase
       .firestore()
-      .collection('schedules')
+      .collection('users')
       .doc(firebase.auth().currentUser.uid)
       .update({
         events: firebase.firestore.FieldValue.arrayRemove(eventContent),

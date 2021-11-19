@@ -111,7 +111,7 @@ export default function ScheduleForm({ closeModal }) {
 
     const scheduleRef = firebase
       .firestore()
-      .collection('schedules')
+      .collection('users')
       .doc(firebase.auth().currentUser.uid);
 
     scheduleRef

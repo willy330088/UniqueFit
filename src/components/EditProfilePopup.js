@@ -88,6 +88,7 @@ const StyledPopupInput = styled.input`
   background: #222d35;
   border: none;
   color: white;
+  border-radius: 5px;
 
   &:focus {
     background: hsla(196, 76%, 80%);
@@ -118,22 +119,37 @@ const StyledPopupBtn = styled.div`
 const StyledPopupBtnContainer = styled.div`
   display: flex;
   justify-content: center;
+  cursor: pointer;
 `;
 
 const StyledPersonalIcon = styled(HiUserCircle)`
   font-size: 120px;
-  margin-right: 10px;
-  color: white;
+  color: ${(props) => (props.hover ? 'grey' : 'white')};
   cursor: pointer;
+  filter: ${(props) => (props.hover ? 'blur(3px)' : 'none')};
+`;
 
-  &:hover {
-    color: grey;
-  }
+const StyledPersonalIconContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  position: relative;
+`;
+
+const StyledPhotoIconPersonal = styled(BsCameraFill)`
+  position: absolute;
+  color: white;
+  font-size: 40px;
+  top: calc(50% - 20px);
+  left: calc(50% - 20px);
+  display: ${(props) => (props.hover ? 'block' : 'none')};
+  z-index: 100;
+  cursor: pointer;
 `;
 
 export default function EditProfilePopup({ closeModal, open }) {
   const currentUser = useSelector((state) => state.currentUser);
   const [photoHover, setPhotoHover] = useState(false);
+  const [personalHover, setPersonalHover] = useState(false);
   const inputPhotoRef = useRef();
   const [source, setSource] = useState(currentUser?.photoURL);
   const [userName, setUserName] = useState(currentUser?.displayName);
@@ -172,16 +188,26 @@ export default function EditProfilePopup({ closeModal, open }) {
               photoURL: imageURL,
             })
             .then(() => {
-              setPhotoFile(null);
-              setSource(currentUser?.photoURL);
-              closeModal();
-              toast.update(profileUpdating, {
-                render: 'Updated Successfully',
-                type: 'success',
-                isLoading: false,
-                position: toast.POSITION.TOP_CENTER,
-                autoClose: 2000,
-              });
+              firebase
+                .firestore()
+                .collection('users')
+                .doc(currentUser.uid)
+                .update({
+                  displayName: userName,
+                  photoURL: imageURL,
+                })
+                .then(() => {
+                  setPhotoFile(null);
+                  setSource(currentUser?.photoURL);
+                  closeModal();
+                  toast.update(profileUpdating, {
+                    render: 'Updated Successfully',
+                    type: 'success',
+                    isLoading: false,
+                    position: toast.POSITION.TOP_CENTER,
+                    autoClose: 2000,
+                  });
+                });
             });
         });
       });
@@ -192,14 +218,23 @@ export default function EditProfilePopup({ closeModal, open }) {
           displayName: userName,
         })
         .then(() => {
-          closeModal();
-          toast.update(profileUpdating, {
-            render: 'Updated Successfully',
-            type: 'success',
-            isLoading: false,
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 2000,
-          });
+          firebase
+            .firestore()
+            .collection('users')
+            .doc(currentUser.uid)
+            .update({
+              displayName: userName,
+            })
+            .then(() => {
+              closeModal();
+              toast.update(profileUpdating, {
+                render: 'Updated Successfully',
+                type: 'success',
+                isLoading: false,
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 2000,
+              });
+            });
         });
     }
   }
@@ -222,7 +257,18 @@ export default function EditProfilePopup({ closeModal, open }) {
             <StyledPhotoIcon hover={photoHover} />
           </StyledPhoto>
         ) : (
-          <StyledPersonalIcon onClick={handleChoose} />
+          <StyledPersonalIconContainer
+            onClick={handleChoose}
+            onMouseOver={() => {
+              setPersonalHover(true);
+            }}
+            onMouseLeave={() => {
+              setPersonalHover(false);
+            }}
+          >
+            <StyledPersonalIcon hover={personalHover}/>
+            <StyledPhotoIconPersonal hover={personalHover} />
+          </StyledPersonalIconContainer>
         )}
         <input
           style={{ display: 'none' }}

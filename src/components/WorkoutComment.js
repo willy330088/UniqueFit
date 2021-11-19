@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { BsThreeDots } from 'react-icons/bs';
 import { HiUserCircle } from 'react-icons/hi';
+import { useSelector } from 'react-redux';
 import firebase from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
@@ -136,6 +137,8 @@ export default function WorkoutComment({ comment, workoutId, currentUser}) {
   const [showTool, setShowTool] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [commentContent, setCommentContent] = useState(comment.content);
+  const users = useSelector((state) => state.users);
+  const publisher = users.filter((user) => user.id === comment.publisher)[0]
 
   function onSaveComment() {
     firebase
@@ -173,14 +176,14 @@ export default function WorkoutComment({ comment, workoutId, currentUser}) {
 
   return (
     <StyledCommentWrap>
-      {comment.publisher.photoURL ? (
-        <StyledCommentUserImage src={comment.publisher.photoURL} />
+      {publisher.photoURL ? (
+        <StyledCommentUserImage src={publisher.photoURL} />
       ) : (
         <StyledPlanInfoPublisherIcon />
       )}
       <StyledNameCommentWrap>
         <StyledCommentUserName>
-          {comment.publisher.displayName}
+          {publisher.displayName}
         </StyledCommentUserName>
         {isEditing ? (
           <StyledCommentEditInputContainer>
@@ -201,7 +204,7 @@ export default function WorkoutComment({ comment, workoutId, currentUser}) {
         <StyledCommentTimeStamp>
           {comment.createdAt.toDate().toLocaleString()}
         </StyledCommentTimeStamp>
-        {comment.publisher.uid === currentUser?.uid ? (
+        {publisher.id === currentUser?.uid ? (
           <StyledCommentThreeDot
             onClick={() => {
               setShowTool(!showTool);

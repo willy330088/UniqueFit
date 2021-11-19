@@ -47,7 +47,11 @@ const StyledPersonalImage = styled.img`
   margin-right: 40px;
 `;
 
-const StyledPersonalInfo = styled.div``;
+const StyledPersonalInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const StyledPersonalName = styled.div`
   color: #1face1;
@@ -159,11 +163,11 @@ export default function CreateWorkoutPage() {
   function showCreationWorkout() {
     if (gymWorkoutTypeSelected) {
       return gymWorkouts.filter(
-        (workout) => workout.publisher.uid === currentUser?.uid
+        (workout) => workout.publisher === currentUser?.uid
       );
     } else {
       return homeWorkouts.filter(
-        (workout) => workout.publisher.uid === currentUser?.uid
+        (workout) => workout.publisher === currentUser?.uid
       );
     }
   }
@@ -214,7 +218,7 @@ export default function CreateWorkoutPage() {
     } else if (mainContent === 'My Plan Creations') {
       if (
         plans.filter(
-          (plan) => plan.publisher.uid === currentUser?.uid
+          (plan) => plan.publisher === currentUser?.uid
         ).length === 0
       ) {
         return <NoResult type={'plan'} />;
@@ -223,7 +227,7 @@ export default function CreateWorkoutPage() {
           <>
             {plans
               .filter(
-                (plan) => plan.publisher.uid === currentUser?.uid
+                (plan) => plan.publisher === currentUser?.uid
               )
               .map((plan) => {
                 return <PlanCreation plan={plan} />;

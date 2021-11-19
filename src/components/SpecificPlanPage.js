@@ -268,13 +268,15 @@ export default function SpecificPlanPage() {
   const plans = useSelector((state) => state.plans);
   const workouts = useSelector((state) => state.workouts);
   let plan = plans.filter((plan) => plan.id === planId)[0];
+  const users = useSelector((state) => state.users);
+  const publisher = users.filter((user) => user.id === plan.publisher)[0]
   const [signInOpen, setSignInOpen] = useState(false);
   const closeSignIn = () => setSignInOpen(false);
 
   if (!plan) {
     plan = {
       collectedBy: [],
-      publisher: [],
+      publisher: null,
       workoutSet: [],
     };
   }
@@ -333,11 +335,7 @@ export default function SpecificPlanPage() {
         batch.set(commentRef, {
           content: commentContent,
           createdAt: firebase.firestore.Timestamp.now(),
-          publisher: {
-            uid: firebase.auth().currentUser.uid,
-            displayName: firebase.auth().currentUser.displayName || '',
-            photoURL: firebase.auth().currentUser.photoURL || '',
-          },
+          publisher: currentUser.uid
         });
 
         batch.commit().then(() => {
@@ -349,7 +347,7 @@ export default function SpecificPlanPage() {
     }
   }
 
-  return plan.publisher.length !== 0 ? (
+  return publisher ? (
     <StyledBody>
       <Header />
       <Banner slogan={'Explore Your Plan'} />
@@ -374,15 +372,13 @@ export default function SpecificPlanPage() {
             <StyledPlanInfoContentContainer>
               <StyledPlanInfoTitle>{plan.title}</StyledPlanInfoTitle>
               <StyledPlanInfoPublisherContainer>
-                {plan.publisher.photoURL ? (
-                  <StyledPlanInfoPublisherImage src={plan.publisher.photoURL} />
+                {publisher.photoURL ? (
+                  <StyledPlanInfoPublisherImage src={publisher.photoURL} />
                 ) : (
                   <StyledPlanInfoPublisherIcon />
                 )}
                 <StyledPlanInfoPublisherName>
-                  {plan.publisher.displayName
-                    ? plan.publisher.displayName
-                    : 'User'}
+                  {publisher.displayName}
                 </StyledPlanInfoPublisherName>
               </StyledPlanInfoPublisherContainer>
             </StyledPlanInfoContentContainer>

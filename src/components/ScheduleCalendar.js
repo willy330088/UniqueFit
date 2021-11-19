@@ -71,7 +71,8 @@ export default function ScheduleCalendar() {
   const [selectedModal, setSelectedModal] = useState('');
   const [selectedEvent, setSelectedEvent] = useState();
   const [calendarHover, setCalendarHover] = useState(false);
-  const schedules = useSelector((state) => state.schedules);
+  const currentUser = useSelector((state) => state.currentUser);
+  const events = useSelector((state) => state.users).filter((user)=> user.id === currentUser.uid)[0].events;
 
   let initialDate = new Date().toISOString();
 
@@ -79,7 +80,6 @@ export default function ScheduleCalendar() {
     setSelectedModal('ScheduleForm');
     openModal();
   };
-  const events = schedules.filter(schedule => schedule.id === firebase.auth().currentUser.uid)[0]
 
   const handleEventClick = (clickInfo) => {
     if (clickInfo.event) {

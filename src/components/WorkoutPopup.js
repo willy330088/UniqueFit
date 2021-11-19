@@ -472,6 +472,8 @@ export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
   const [scrollDown, setScrollDown] = useState(true);
   const [videoReady, setVideoReady] = useState(false);
   const currentUser = useSelector((state) => state.currentUser);
+  const users = useSelector((state) => state.users);
+  const publisher = users.filter((user) => user.id === workout.publisher)[0]
 
   const isCollected = workout.collectedBy?.includes(currentUser?.uid);
 
@@ -508,11 +510,7 @@ export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
         batch.set(commentRef, {
           content: commentContent,
           createdAt: firebase.firestore.Timestamp.now(),
-          publisher: {
-            uid: firebase.auth().currentUser.uid,
-            displayName: firebase.auth().currentUser.displayName || '',
-            photoURL: firebase.auth().currentUser.photoURL || '',
-          },
+          publisher: firebase.auth().currentUser.uid
         });
 
         batch.commit().then(() => {
@@ -550,9 +548,14 @@ export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
       setSignInOpen(true)
     }
   }
+  
+  function popupClose() {
+    close()
+    setVideoReady(false)
+  }
 
   return (
-    <StyledPopup open={open} closeOnDocumentClick onClose={close}>
+    <StyledPopup open={open} closeOnDocumentClick onClose={popupClose}>
       <input type="text" autofocus="autofocus" style={{ display: 'none' }} />
       <StyledAddToCollectIcon
         onClick={toggleCollected}
@@ -589,14 +592,12 @@ export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
           />
           <StyledContentContainer>
             <StyledPulisherContainer>
-              {workout.publisher.photoURL ? (
-                <StyledPublisherImage src={workout.publisher.photoURL} />
+              {publisher.photoURL ? (
+                <StyledPublisherImage src={publisher.photoURL} />
               ) : (
                 <StyledPublisherIcon />
               )}
-              {workout.publisher.displayName
-                ? workout.publisher.displayName
-                : 'User'}
+              {publisher.displayName}
             </StyledPulisherContainer>
             <StyledCollectionContainer>
               <StyledCollectIcon />{' '}

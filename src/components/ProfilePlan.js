@@ -8,6 +8,7 @@ import { FaDumbbell } from 'react-icons/fa';
 import muscleGroups from '../utils/muscleGroup';
 import CheckoutIcon from '../images/details.png';
 import GymBackground from '../images/gym.jpeg';
+import { useSelector } from 'react-redux';
 
 const StyledPlanContainer = styled.div`
   width: 100%;
@@ -250,6 +251,8 @@ const StyledAndMoreText = styled.div`
 
 export default function PlanItem({ plan }) {
   const [hover, setHover] = useState(false);
+  const users = useSelector((state) => state.users);
+  const publisher = users.filter((user) => user.id === plan.publisher)[0]
 
   return (
     <StyledPlanContainer
@@ -279,13 +282,13 @@ export default function PlanItem({ plan }) {
         <StyledPlanInfoContentContainer>
           <StyledPlanInfoTitle>{plan.title}</StyledPlanInfoTitle>
           <StyledPlanInfoPublisherContainer>
-            {plan.publisher.photoURL ? (
-              <StyledPlanInfoPublisherImage src={plan.publisher.photoURL} />
+            {publisher.photoURL ? (
+              <StyledPlanInfoPublisherImage src={publisher.photoURL} />
             ) : (
               <StyledPlanInfoPublisherIcon />
             )}
             <StyledPlanInfoPublisherName>
-              {plan.publisher.displayName ? plan.publisher.displayName : 'User'}
+              {publisher.displayName}
             </StyledPlanInfoPublisherName>
           </StyledPlanInfoPublisherContainer>
         </StyledPlanInfoContentContainer>

@@ -123,11 +123,7 @@ export default function CreateWorkoutPage({ close }) {
         documentRef
           .set({
             title: title,
-            publisher: {
-              displayName: firebase.auth().currentUser.displayName || '',
-              photoURL: firebase.auth().currentUser.photoURL || '',
-              uid: firebase.auth().currentUser.uid,
-            },
+            publisher: firebase.auth().currentUser.uid,
             description: description,
             targetMuscleGroup: targetMuscleGroup,
             type: type,

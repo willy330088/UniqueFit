@@ -12,10 +12,10 @@ export const getPlans = (plans) => {
   }
 }
 
-export const getSchedules = (schedules) => {
+export const getUsers = (users) => {
   return {
-    type: 'GET_SCHEDULES',
-    payload: schedules
+    type: 'GET_USERS',
+    payload: users
   }
 }
 

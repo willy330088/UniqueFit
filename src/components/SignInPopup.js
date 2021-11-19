@@ -211,14 +211,20 @@ export default function SignInPopup({ open, closeModal }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const userRef = firebase.firestore().collection('users')
 
   const handleOnClick = async (provider) => {
     const res = await socialMediaAuth(provider);
-    if (location.pathname === '/') {
-      history.push('/home');
-    } else {
-      closeModal();
-    }
+    userRef.doc(res.uid).set({
+      displayName: res.displayName,
+      photoURL: res.photoURL,
+    }).then(() => {
+      if (location.pathname === '/') {
+        history.push('/home');
+      } else {
+        closeModal();
+      }
+    })
     console.log(res);
   };
 
@@ -231,17 +237,21 @@ export default function SignInPopup({ open, closeModal }) {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
-        .then(() => {
+        .then((res) => {
+          console.log(res)
           firebase.auth().currentUser.updateProfile({
             displayName: name,
-          });
-        })
-        .then(() => {
-          if (location.pathname === '/') {
-            history.push('/home');
-          } else {
-            closeModal();
-          }
+          })
+          userRef.doc(res.user.uid).set({
+            displayName: name,
+            photoURL: null,
+          }).then(() => {
+            if (location.pathname === '/') {
+              history.push('/home');
+            } else {
+              closeModal();
+            }
+          })
         })
         .catch((error) => {
           switch (error.code) {
@@ -284,6 +294,7 @@ export default function SignInPopup({ open, closeModal }) {
         });
     }
   };
+  
   return (
     <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
       <StyledPopupImage src={Fit} />

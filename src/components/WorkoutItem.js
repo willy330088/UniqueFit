@@ -7,6 +7,7 @@ import { RiMessage2Fill } from 'react-icons/ri';
 import Popup from 'reactjs-popup';
 import muscleGroups from '../utils/muscleGroup';
 import WorkoutPopup from './WorkoutPopup';
+import { useSelector } from 'react-redux';
 
 const StyledWorkoutItemContainer = styled.div`
   display: flex;
@@ -135,6 +136,8 @@ export default function WorkoutItem({ workout, setSignInOpen }) {
   const [hover, setHover] = useState(false);
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
+  const users = useSelector((state) => state.users);
+  const publisher = users.filter((user) => user.id === workout.publisher)[0]
 
   return (
     <>
@@ -161,18 +164,14 @@ export default function WorkoutItem({ workout, setSignInOpen }) {
         <StyledWorkoutItemDescription>
           <StyledWorkoutItemTitle>{workout.title}</StyledWorkoutItemTitle>
           <StyledWorkoutItemPublisher>
-            {workout.publisher.photoURL ? (
-              <StyledPublisherImage src={workout.publisher.photoURL} />
+            {publisher.photoURL ? (
+              <StyledPublisherImage src={publisher.photoURL} />
             ) : (
               <StyledPublisherIcon />
             )}
-            {workout.publisher.displayName ? (
-              <StyledPublisherName>
-                {workout.publisher.displayName}
-              </StyledPublisherName>
-            ) : (
-              <StyledPublisherName>User</StyledPublisherName>
-            )}
+            <StyledPublisherName>
+              {publisher.displayName}
+            </StyledPublisherName>
           </StyledWorkoutItemPublisher>
           <StyledWorkoutItemSocial>
             <div>

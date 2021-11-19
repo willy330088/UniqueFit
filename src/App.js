@@ -22,8 +22,8 @@ import 'firebase/firestore';
 import {
   getWorkouts,
   getPlans,
-  getSchedules,
   getCurrentUser,
+  getUsers
 } from '../src/redux/actions';
 import FullPageLoading from './components/FullPageLoading';
 
@@ -86,13 +86,13 @@ function App() {
   useEffect(() => {
     firebase
       .firestore()
-      .collection('schedules')
+      .collection('users')
       .onSnapshot((collectionSnapshot) => {
         const data = collectionSnapshot.docs.map((docSnapshot) => {
           const id = docSnapshot.id;
           return { ...docSnapshot.data(), id };
         });
-        dispatch(getSchedules(data));
+        dispatch(getUsers(data));
       });
   }, []);
 

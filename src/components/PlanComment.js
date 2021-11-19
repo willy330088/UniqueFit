@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { BsThreeDots } from 'react-icons/bs';
 import { HiUserCircle } from 'react-icons/hi';
+import { useSelector } from 'react-redux';
 import firebase from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
@@ -116,6 +117,8 @@ export default function PlanComment({ comment, planId, currentUser }) {
   const [showTool, setShowTool] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [commentContent, setCommentContent] = useState(comment.content);
+  const users = useSelector((state) => state.users);
+  const publisher = users.filter((user) => user.id === comment.publisher)[0]
 
   function onSaveComment() {
     firebase
@@ -153,14 +156,14 @@ export default function PlanComment({ comment, planId, currentUser }) {
 
   return (
     <StyledCommentWrap>
-      {comment.publisher.photoURL ? (
-        <StyledCommentUserImage src={comment.publisher.photoURL} />
+      {publisher.photoURL ? (
+        <StyledCommentUserImage src={publisher.photoURL} />
       ) : (
         <StyledPlanInfoPublisherIcon />
       )}
       <StyledNameCommentWrap>
         <StyledCommentUserName>
-          {comment.publisher.displayName}
+          {publisher.displayName}
         </StyledCommentUserName>
         {isEditing ? (
           <>
