@@ -164,13 +164,13 @@ export default function WorkoutItem({ workout, setSignInOpen }) {
         <StyledWorkoutItemDescription>
           <StyledWorkoutItemTitle>{workout.title}</StyledWorkoutItemTitle>
           <StyledWorkoutItemPublisher>
-            {publisher.photoURL ? (
+            {publisher?.photoURL ? (
               <StyledPublisherImage src={publisher.photoURL} />
             ) : (
               <StyledPublisherIcon />
             )}
             <StyledPublisherName>
-              {publisher.displayName}
+              {publisher?.displayName}
             </StyledPublisherName>
           </StyledWorkoutItemPublisher>
           <StyledWorkoutItemSocial>

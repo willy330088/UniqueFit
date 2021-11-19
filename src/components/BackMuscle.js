@@ -33,6 +33,7 @@ export default function BackMuscle({filteredMuscleGroups, setFilteredMuscleGroup
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 471.48 783.75"
       width={width}
+      height={'393px'}
     >
       <path
         fill="hsla(206°, 8%, 36%)"

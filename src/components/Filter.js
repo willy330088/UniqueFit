@@ -125,6 +125,7 @@ const StyledPopupSpinIcon = styled.div`
   background-image: url(${Spin});
   background-repeat: no-repeat;
   background-size: contain;
+  transform: rotate(0.5turn);
 
   &:hover {
     background-image: url(${SpinHover});

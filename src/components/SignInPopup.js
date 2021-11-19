@@ -9,6 +9,8 @@ import socialMediaAuth from '../utils/auth';
 import { useHistory, useLocation } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { BsFacebook } from 'react-icons/bs';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const StyledPopupImage = styled.img`
   height: 100%;
@@ -104,6 +106,10 @@ const StyledSignInBtn = styled.button`
   cursor: pointer;
   border: none;
   border-radius: 5px;
+
+  &:hover {
+    background-color: hsla(232, 59%, 42%);
+  }
 `;
 
 const StyledSignInMediaBtn = styled.div`
@@ -116,6 +122,9 @@ const StyledSignInMediaBtn = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 5px;
+  &:hover {
+    background-color: hsla(232, 59%, 42%);
+  }
 `;
 
 const StyledGoogleIcon = styled(FcGoogle)`
@@ -211,20 +220,27 @@ export default function SignInPopup({ open, closeModal }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const userRef = firebase.firestore().collection('users')
+  const userRef = firebase.firestore().collection('users');
 
   const handleOnClick = async (provider) => {
     const res = await socialMediaAuth(provider);
-    userRef.doc(res.uid).set({
-      displayName: res.displayName,
-      photoURL: res.photoURL,
-    }).then(() => {
-      if (location.pathname === '/') {
-        history.push('/home');
-      } else {
-        closeModal();
-      }
-    })
+    userRef
+      .doc(res.uid)
+      .set({
+        displayName: res.displayName,
+        photoURL: res.photoURL,
+      })
+      .then(() => {
+        if (location.pathname === '/') {
+          history.push('/home');
+        } else {
+          closeModal();
+        }
+        toast.success('Sign in successfully!', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+        });
+      });
     console.log(res);
   };
 
@@ -238,20 +254,27 @@ export default function SignInPopup({ open, closeModal }) {
         .auth()
         .createUserWithEmailAndPassword(email, password)
         .then((res) => {
-          console.log(res)
+          console.log(res);
           firebase.auth().currentUser.updateProfile({
             displayName: name,
-          })
-          userRef.doc(res.user.uid).set({
-            displayName: name,
-            photoURL: null,
-          }).then(() => {
-            if (location.pathname === '/') {
-              history.push('/home');
-            } else {
-              closeModal();
-            }
-          })
+          });
+          userRef
+            .doc(res.user.uid)
+            .set({
+              displayName: name,
+              photoURL: null,
+            })
+            .then(() => {
+              if (location.pathname === '/') {
+                history.push('/home');
+              } else {
+                closeModal();
+              }
+              toast.success('Sign in successfully!', {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 2000,
+              });
+            });
         })
         .catch((error) => {
           switch (error.code) {
@@ -277,6 +300,10 @@ export default function SignInPopup({ open, closeModal }) {
           } else {
             closeModal();
           }
+          toast.success('Sign in successfully!', {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+          });
         })
         .catch((error) => {
           switch (error.code) {
@@ -294,7 +321,7 @@ export default function SignInPopup({ open, closeModal }) {
         });
     }
   };
-  
+
   return (
     <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
       <StyledPopupImage src={Fit} />

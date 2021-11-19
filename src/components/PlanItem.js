@@ -166,7 +166,7 @@ const StyledPlanWorkoutsContainer = styled.div``;
 
 const StyledPlanMainContentContainer = styled.div`
   overflow-y: scroll;
-  height: 390px;
+  height: 360px;
 `;
 
 const StyledPlanWorkoutItemContainer = styled.div`
@@ -283,13 +283,13 @@ export default function PlanItem({ plan }) {
         <StyledPlanInfoContentContainer>
           <StyledPlanInfoTitle>{plan.title}</StyledPlanInfoTitle>
           <StyledPlanInfoPublisherContainer>
-            {publisher.photoURL ? (
+            {publisher?.photoURL ? (
               <StyledPlanInfoPublisherImage src={publisher.photoURL} />
             ) : (
               <StyledPlanInfoPublisherIcon />
             )}
             <StyledPlanInfoPublisherName>
-              {publisher.displayName}
+              {publisher?.displayName}
             </StyledPlanInfoPublisherName>
           </StyledPlanInfoPublisherContainer>
         </StyledPlanInfoContentContainer>
