@@ -13,18 +13,18 @@ const StyledCreateWorkoutBtn = styled.div`
   font-size: 20px;
   height: 40px;
   width: 120px;
-  cursor: pointer;
-  color: #1face1;
+  cursor: ${(props) => (props.createDisabled ? 'not-allowed' : 'pointer')};
+  color: ${(props) => (props.createDisabled ? '#d1d1d1' : '#1face1')};
   border-radius: 5px;
-  background-color: transparent;
+  background-color: ${(props) => (props.createDisabled ? '#969696' : 'transparent')};
   text-align: center;
   line-height: 40px;
   margin: 10px 0;
-  border: 2px solid #1face1;
+  border: ${(props) => (props.createDisabled ? 'none' : '2px solid #1face1')};
 
   &:hover {
-    color: white;
-    background-color: #1face1;
+    color: ${(props) => (props.createDisabled ? '#d1d1d1' : 'white')};
+    background-color: ${(props) => (props.createDisabled ? '#969696' : '#1face1')};
   }
 
   @media (min-width: 500px) {
@@ -80,69 +80,76 @@ export default function CreateWorkoutPage({ close }) {
   const [videoFile, setVideoFile] = useState('');
   const [source, setSource] = useState();
   const [paging, setPaging] = useState(1);
+  const [createDisabled, setCreateDisabled] = useState(false);
 
   function createWorkout() {
-    const documentRef = firebase.firestore().collection('workouts').doc();
-    const fileRef = firebase.storage().ref('workout-videos/' + documentRef.id);
-    const metadata = {
-      contentType: videoFile.type,
-    };
+    if (createDisabled) {
+      return
+    } else {
+      setCreateDisabled(true)
+      const documentRef = firebase.firestore().collection('workouts').doc();
+      const fileRef = firebase.storage().ref('workout-videos/' + documentRef.id);
+      const metadata = {
+        contentType: videoFile.type,
+      };
 
-    if (title === '') {
-      toast.error('Please fill in title', {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 3000,
-      });
-      return
-    } else if (targetMuscleGroup === '') {
-      toast.error('Please choose target muscle group', {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 3000,
-      });
-      return
-    } else if (description === '') {
-      toast.error('Please fill in description', {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 3000,
-      });
-      return
-    } else if (videoFile === '') {
-      toast.error('Please upload video', {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 3000,
-      });
-      return
-    }
+      if (title === '') {
+        toast.error('Please fill in title', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
+        return
+      } else if (targetMuscleGroup === '') {
+        toast.error('Please choose target muscle group', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
+        return
+      } else if (description === '') {
+        toast.error('Please fill in description', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
+        return
+      } else if (videoFile === '') {
+        toast.error('Please upload video', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
+        return
+      }
 
-    const workoutCreating = toast.loading('Creating Workouts...', {
-      position: toast.POSITION.TOP_CENTER,
-    });
+      const workoutCreating = toast.loading('Creating Workouts...', {
+        position: toast.POSITION.TOP_CENTER,
+      });
 
-    fileRef.put(videoFile, metadata).then(() => {
-      fileRef.getDownloadURL().then((videoURL) => {
-        documentRef
-          .set({
-            title: title,
-            publisher: firebase.auth().currentUser.uid,
-            description: description,
-            targetMuscleGroup: targetMuscleGroup,
-            type: type,
-            collectedBy: [],
-            videoURL,
-            createdAt: firebase.firestore.Timestamp.now(),
-          })
-          .then(() => {
-            toast.update(workoutCreating, {
-              render: 'Created Successfully',
-              type: 'success',
-              isLoading: false,
-              position: toast.POSITION.TOP_CENTER,
-              autoClose: 2000,
+      fileRef.put(videoFile, metadata).then(() => {
+        fileRef.getDownloadURL().then((videoURL) => {
+          documentRef
+            .set({
+              title: title,
+              publisher: firebase.auth().currentUser.uid,
+              description: description,
+              targetMuscleGroup: targetMuscleGroup,
+              type: type,
+              collectedBy: [],
+              videoURL,
+              createdAt: firebase.firestore.Timestamp.now(),
+            })
+            .then(() => {
+              toast.update(workoutCreating, {
+                render: 'Created Successfully',
+                type: 'success',
+                isLoading: false,
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 2000,
+              });
+              close();
+              setCreateDisabled(false)
             });
-            close();
-          });
+        });
       });
-    });
+    }
   }
 
   function showMainContent() {
@@ -168,7 +175,7 @@ export default function CreateWorkoutPage({ close }) {
             setSource={setSource}
           />
           <StyledChangeWorkoutBtnContainer>
-            <StyledCreateWorkoutBtn onClick={createWorkout}>
+            <StyledCreateWorkoutBtn onClick={createWorkout} createDisabled={createDisabled}>
               Create
             </StyledCreateWorkoutBtn>
           </StyledChangeWorkoutBtnContainer>

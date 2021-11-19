@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import Upload from '../images/upload.png';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const StyledVideoInput = styled.div`
   width: 100%;
@@ -87,6 +89,7 @@ const StyledTypeInput = styled.input`
   width: 20px;
   height: 20px;
   margin-right: 10px;
+  cursor: pointer;
 `;
 
 const StyledTypeLabel = styled.label`
@@ -106,13 +109,26 @@ export default function VideoInput({
   const [hover, setHover] = useState(false)
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setVideoFile(file);
-    const url = URL.createObjectURL(file);
-    setSource(url);
+    console.log(e.target.files[0])
+    if (e.target.files[0]) {
+      const file = e.target.files[0];
+      console.log(file.size)
+      if (file.size > 10000000) {
+        toast.error('Video Size Limit: 10 MB', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
+        return
+      } else {
+        setVideoFile(file);
+        const url = URL.createObjectURL(file);
+        setSource(url);
+      }
+    }
   };
 
   const handleChoose = () => {
+    inputRef.current.value = null
     inputRef.current.click();
   };
 
@@ -148,6 +164,7 @@ export default function VideoInput({
         name={'workoutType'}
         value={'Gymworkout'}
         checked={type === 'Gymworkout'}
+        readOnly
         onClick={() => {
           if (type !== 'Gymworkout') {
             setType('Gymworkout');
@@ -160,6 +177,7 @@ export default function VideoInput({
         name={'workoutType'}
         value={'Homeworkout'}
         checked={type === 'Homeworkout'}
+        readOnly
         onClick={() => {
           if (type !== 'Homeworkout') {
             setType('Homeworkout');

@@ -35,18 +35,18 @@ const StyledCreateWorkoutBtn = styled.div`
   font-size: 20px;
   height: 40px;
   width: 120px;
-  cursor: pointer;
-  color: #1face1;
+  cursor: ${(props) => (props.createDisabled ? 'not-allowed' : 'pointer')};
+  color: ${(props) => (props.createDisabled ? '#d1d1d1' : '#1face1')};
   border-radius: 5px;
-  background-color: transparent;
+  background-color: ${(props) => (props.createDisabled ? '#969696' : 'transparent')};
   text-align: center;
   line-height: 40px;
   margin: 10px 0;
-  border: solid 2px #1face1;
+  border: ${(props) => (props.createDisabled ? 'none' : '2px solid #1face1')};
 
   &:hover {
-    color: white;
-    background-color: #1face1;
+    color: ${(props) => (props.createDisabled ? '#d1d1d1' : 'white')};
+    background-color: ${(props) => (props.createDisabled ? '#969696' : '#1face1')};
   }
 
   @media (min-width: 500px) {
@@ -85,6 +85,7 @@ export default function CreatePlanPage({ paging, setPaging, originalPlan, close 
     originalPlan.estimatedTrainingTime
   );
   const [publicity, setPublicity] = useState(originalPlan.public);
+  const [createDisabled, setCreateDisabled] = useState(false);
   const [plan, setPlan] = useState({
     workoutSet: [],
   });
@@ -113,79 +114,85 @@ export default function CreatePlanPage({ paging, setPaging, originalPlan, close 
   }, []);
 
   function savePlan() {
-    const documentRef = firebase.firestore().collection('plans').doc(originalPlan.id);
-    let checked = false
+    if (createDisabled) {
+      return
+    } else {
+      setCreateDisabled(true)
+      const documentRef = firebase.firestore().collection('plans').doc(originalPlan.id);
+      let checked = false
 
-    if (title === '') {
-      toast.error('Please fill in title', {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 3000,
-      });
-      return
-    } else if (!estimatedTrainingTime) {
-      toast.error('Please fill in estimated training time', {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 3000,
-      });
-      return
-    } else if (description === '') {
-      toast.error('Please fill in description', {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 3000,
-      });
-      return
-    } else if (plan.workoutSet.length === 0) {
-      toast.error('Please add workouts', {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 3000,
-      });
-      return
-    }
-
-    plan.workoutSet.every((workout) => {
-      checked = false;
-      if (!workout.reps || !workout.weight) {
-        toast.error(`Please fill in weights and reps`, {
+      if (title === '') {
+        toast.error('Please fill in title', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
-        return false
-      }
-      checked = true;
-      return true
-    })
-
-    if (checked) {
-      const planEditing = toast.loading('Editing Plan...', {
-        position: toast.POSITION.TOP_CENTER,
-      });
-
-      documentRef
-        .update({
-          title: title,
-          public: publicity,
-          description: description,
-          targetMuscleGroup: targetMuscleGroup,
-          estimatedTrainingTime: estimatedTrainingTime,
-          workoutSet: plan.workoutSet.map((item) => {
-            return {
-              workoutId: item.workoutId,
-              reps: item.reps,
-              weight: item.weight,
-              title: item.title,
-            };
-          }),
-        })
-        .then(() => {
-          toast.update(planEditing, {
-            render: 'Edited Successfully',
-            type: 'success',
-            isLoading: false,
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 2000,
-          });
-          close()
+        return
+      } else if (!estimatedTrainingTime) {
+        toast.error('Please fill in estimated training time', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
         });
+        return
+      } else if (description === '') {
+        toast.error('Please fill in description', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
+        return
+      } else if (plan.workoutSet.length === 0) {
+        toast.error('Please add workouts', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
+        return
+      }
+
+      plan.workoutSet.every((workout) => {
+        checked = false;
+        if (!workout.reps || !workout.weight) {
+          toast.error(`Please fill in weights and reps`, {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
+          return false
+        }
+        checked = true;
+        return true
+      })
+
+      if (checked) {
+        const planEditing = toast.loading('Editing Plan...', {
+          position: toast.POSITION.TOP_CENTER,
+        });
+
+        documentRef
+          .update({
+            title: title,
+            public: publicity,
+            description: description,
+            targetMuscleGroup: targetMuscleGroup,
+            estimatedTrainingTime: estimatedTrainingTime,
+            workoutSet: plan.workoutSet.map((item) => {
+              return {
+                workoutId: item.workoutId,
+                reps: item.reps,
+                weight: item.weight,
+                title: item.title,
+              };
+            }),
+          })
+          .then(() => {
+            toast.update(planEditing, {
+              render: 'Edited Successfully',
+              type: 'success',
+              isLoading: false,
+              position: toast.POSITION.TOP_CENTER,
+              autoClose: 2000,
+            });
+            close()
+            setCreateDisabled(false)
+          });
+      }
     }
   }
 
@@ -216,7 +223,7 @@ export default function CreatePlanPage({ paging, setPaging, originalPlan, close 
           <StyledCreateLabel>Order Your Workouts</StyledCreateLabel>
           <DragandDrop plan={plan} setPlan={setPlan} />
           <StyledChangeWorkoutBtnContainer>
-            <StyledCreateWorkoutBtn onClick={savePlan}>
+            <StyledCreateWorkoutBtn onClick={savePlan} createDisabled={createDisabled}>
               Save
             </StyledCreateWorkoutBtn>
           </StyledChangeWorkoutBtnContainer>

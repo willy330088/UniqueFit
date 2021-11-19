@@ -13,18 +13,18 @@ const StyledCreateWorkoutBtn = styled.div`
   font-size: 20px;
   height: 40px;
   width: 120px;
-  cursor: pointer;
-  color: #1face1;
+  cursor: ${(props) => (props.createDisabled ? 'not-allowed' : 'pointer')};
+  color: ${(props) => (props.createDisabled ? '#d1d1d1' : '#1face1')};
   border-radius: 5px;
-  background-color: transparent;
+  background-color: ${(props) => (props.createDisabled ? '#969696' : 'transparent')};
   text-align: center;
   line-height: 40px;
   margin: 10px 0;
-  border: 2px solid #1face1;
+  border: ${(props) => (props.createDisabled ? 'none' : '2px solid #1face1')};
 
   &:hover {
-    color: white;
-    background-color: #1face1;
+    color: ${(props) => (props.createDisabled ? '#d1d1d1' : 'white')};
+    background-color: ${(props) => (props.createDisabled ? '#969696' : '#1face1')};
   }
 
   @media (min-width: 500px) {
@@ -82,78 +82,86 @@ export default function CreateWorkoutPage({ workout, close }) {
   const [videoFile, setVideoFile] = useState('');
   const [source, setSource] = useState(workout.videoURL);
   const [paging, setPaging] = useState(1);
+  const [createDisabled, setCreateDisabled] = useState(false);
 
   function SaveWorkout() {
-    const documentRef = firebase
-      .firestore()
-      .collection('workouts')
-      .doc(workout.id);
-
-    const fileRef = firebase.storage().ref('workout-videos/' + documentRef.id);
-    const metadata = {
-      contentType: videoFile.type,
-    };
-
-    if (title === '') {
-      toast.error('Please fill in title', {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 3000,
-      });
+    if (createDisabled) {
       return
-    } else if (description === '') {
-      toast.error('Please fill in description', {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 3000,
-      });
-      return
-    }
-
-    const workoutEditing = toast.loading('Editing Workouts...', {
-      position: toast.POSITION.TOP_CENTER,
-    });
-
-    if (videoFile === '') {
-      documentRef
-        .update({
-          title: title,
-          description: description,
-          targetMuscleGroup: targetMuscleGroup,
-          type: type,
-        })
-        .then(() => {
-          toast.update(workoutEditing, {
-            render: 'Edited Successfully',
-            type: 'success',
-            isLoading: false,
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 2000,
-          })
-          close();
-        });
     } else {
-      fileRef
-        .put(videoFile, metadata)
-        .then(() => {
-          fileRef.getDownloadURL().then((videoURL) => {
-            documentRef.update({
-              title: title,
-              description: description,
-              targetMuscleGroup: targetMuscleGroup,
-              type: type,
-              videoURL,
-            });
-          });
-        })
-        .then(() => {
-          toast.update(workoutEditing, {
-            render: 'Edited Successfully',
-            type: 'success',
-            isLoading: false,
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 2000,
-          })
-          close();
+      setCreateDisabled(true)
+      const documentRef = firebase
+        .firestore()
+        .collection('workouts')
+        .doc(workout.id);
+
+      const fileRef = firebase.storage().ref('workout-videos/' + documentRef.id);
+      const metadata = {
+        contentType: videoFile.type,
+      };
+
+      if (title === '') {
+        toast.error('Please fill in title', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
         });
+        return
+      } else if (description === '') {
+        toast.error('Please fill in description', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
+        return
+      }
+
+      const workoutEditing = toast.loading('Editing Workouts...', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+
+      if (videoFile === '') {
+        documentRef
+          .update({
+            title: title,
+            description: description,
+            targetMuscleGroup: targetMuscleGroup,
+            type: type,
+          })
+          .then(() => {
+            toast.update(workoutEditing, {
+              render: 'Edited Successfully',
+              type: 'success',
+              isLoading: false,
+              position: toast.POSITION.TOP_CENTER,
+              autoClose: 2000,
+            })
+            close();
+            setCreateDisabled(false)
+          });
+      } else {
+        fileRef
+          .put(videoFile, metadata)
+          .then(() => {
+            fileRef.getDownloadURL().then((videoURL) => {
+              documentRef.update({
+                title: title,
+                description: description,
+                targetMuscleGroup: targetMuscleGroup,
+                type: type,
+                videoURL,
+              });
+            });
+          })
+          .then(() => {
+            toast.update(workoutEditing, {
+              render: 'Edited Successfully',
+              type: 'success',
+              isLoading: false,
+              position: toast.POSITION.TOP_CENTER,
+              autoClose: 2000,
+            })
+            close();
+            setCreateDisabled(false)
+          });
+      }
     }
   }
 
@@ -180,7 +188,7 @@ export default function CreateWorkoutPage({ workout, close }) {
             setSource={setSource}
           />
           <StyledChangeWorkoutBtnContainer>
-            <StyledCreateWorkoutBtn onClick={SaveWorkout}>
+            <StyledCreateWorkoutBtn onClick={SaveWorkout} createDisabled={createDisabled}>
               Save
             </StyledCreateWorkoutBtn>
           </StyledChangeWorkoutBtnContainer>
