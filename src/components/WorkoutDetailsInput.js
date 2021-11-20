@@ -145,7 +145,7 @@ export default function PlanDetailsInput({
           setTitle(e.target.value);
         }}
         value={title}
-        maxLength={15}
+        // maxLength={15}
       />
       <StyledCreateLabel reminder={'(Choose 1 main muscle group)'}>
         {targetMuscleGroup === '' ? 'Target Muscle Group' : targetMuscleGroup}

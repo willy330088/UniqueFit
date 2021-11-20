@@ -68,6 +68,23 @@ const StyledWorkoutItemTitle = styled.div`
   font-size: 35px;
   color: #1face1;
   margin-bottom: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 200px;
+  text-align: center;
+
+  @media (min-width: 500px) {
+  text-align: start;
+  }
+
+  @media (min-width: 700px) {
+   width: 300px;
+  }
+
+  @media (min-width: 1400px) {
+   width: 300px;
+  } ;
 `;
 
 const StyledWorkoutItemPublisher = styled.div`
@@ -119,7 +136,10 @@ const StyledContainer = styled.div`
 const StyledContainer2 = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 10px;
+
+  @media (min-width: 500px) {
+    margin-left: 10px;
+  } ;
 `;
 
 const StyledCollectNum = styled.div`

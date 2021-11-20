@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import Popup from 'reactjs-popup';
 import ScheduleForm from './ScheduleForm';
 import ScheduleDetails from './ScheduleDetails';
-import firebase from '../utils/firebase';
 import CalendarHover from '../images/AddCalendar.png';
 import Calendar from '../images/AddCalendar-2.png';
 import { useSelector } from 'react-redux';
@@ -16,35 +15,123 @@ const StyledCalendarContainer = styled.div`
   background: white;
   padding: 20px;
   position: relative;
-`;
+  width: 100%;
+  border-radius: 10px;
 
-const StyledAddTrainingContainer = styled.div`
-  width: 200px;
-  height: 40px;
-  position: absolute;
-  top: 20px;
-  left: 250px;
-  display: flex;
-  align-items: center;
-  transition: ease-in-out 0.1s;
-  cursor: pointer;
+  .fc-toolbar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .fc-button {
+    padding: 5px;
+  }
+
+  .fc-toolbar-chunk {
+    margin-bottom: 5px;
+  }
+
+  .fc-toolbar-title {
+    width: 250px;
+    font-size: 35px;
+  }
+
+  .fc {
+    width: 100%;
+  }
+
+  .fc-event {
+    background: #1face1;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    padding-left: 5px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 5px 15px;
+    &:hover {
+      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+
+  }
+
+  .fc-event-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 600px) {
+    .fc-button {
+      padding: 10px;
+    }
+
+    .fc-event {
+      font-size: 15px;
+    }
+  }
+
+  @media (min-width: 800px) {
+    .fc-toolbar {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .fc-button {
+      padding: 10px;
+    }
+
+    .fc-toolbar-chunk {
+      margin-right: 10px;
+      margin-bottom: 0px;
+    }
+
+    .fc-event {
+      font-size: 20px;
+    }
+  }
 `;
 
 const StyledAddTrainingIcon = styled.div`
   cursor: pointer;
-  width: ${(props) =>props.calendarHover ? '45px' : '40px'};
-  height: ${(props) =>props.calendarHover ? '45px' : '40px'};
-  background-image: ${(props) =>props.calendarHover ? `url(${CalendarHover})` : `url(${Calendar})`};
+  margin-left: 5px;
+  width: 40px;
+  height: 40px;
+  background-image: url(${Calendar});
   background-repeat: no-repeat;
   background-size: contain;
   transition: ease-in-out 0.1s;
 `;
 
-const StyledAddTrainingText = styled.div`
-  margin-left: 10px;
-  font-size: ${(props) =>props.calendarHover ? '27px' : '25px'};
-  color: ${(props) => (props.calendarHover ? '#1face1' : 'black')};
-  transition: ease-in-out 0.3s;
+const StyledAddTrainingContainer = styled.div`
+  height: 65px;
+  width: 65px;
+  position: absolute;
+  right: 10px;
+  top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #e5f0f5;
+  border-radius: 50%;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+  &:hover ${StyledAddTrainingIcon} {
+    width: 45px;
+    height: 45px;
+  }
+
+  @media (min-width: 500px) {
+    right: 40px;
+    top: 40px;
+  }
+
+  @media (min-width: 800px) {
+    right: 30px;
+    top: 10px;
+  }
 `;
 
 const StyledPopup = styled(Popup)`
@@ -64,15 +151,15 @@ const StyledPopup = styled(Popup)`
 `;
 
 export default function ScheduleCalendar() {
-  // States
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
   const openModal = () => setOpen(true);
   const [selectedModal, setSelectedModal] = useState('');
   const [selectedEvent, setSelectedEvent] = useState();
-  const [calendarHover, setCalendarHover] = useState(false);
   const currentUser = useSelector((state) => state.currentUser);
-  const events = useSelector((state) => state.users).filter((user)=> user.id === currentUser.uid)[0].events;
+  const events = useSelector((state) => state.users).filter(
+    (user) => user.id === currentUser.uid
+  )[0].events;
 
   let initialDate = new Date().toISOString();
 
@@ -92,20 +179,8 @@ export default function ScheduleCalendar() {
 
   return (
     <StyledCalendarContainer>
-      <StyledAddTrainingContainer
-        onMouseOver={() => {
-          setCalendarHover(true);
-        }}
-        onMouseLeave={() => {
-          setCalendarHover(false);
-        }}
-        calendarHover={calendarHover}
-        onClick={openForm}
-      >
-        <StyledAddTrainingIcon calendarHover={calendarHover} />
-        <StyledAddTrainingText calendarHover={calendarHover}>
-          Add Training
-        </StyledAddTrainingText>
+      <StyledAddTrainingContainer onClick={openForm}>
+        <StyledAddTrainingIcon />
       </StyledAddTrainingContainer>
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -117,7 +192,6 @@ export default function ScheduleCalendar() {
         initialDate={initialDate}
         weekends={true}
         events={events}
-        
         eventClick={handleEventClick}
         views={{
           dayGrid: {

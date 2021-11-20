@@ -177,6 +177,12 @@ const StyledCollectIconContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  cursor: pointer;
 
   @media (min-width: 500px) {
     right: 40px;
@@ -192,6 +198,7 @@ const StyledCollectIconContainer = styled.div`
 const StyledCollectIconText = styled.div`
   font-size: 15px;
   color: ${(props) => (props.isCollected ? '#1face1' : '#808080')};
+  cursor: pointer;
 `;
 
 const StyledPlanCollectIcon = styled(FaDumbbell)`

@@ -1,25 +1,34 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import ProfilePlan from './ProfilePlan';
-import { BsBookmarkFill } from 'react-icons/bs';
-import Popup from 'reactjs-popup';
+import { FaDumbbell } from 'react-icons/fa';
 import firebase from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/auth';
 
 const StyledPlanCreationContainer = styled.div`
+  margin: 20px 0px 50px 0;
+  width: 100%;
   display: flex;
   align-items: center;
-  margin: 50px 0px;
+  flex-direction: column;
+
+  @media (min-width: 800px) {
+    margin: 50px 0px;
+    flex-direction: row;
+  }
 `;
 
-const StyledCollectIcon = styled(BsBookmarkFill)`
-  font-size: 40px;
+const StyledCollectIcon = styled(FaDumbbell)`
+  font-size: 50px;
   margin-left: 40px;
   color: #1face1;
   cursor: pointer;
-  margin-left: auto;
+
+  @media (min-width: 800px) {
+    margin-left: auto;
+  }
 
   &:hover {
     color: white;

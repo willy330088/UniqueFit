@@ -56,6 +56,7 @@ const StyledMapContainer = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
+  width: 100%;
 `;
 
 const StyledLoadingContent = styled.div`
@@ -116,24 +117,37 @@ const StyledLogoContainer = styled.div`
 `;
 
 const StyledLogoText1 = styled.div`
-  font-size: 80px;
+  font-size: 40px;
   color: #1face1;
   margin: 0 5px;
+
+  @media (min-width: 550px) {
+    font-size: 80px;
+  }
 `;
 
 const StyledLogoText2 = styled.div`
-  font-size: 80px;
+  font-size: 40px;
   color: white;
   margin: 0 5px;
+
+  @media (min-width: 550px) {
+    font-size: 80px;
+  }
 `;
 
 const StyledLogoDumbbell = styled.div`
   background-image: url(${LogoDumbbell});
   background-repeat: no-repeat;
   background-size: cover;
-  width: 33px;
-  height: 65px;
+  width: 17px;
+  height: 36px;
   margin: 0 5px;
+
+  @media (min-width: 550px) {
+    width: 33px;
+    height: 65px;
+  }
 `;
 
 const libraries = ['places'];

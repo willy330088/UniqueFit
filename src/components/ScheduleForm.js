@@ -141,6 +141,7 @@ export default function ScheduleForm({ closeModal }) {
   console.log(selectedPlan);
   return (
     <>
+      <input type="text" autofocus="autofocus" style={{ display: 'none' }} />
       <StyledDateContainer>
         <StyledLabel>Choose Training Date</StyledLabel>
         <StyledDatePicker selected={selectedDate} onChange={setSelectedDate} />

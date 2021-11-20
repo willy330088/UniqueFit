@@ -50,7 +50,7 @@ const StyledTitleContainer = styled.div`
 
 const StyledMuscleIcon = styled.img`
   width: 55px;
-  margin-right: 30px;
+  margin-right: 10px;
 
   @media (min-width: 500px) {
     width: 60px;
@@ -67,13 +67,19 @@ const StyledMuscleIcon = styled.img`
 const StyledTitle = styled.div`
   color: #1face1;
   font-size: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  width: 200px;
 
   @media (min-width: 500px) {
     font-size: 40px;
+    width: 300px;
   }
 
   @media (min-width: 700px) {
     font-size: 60px;
+    width: 420px;
   } ;
 `;
 //
@@ -422,24 +428,36 @@ const StyledLogoContainer = styled.div`
 `;
 
 const StyledLogoText1 = styled.div`
-  font-size: 80px;
+  font-size: 40px;
   color: #1face1;
   margin: 0 5px;
+
+  @media (min-width: 500px) {
+    font-size: 80px;
+  }
 `;
 
 const StyledLogoText2 = styled.div`
-  font-size: 80px;
+  font-size: 40px;
   color: white;
   margin: 0 5px;
+  @media (min-width: 500px) {
+    font-size: 80px;
+  }
 `;
 
 const StyledLogoDumbbell = styled.div`
   background-image: url(${LogoDumbbell});
   background-repeat: no-repeat;
   background-size: cover;
+  width: 17px;
+  height: 36px;
+  margin: 0 5px;
+
+  @media (min-width: 500px) {
   width: 33px;
   height: 65px;
-  margin: 0 5px;
+  }
 `;
 
 const StyledPopup = styled(Popup)`

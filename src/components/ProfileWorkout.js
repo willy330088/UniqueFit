@@ -59,6 +59,23 @@ const StyledWorkoutItemTitle = styled.div`
   font-size: 35px;
   color: #1face1;
   margin-bottom: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 200px;
+  text-align: center;
+
+  @media (min-width: 500px) {
+  text-align: start;
+  }
+
+  @media (min-width: 700px) {
+   width: 300px;
+  }
+
+  @media (min-width: 1400px) {
+   width: 300px;
+  } ;
 `;
 
 const StyledWorkoutItemPublisher = styled.div`

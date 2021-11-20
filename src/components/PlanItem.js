@@ -156,7 +156,10 @@ const StyledPlanText = styled.div`
   margin: 10px 0;
   color: #222d35;
   font-size: 16px;
-  word-break: break-all;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const StyledPlanWorkouts = styled.div`
