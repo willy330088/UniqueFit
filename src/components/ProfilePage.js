@@ -30,6 +30,18 @@ const StyledBody = styled.div`
 const StyledProfilePageContainer = styled.div`
   padding: 50px 10% 100px;
   min-height: 800px;
+
+  @media (min-width: 950px) {
+   padding: 50px 15% 100px;
+  }
+
+  @media (min-width: 1100px) {
+   padding: 50px 5% 100px;
+  }
+
+  @media (min-width: 1400px) {
+    padding: 50px 10% 100px;
+  }
 `;
 
 const StyledPersonalInfoContainer = styled.div`
@@ -42,9 +54,19 @@ const StyledPersonalInfoContainer = styled.div`
 `;
 
 const StyledPersonalImage = styled.img`
-  width: 120px;
+  width: 50px;
   border-radius: 50%;
-  margin-right: 40px;
+  margin-right: 10px;
+
+  @media (min-width: 450px) {
+    width: 60px;
+  }
+
+  @media (min-width: 750px) {
+    width: 120px;
+    border-radius: 50%;
+    margin-right: 40px;
+  }
 `;
 
 const StyledPersonalInfo = styled.div`
@@ -55,29 +77,47 @@ const StyledPersonalInfo = styled.div`
 
 const StyledPersonalName = styled.div`
   color: #1face1;
-  font-size: 50px;
+  font-size: 30px;
   margin-bottom: 10px;
+
+  @media (min-width: 750px) {
+    font-size: 50px;
+    margin-bottom: 10px;
+  }
 `;
 
 const StyledPersonalEmail = styled.div`
   color: white;
-  font-size: 30px;
+  font-size: 20px;
+
+  @media (min-width: 750px) {
+    font-size: 30px;
+  }
 `;
 
 const StyledPencilIcon = styled(BsFillPencilFill)`
-  font-size: 40px;
-  margin-left: 40px;
+  font-size: 20px;
+  margin-left: 10px;
   color: #7d7d7d;
   cursor: pointer;
 
   &:hover {
     color: white;
   }
+
+  @media (min-width: 450px) {
+    font-size: 25px;
+    margin-left: 20px;
+  }
+
+  @media (min-width: 750px) {
+    font-size: 40px;
+    margin-left: 40px;
+  }
 `;
 
 const StyledSignOutIcon = styled(RiLogoutBoxRLine)`
-  font-size: 50px;
-  margin-left: 40px;
+  font-size: 25px;
   color: #7d7d7d;
   cursor: pointer;
   position: absolute;
@@ -86,22 +126,46 @@ const StyledSignOutIcon = styled(RiLogoutBoxRLine)`
   &:hover {
     color: white;
   }
-`;
 
-const StyledSideBar = styled.aside`
-  float: left;
+  @media (min-width: 450px) {
+    font-size: 30px;
+  }
+
+  @media (min-width: 750px) {
+    font-size: 50px;
+  }
 `;
 
 const StyledSideBarContainer = styled.div`
-  margin-top: 50px;
-  width: 300px;
+  width: 100%;
+
+  @media (min-width: 1100px) {
+    width: 400px;
+  }
+
+  @media (min-width: 1400px) {
+    width: 450px;
+  }
 `;
 
 const StyledProfileContentContainer = styled.div`
-  padding: 50px 0px 50px 50px;
-  margin-left: 200px;
-  @media (min-width: 1280px) {
-    margin-left: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+  width: 100%;
+
+  @media (min-width: 800px) {
+    display: block;
+  }
+
+  @media (min-width: 1100px) {
+    margin-top: 0px;
+   padding: 0px 0px 50px 50px;
+  }
+
+  @media (min-width: 1500px) {
+    margin-left: 100px;
   }
 `;
 
@@ -138,8 +202,16 @@ const StyledPersonalIcon = styled(HiUserCircle)`
   color: white;
 `;
 
+const StyledMainContent = styled.div`
+  margin-top: 50px;
+
+  @media (min-width: 1100px) {
+    display: flex;
+  }
+`;
+
 export default function CreateWorkoutPage() {
-  const history = useHistory()
+  const history = useHistory();
   const workouts = useSelector((state) => state.workouts);
   const plans = useSelector((state) => state.plans);
   const currentUser = useSelector((state) => state.currentUser);
@@ -217,18 +289,14 @@ export default function CreateWorkoutPage() {
       }
     } else if (mainContent === 'My Plan Creations') {
       if (
-        plans.filter(
-          (plan) => plan.publisher === currentUser?.uid
-        ).length === 0
+        plans.filter((plan) => plan.publisher === currentUser?.uid).length === 0
       ) {
         return <NoResult type={'plan'} />;
       } else {
         return (
           <>
             {plans
-              .filter(
-                (plan) => plan.publisher === currentUser?.uid
-              )
+              .filter((plan) => plan.publisher === currentUser?.uid)
               .map((plan) => {
                 return <PlanCreation plan={plan} />;
               })}
@@ -237,18 +305,15 @@ export default function CreateWorkoutPage() {
       }
     } else if (mainContent === 'My Plan Collections') {
       if (
-        plans.filter((plan) =>
-          plan.collectedBy.includes(currentUser?.uid)
-        ).length === 0
+        plans.filter((plan) => plan.collectedBy.includes(currentUser?.uid))
+          .length === 0
       ) {
         return <NoResult type={'plan'} />;
       } else {
         return (
           <>
             {plans
-              .filter((plan) =>
-                plan.collectedBy.includes(currentUser?.uid)
-              )
+              .filter((plan) => plan.collectedBy.includes(currentUser?.uid))
               .map((plan) => {
                 return <PlanCollection plan={plan} />;
               })}
@@ -265,12 +330,10 @@ export default function CreateWorkoutPage() {
   }
 
   function signOut() {
-    firebase
-      .auth()
-      .signOut()
+    firebase.auth().signOut();
   }
 
-  return workouts.length !==0 ? (
+  return workouts.length !== 0 ? (
     <StyledBody>
       <Header />
       <Banner slogan={'My Profile'} />
@@ -290,7 +353,7 @@ export default function CreateWorkoutPage() {
               setOpen(true);
             }}
           />
-          <EditProfilePopup open={open} closeModal={closeModal}/>
+          <EditProfilePopup open={open} closeModal={closeModal} />
           <StyledSignOutIcon
             onClick={() => {
               setConfirmOpen(true);
@@ -303,7 +366,7 @@ export default function CreateWorkoutPage() {
             type={'signOut'}
           />
         </StyledPersonalInfoContainer>
-        <StyledSideBar>
+        <StyledMainContent>
           <StyledSideBarContainer>
             {SidebarData.map((item) => {
               return (
@@ -315,34 +378,36 @@ export default function CreateWorkoutPage() {
               );
             })}
           </StyledSideBarContainer>
-        </StyledSideBar>
-        <StyledProfileContentContainer>
-          <StyledProfileContentTitle>{mainContent}</StyledProfileContentTitle>
-          {mainContent === 'My Workout Collections' ||
-          mainContent === 'My Workout Creations' ? (
-            <StyledBookmark>
-              <StyledWorkoutTypeTag
-                selected={gymWorkoutTypeSelected}
-                onClick={() => {
-                  setGymWorkoutTypeSelected(true);
-                }}
-              >
-                Gym Workout
-              </StyledWorkoutTypeTag>
-              <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
-              <StyledWorkoutTypeTag
-                selected={!gymWorkoutTypeSelected}
-                onClick={() => {
-                  setGymWorkoutTypeSelected(false);
-                }}
-              >
-                Home Workout
-              </StyledWorkoutTypeTag>
-            </StyledBookmark>
-          ) : null}
-          {showMainContent()}
-        </StyledProfileContentContainer>
+          <StyledProfileContentContainer>
+            <StyledProfileContentTitle>{mainContent}</StyledProfileContentTitle>
+            {mainContent === 'My Workout Collections' ||
+            mainContent === 'My Workout Creations' ? (
+              <StyledBookmark>
+                <StyledWorkoutTypeTag
+                  selected={gymWorkoutTypeSelected}
+                  onClick={() => {
+                    setGymWorkoutTypeSelected(true);
+                  }}
+                >
+                  Gym Workout
+                </StyledWorkoutTypeTag>
+                <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
+                <StyledWorkoutTypeTag
+                  selected={!gymWorkoutTypeSelected}
+                  onClick={() => {
+                    setGymWorkoutTypeSelected(false);
+                  }}
+                >
+                  Home Workout
+                </StyledWorkoutTypeTag>
+              </StyledBookmark>
+            ) : null}
+            {showMainContent()}
+          </StyledProfileContentContainer>
+        </StyledMainContent>
       </StyledProfilePageContainer>
     </StyledBody>
-  ) : <FullPageLoading/>
+  ) : (
+    <FullPageLoading />
+  );
 }

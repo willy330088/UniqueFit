@@ -14,11 +14,15 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSelector } from 'react-redux';
 import ConfirmPopup from './ConfirmPopup';
+import WorkoutItem from './WorkoutItem';
 
 const StyledWorkoutCreationContainer = styled.div`
-  display: flex;
-  align-items: center;
   margin: 50px 0px;
+
+  @media (min-width: 800px) {
+    display: flex;
+    align-items: center;
+  }
 `;
 
 const StyledPencilIcon = styled(BsFillPencilFill)`
@@ -26,7 +30,6 @@ const StyledPencilIcon = styled(BsFillPencilFill)`
   margin-left: 10px;
   color: #7d7d7d;
   cursor: pointer;
-  margin-left: auto;
 
   &:hover {
     color: white;
@@ -67,6 +70,16 @@ const StyledPopup = styled(Popup)`
     @media (min-width: 650px) {
       padding: 30px 70px;
     }
+  }
+`;
+
+const StyledToolContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (min-width: 800px) {
+    margin-left: auto;
   }
 `;
 
@@ -125,6 +138,7 @@ export default function WorkoutCreation({ workout }) {
   return (
     <StyledWorkoutCreationContainer>
       <ProfileWorkout workout={workout} />
+      <StyledToolContainer>
       <StyledPencilIcon
         onClick={() => {
           setOpen(true);
@@ -144,6 +158,7 @@ export default function WorkoutCreation({ workout }) {
         action={deleteWorkout}
         type={'delete'}
       />
+      </StyledToolContainer>
     </StyledWorkoutCreationContainer>
   );
 }

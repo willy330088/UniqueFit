@@ -1,12 +1,13 @@
 import React from 'react';
 import Header from './Header';
 import styled from 'styled-components';
-import Homepage from '../images/Homepage.png';
+import Homepage from '../images/Homepage.jpeg';
 import Fitness from '../images/fitness.jpeg';
 import FullPageLoading from './FullPageLoading';
 
 const StyledBanner = styled.img`
   object-fit: cover;
+  object-position: right;
   width: 100vw;
   height: 100vh;
   position: fixed;
@@ -24,14 +25,20 @@ const StyledMainTextContainer = styled.div`
 `;
 
 const StyledMainText = styled.div`
-  font-size: 80px;
+  font-size: 50px;
   color: white;
   letter-spacing: 2px;
+  @media (min-width: 800px) {
+    font-size: 80px;
+  }
 `;
 
 const StyledMainTextWord = styled.span`
-  font-size: 80px;
+  font-size: 50px;
   color: #1face1;
+  @media (min-width: 800px) {
+    font-size: 80px;
+  }
 `;
 
 const StyledScrollToDownText = styled.div`
@@ -40,14 +47,17 @@ const StyledScrollToDownText = styled.div`
   color: white;
   letter-spacing: 5px;
   position: absolute;
-  bottom: 100px;
+  bottom: 50px;
   left: calc(50% - 50px);
   text-align: center;
+  @media (min-width: 800px) {
+    bottom: 100px;
+  }
 `;
 
 const StyledScrollToDownIcon= styled.span`
   position: absolute;
-  bottom: 150px;
+  bottom: 100px;
   left: 50%;
   width: 46px;
   height: 46px;
@@ -57,6 +67,9 @@ const StyledScrollToDownIcon= styled.span`
   box-sizing: border-box;
   z-index: 1;
   cursor: pointer;
+  @media (min-width: 500px) {
+    bottom: 150px
+  }
 
   &:after{
     position: absolute;
@@ -121,7 +134,7 @@ const StyledMainImageContainer = styled.div`
   &:before {
     content: "";
     background-image: url(${Fitness});
-    background-position-x: 7%;
+    background-position-x: 50%;
     background-repeat: no-repeat;
     background-size: cover;
     background-position-y: center;
@@ -140,14 +153,23 @@ const StyledMainWordContainer = styled.div`
   height: 100%;
   background-color: white;
   padding: 7% 8% 7% 5%;
+  overflow-y: scroll;
 `;
 
 const StyledStepContainer = styled.div`
   width: 100%;
-  height: 30%;
+  height: 300px;
   display: flex;
   margin-bottom: 3%;
   align-items: center;
+
+  @media (min-width: 600px) {
+    height: 250px;
+  }
+
+  @media (min-width: 800px) {
+    height: 30%;
+  }
 `;
 
 const StyledStepTextContainer = styled.div`
@@ -155,14 +177,22 @@ const StyledStepTextContainer = styled.div`
 `;
 
 const StyledStepTextTitle = styled.div`
-  font-size: 35px;
+  font-size: 20px;
   color: #1face1;
   margin-bottom: 10px;
+
+  @media (min-width: 500px) {
+    font-size: 35px;
+  }
 `;
 
 const StyledStepTextContent = styled.div`
-  font-size: 20px;
+  font-size: 15px;
   color: #666666;
+
+  @media (min-width: 500px) {
+    font-size: 20px;
+  }
 `;
 
 export default function HomePage({currentUser}) {

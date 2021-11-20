@@ -7,6 +7,8 @@ import firebase from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/auth';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const StyledCommentWrap = styled.div`
   display: flex;
@@ -150,7 +152,10 @@ export default function PlanComment({ comment, planId, currentUser }) {
     batch.delete(commentRef);
 
     batch.commit().then(() => {
-      alert('Successfully deleted!');
+      toast.success('Deleted Successfully', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+      });
     });
   }
 
@@ -184,7 +189,7 @@ export default function PlanComment({ comment, planId, currentUser }) {
         <StyledCommentTimeStamp>
           {comment.createdAt.toDate().toLocaleString()}
         </StyledCommentTimeStamp>
-        {comment.publisher.uid === currentUser?.uid ? (
+        {publisher.id === currentUser?.uid ? (
           <StyledCommentThreeDot
             onClick={() => {
               setShowTool(!showTool);

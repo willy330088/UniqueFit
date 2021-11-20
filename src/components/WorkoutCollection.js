@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
 import ProfileWorkout from './ProfileWorkout'
-import { BsBookmarkFill } from 'react-icons/bs';
+import { FaDumbbell } from 'react-icons/fa';
 import firebase from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
@@ -9,16 +9,23 @@ import 'firebase/auth';
 
 const StyledWorkoutCreationContainer = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
   margin: 50px 0px ;
+  @media (min-width: 800px) {
+    flex-direction: row;
+  }
 `;
 
-const StyledCollectIcon = styled(BsBookmarkFill)`
-  font-size: 40px;
+const StyledCollectIcon = styled(FaDumbbell)`
+  font-size: 50px;
   margin-left: 40px;
   color: #1face1;
   cursor: pointer;
-  margin-left: auto;
+
+  @media (min-width: 800px) {
+    margin-left: auto;
+  }
 
   &:hover {
     color: white;

@@ -2,7 +2,6 @@ import { v4 as uuid } from 'uuid';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import RemoveIcon from '../images/remove.png';
 import { GoListUnordered } from 'react-icons/go';
 import { FaTrashAlt } from 'react-icons/fa';
 import firebase from '../utils/firebase';
@@ -94,9 +93,9 @@ const Notice = styled.div`
 const StyledRemoveIcon = styled(FaTrashAlt)`
   font-size: 20px;
   cursor: pointer;
-  color: #808080;
+  color: hsla(0, 0%,70%);
   &:hover{
-    font-size: 22px;
+    color: hsla(0, 0%,50%);
   }
 `;
 

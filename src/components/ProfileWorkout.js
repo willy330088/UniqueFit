@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { HiUserCircle } from 'react-icons/hi';
 import { ImPlay } from 'react-icons/im';
-import { BsFillBookmarkHeartFill } from 'react-icons/bs';
+import { FaDumbbell } from 'react-icons/fa';
 import { RiMessage2Fill } from 'react-icons/ri';
-import Popup from 'reactjs-popup';
 import muscleGroups from '../utils/muscleGroup';
 import WorkoutPopup from './WorkoutPopup';
 import { useSelector } from 'react-redux';
@@ -14,12 +13,12 @@ const StyledWorkoutItemContainer = styled.div`
   align-items: center;
   cursor: pointer;
   justify-content: center;
-  width: 100%;
   background-color: #374652;
   height: 200px;
   margin-bottom: 30px;
   border-radius: 10px;
   position: relative;
+  width: 350px;
 
   &::before {
     content: '';
@@ -40,28 +39,20 @@ const StyledWorkoutItemContainer = styled.div`
     }
   }
 
-  @media (min-width: 1400px) {
-    max-width: 600px;
-  } ;
+  @media (min-width: 650px) {
+    width: 600px;
+  }
 `;
 
 const StyledWorkoutItemDescription = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  @media (min-width: 500px) {
+  
+  @media (min-width: 650px) {
     display: block;
     margin-left: 30px;
   }
-
-  @media (min-width: 700px) {
-    margin-left: 50px;
-  }
-
-  @media (min-width: 1400px) {
-    margin-left: 30px;
-  } ;
 `;
 
 const StyledWorkoutItemTitle = styled.div`
@@ -80,7 +71,7 @@ const StyledWorkoutItemImage = styled.img`
   display: none;
   @media (min-width: 650px) {
     display: block;
-  } ;
+  }
 `;
 
 const StyledPublisherIcon = styled(HiUserCircle)`
@@ -119,42 +110,38 @@ const StyledPlayIcon = styled(ImPlay)`
   display: ${(props) => (props.hover ? 'block' : 'none')};
 `;
 
-const StyledCollectIcon = styled(BsFillBookmarkHeartFill)`
-  font-size: 15px;
+const StyledCollectIcon = styled(FaDumbbell)`
+  font-size: 18px;
   margin-right: 5px;
 `;
 
 const StyledMessageIcon = styled(RiMessage2Fill)`
   font-size: 15px;
+  margin-right: 5px;
+`;
+
+const StyledContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const StyledContainer2 = styled.div`
+  display: flex;
+  align-items: center;
+  
   @media (min-width: 500px) {
-    margin: 0px 5px 0 10px;
-  } ;
-`;
-
-//popup
-const StyledPopup = styled(Popup)`
-  &-overlay {
-    background: rgba(0, 0, 0, 0.6);
-  }
-
-  &-content {
-    margin: auto;
-    background: #222d35;
-    width: 350px;
-    height: 300px;
-    overflow-y: scroll;
-
-    @media (min-width: 500px) {
-      width: 500px;
-      height: 400px;
-    }
-
-    @media (min-width: 700px) {
-      width: 700px;
-      height: 550px;
-    }
+    margin-left: 10px;
   }
 `;
+
+const StyledCollectNum = styled.div`
+  padding-top: 3px;
+`;
+
+const StyledCommentNum = styled.div`
+  padding-top: 3px;
+`;
+
 
 export default function ProfileWorkout({ workout }) {
   const [hover, setHover] = useState(false);
@@ -188,24 +175,26 @@ export default function ProfileWorkout({ workout }) {
         <StyledWorkoutItemDescription>
           <StyledWorkoutItemTitle>{workout.title}</StyledWorkoutItemTitle>
           <StyledWorkoutItemPublisher>
-            {publisher.photoURL ? (
-              <StyledPublisherImage src={publisher.photoURL} />
+            {publisher?.photoURL ? (
+              <StyledPublisherImage src={publisher?.photoURL} />
             ) : (
               <StyledPublisherIcon />
             )}
-            {
-              <StyledPublisherName>
-                {publisher.displayName}
-              </StyledPublisherName>
-            }
+            {<StyledPublisherName>{publisher?.displayName}</StyledPublisherName>}
           </StyledWorkoutItemPublisher>
           <StyledWorkoutItemSocial>
-            <div>
-              <StyledCollectIcon /> Collected ({workout.collectedBy.length}){' '}
-            </div>
-            <div>
-              <StyledMessageIcon /> Comments ({workout.commentsCount || 0})
-            </div>
+            <StyledContainer>
+              <StyledCollectIcon />{' '}
+              <StyledCollectNum>
+                Collected ({workout.collectedBy.length})
+              </StyledCollectNum>{' '}
+            </StyledContainer>
+            <StyledContainer2>
+              <StyledMessageIcon />{' '}
+              <StyledCommentNum>
+                Comments ({workout.commentsCount || 0})
+              </StyledCommentNum>
+            </StyledContainer2>
           </StyledWorkoutItemSocial>
         </StyledWorkoutItemDescription>
       </StyledWorkoutItemContainer>

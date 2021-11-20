@@ -15,14 +15,23 @@ import { useSelector } from 'react-redux';
 import ConfirmPopup from './ConfirmPopup';
 
 const StyledPlanCreationContainer = styled.div`
+  margin: 20px 0px 50px 0;
+  width: 100%;
   display: flex;
   align-items: center;
-  margin: 50px 0px;
+  flex-direction: column;
+
+  @media (min-width: 800px) {
+    display: flex;
+    align-items: center;
+    margin: 50px 0px;
+    flex-direction: row;
+  }
 `;
 
 const StyledPencilIcon = styled(BsFillPencilFill)`
   font-size: 40px;
-  margin-left: auto;
+  margin-left: 30px;
   color: #7d7d7d;
   cursor: pointer;
 
@@ -71,6 +80,16 @@ const StyledPopup = styled(Popup)`
   }
 `;
 
+const StyledToolContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (min-width: 800px) {
+    margin-left: auto;
+  }
+`;
+
 export default function PlanCreation({ plan }) {
   const [paging, setPaging] = useState(1);
   const [open, setOpen] = useState(false);
@@ -114,35 +133,37 @@ export default function PlanCreation({ plan }) {
   return (
     <StyledPlanCreationContainer>
       <ProfilePlan plan={plan} />
-      <StyledPencilIcon
-        onClick={() => {
-          setOpen(true);
-        }}
-      />
-      <StyledPopup
-        open={open}
-        closeOnDocumentClick
-        onClose={closeModal}
-        paging={paging}
-      >
-        <EditPlanPopup
-          paging={paging}
-          setPaging={setPaging}
-          originalPlan={plan}
-          close={closeModal}
+      <StyledToolContainer>
+        <StyledPencilIcon
+          onClick={() => {
+            setOpen(true);
+          }}
         />
-      </StyledPopup>
-      <StyledRemoveIcon
-        onClick={() => {
-          setConfirmOpen(true);
-        }}
-      />
-      <ConfirmPopup
-        confirmOpen={confirmOpen}
-        closeConfirm={closeConfirm}
-        action={deletePlan}
-        type={'delete'}
-      />
+        <StyledPopup
+          open={open}
+          closeOnDocumentClick
+          onClose={closeModal}
+          paging={paging}
+        >
+          <EditPlanPopup
+            paging={paging}
+            setPaging={setPaging}
+            originalPlan={plan}
+            close={closeModal}
+          />
+        </StyledPopup>
+        <StyledRemoveIcon
+          onClick={() => {
+            setConfirmOpen(true);
+          }}
+        />
+        <ConfirmPopup
+          confirmOpen={confirmOpen}
+          closeConfirm={closeConfirm}
+          action={deletePlan}
+          type={'delete'}
+        />
+      </StyledToolContainer>
     </StyledPlanCreationContainer>
   );
 }

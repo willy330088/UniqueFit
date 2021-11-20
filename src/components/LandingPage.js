@@ -8,6 +8,25 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import SignInPopup from './SignInPopup';
 
+const StyledLogoDumbbell = styled.img`
+  position: absolute;
+  width: 33px;
+  top: 13px;
+  right: 48px;
+
+  @media (min-width: 700px) {
+    width: 50px;
+    top: 20px;
+    right: 68px;
+  }
+
+  @media (min-width: 950px) {
+    width: 65px;
+    top: 28px;
+    right: 81px;
+  }
+`;
+
 const StyledLandingPageContainer = styled.div`
   background-image: url(${LandingPageBackground});
   background-repeat: no-repeat;
@@ -50,25 +69,6 @@ const StyledLogoText = styled.div`
 
   @media (min-width: 950px) {
     font-size: 160px;
-  }
-`;
-
-const StyledLogoDumbbell = styled.img`
-  position: absolute;
-  width: 33px;
-  top: 13px;
-  right: 48px;
-
-  @media (min-width: 700px) {
-    width: 50px;
-    top: 20px;
-    right: 68px;
-  }
-
-  @media (min-width: 950px) {
-    width: 65px;
-    top: 28px;
-    right: 81px;
   }
 `;
 
@@ -131,6 +131,7 @@ export default function LandingPage() {
   const history = useHistory();
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
+  // const [loading, setLoading] = useState(false);
 
   return (
     <StyledLandingPageContainer>

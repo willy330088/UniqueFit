@@ -49,6 +49,8 @@ const StyledPopupFilterTagContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-top: 20px;
+  height: 80px;
+  overflow-y: scroll;
 `;
 
 const StyledFilterTag = styled.div`
@@ -100,7 +102,7 @@ const StyledPopup = styled(Popup)`
     margin: auto;
     background: #222d35;
     width: 550px;
-    height: 700px;
+    height: 580px;
     padding: 30px 60px;
     position: relative;
     border-radius: 5px;
@@ -110,18 +112,16 @@ const StyledPopup = styled(Popup)`
 const StyledPopupIconContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 30px;
-  padding-bottom: 20px;
   border-bottom: solid 3px hsla(196, 76%, 30%);
 `;
 
 const StyledPopupSpinIcon = styled.div`
   position: absolute;
-  bottom: 200px;
+  bottom: 150px;
   left: 100px;
   cursor: pointer;
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   background-image: url(${Spin});
   background-repeat: no-repeat;
   background-size: contain;
@@ -164,7 +164,7 @@ export default function Filter({
           />
           {isFront ? (
             <FrontMuscle
-              width={'240px'}
+              width={'200px'}
               filteredMuscleGroups={filteredMuscleGroups}
               setFilteredMuscleGroups={setFilteredMuscleGroups}
               clickDisabled={false}
@@ -172,7 +172,7 @@ export default function Filter({
             />
           ) : (
             <BackMuscle
-              width={'236.5px'}
+              width={'200px'}
               filteredMuscleGroups={filteredMuscleGroups}
               setFilteredMuscleGroups={setFilteredMuscleGroups}
               clickDisabled={false}

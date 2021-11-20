@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { HiUserCircle } from 'react-icons/hi';
-import { BsFillBookmarkHeartFill } from 'react-icons/bs';
 import { RiMessage2Fill } from 'react-icons/ri';
 import { FaWeightHanging } from 'react-icons/fa';
 import { FaDumbbell } from 'react-icons/fa';
@@ -22,7 +21,7 @@ const StyledPlanContainer = styled.div`
   z-index: 1;
 
   &:before {
-    content: "";
+    content: '';
     background-image: url(${GymBackground});
     background-position-x: 7%;
     background-repeat: no-repeat;
@@ -32,9 +31,9 @@ const StyledPlanContainer = styled.div`
     left: 0;
     bottom: 0;
     right: 0;
-    position: absolute; 
+    position: absolute;
     z-index: -1;
-  }   
+  }
 
   &::after {
     content: '';
@@ -56,17 +55,14 @@ const StyledPlanContainer = styled.div`
   }
 
   @media (min-width: 800px) {
-    padding: 30px 50px;
+    padding: 30px 20px;
+    width: 80%;
   }
 
   @media (min-width: 800px) {
-    padding: 30px 120px;
-  }
-
-  @media (min-width: 1200px) {
     padding: 30px 50px;
     width: 550px;
-  } ;
+  }
 `;
 
 const StyledPlanInfoContainer = styled.div`
@@ -118,24 +114,25 @@ const StyledPlanMediaContainer = styled.div`
 
 const StyledPlanCollectionContainer = styled.div`
   display: flex;
-  align-items: baseline;
+  align-items: center;
 `;
 
-const StyledPlanCollectionIcon = styled(BsFillBookmarkHeartFill)`
+const StyledPlanCollectionIcon = styled(FaDumbbell)`
   color: #222d35;
-  font-size: 25px;
+  font-size: 27px;
   margin-right: 5px;
 `;
 
 const StyledPlanCollectionNum = styled.div`
   color: #222d35;
   font-size: 35px;
+  padding-top: 3px;
 `;
 
 const StyledPlanCommentContainer = styled.div`
   display: flex;
   margin-left: 20px;
-  align-items: baseline;
+  align-items: center;
 `;
 
 const StyledPlanCommentIcon = styled(RiMessage2Fill)`
@@ -147,12 +144,14 @@ const StyledPlanCommentIcon = styled(RiMessage2Fill)`
 const StyledPlanCommentNum = styled.div`
   color: #222d35;
   font-size: 35px;
+  padding-top: 3px;
 `;
 
 const StyledPlanText = styled.div`
   margin: 10px 0;
   color: #222d35;
   font-size: 16px;
+  word-break: break-all;
 `;
 
 const StyledPlanWorkouts = styled.div`
@@ -252,7 +251,9 @@ const StyledAndMoreText = styled.div`
 export default function PlanItem({ plan }) {
   const [hover, setHover] = useState(false);
   const users = useSelector((state) => state.users);
-  const publisher = users.filter((user) => user.id === plan.publisher)[0]
+  const publisher = users.filter((user) => user.id === plan.publisher)[0];
+
+  console.log(plan.workoutSet.length);
 
   return (
     <StyledPlanContainer
@@ -334,10 +335,10 @@ export default function PlanItem({ plan }) {
             }
           })}
         </StyledPlanWorkoutsContainer>
-        {plan.workoutSet.length > 5 ? (
-          <StyledAndMoreText>And More...</StyledAndMoreText>
-        ) : null}
       </StyledPlanMainContentContainer>
+      {plan.workoutSet.length > 5 ? (
+        <StyledAndMoreText>And More</StyledAndMoreText>
+      ) : null}
     </StyledPlanContainer>
   );
 }

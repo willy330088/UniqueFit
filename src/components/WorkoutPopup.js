@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import muscleGroups from '../utils/muscleGroup';
 import { HiUserCircle } from 'react-icons/hi';
-import { BsFillBookmarkHeartFill } from 'react-icons/bs';
-import { BsBookmarkFill } from 'react-icons/bs';
+import { FaDumbbell } from 'react-icons/fa';
 import { RiMessage2Fill } from 'react-icons/ri';
 import firebase from '../utils/firebase';
 import 'firebase/firestore';
@@ -36,6 +35,7 @@ const StyledTitleContainer = styled.div`
   align-items: center;
   margin: 0px 0 25px 0px;
   padding-top: 20px;
+  position: relative;
 
   @media (min-width: 500px) {
     margin: 0px 0 20px 0px;
@@ -101,14 +101,16 @@ const StyledPulisherContainer = styled.div`
   align-items: center;
   color: white;
   font-size: 18px;
-  margin: 0 0 20px 0px;
+  margin: 0 0 10px 0px;
 
   @media (min-width: 500px) {
     font-size: 20px;
+    margin: 0 0 10px 0px;
   }
 
   @media (min-width: 700px) {
     font-size: 30px;
+    margin: 0 0 20px 0px;
   } ;
 `;
 
@@ -153,7 +155,7 @@ const StyledPublisherImage = styled.img`
 
 const StyledCollectionContainer = styled.div`
   display: flex;
-  align-items: baseline;
+  align-items: center;
   margin-bottom: 10px;
 
   @media (min-width: 500px) {
@@ -165,7 +167,7 @@ const StyledCollectionContainer = styled.div`
   } ;
 `;
 
-const StyledCollectIcon = styled(BsFillBookmarkHeartFill)`
+const StyledCollectIcon = styled(FaDumbbell)`
   color: white;
   font-size: 20px;
 
@@ -180,25 +182,23 @@ const StyledCollectIcon = styled(BsFillBookmarkHeartFill)`
 
 const StyledCollectionNum = styled.div`
   color: white;
-  font-size: 30px;
+  font-size: 20px;
   margin-left: 10px;
 
   @media (min-width: 500px) {
-    font-size: 35px;
+    padding-top: 4px;
+    font-size: 25px;
   }
 
   @media (min-width: 700px) {
-    font-size: 45px;
+    padding-top: 4px;
+    font-size: 30px;
   } ;
 `;
 
-const StyledAddToCollectIcon = styled(BsBookmarkFill)`
+const StyledAddToCollectIcon = styled(FaDumbbell)`
   font-size: 30px;
-  color: ${(props) => (props.isCollected ? '#1face1' : 'white')};
-  position: absolute;
-  right: 15px;
-  bottom: 40px;
-  z-index: 20;
+  color: ${(props) => (props.isCollected ? '#1face1' : '#808080')};
   cursor: pointer;
 
   @media (min-width: 500px) {
@@ -323,11 +323,11 @@ const StyledScrollDown = styled.span`
   position: absolute;
   top: 90px;
   left: 50%;
-  width: 24px;
+  width: 100px;
   height: 24px;
   margin-left: -12px;
-  border-left: 1px solid #fff;
-  border-bottom: 1px solid #fff;
+  border-left: 5px solid #fff;
+  border-bottom: 5px solid #fff;
   transform: rotate(-45deg);
   animation: down 3s infinite;
   box-sizing: border-box;
@@ -466,6 +466,20 @@ const StyledPopup = styled(Popup)`
   }
 `;
 
+const StyledCollectIconContainer = styled.div`
+  position: absolute;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  letter-spacing: 2px;
+`;
+
+const StyledCollectIconText = styled.div`
+  font-size: 15px;
+  color: ${(props) => (props.isCollected ? '#1face1' : '#808080')};
+`;
+
 export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
   const [commentContent, setCommentContent] = useState('');
   const [comments, setComments] = useState([]);
@@ -473,7 +487,7 @@ export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
   const [videoReady, setVideoReady] = useState(false);
   const currentUser = useSelector((state) => state.currentUser);
   const users = useSelector((state) => state.users);
-  const publisher = users.filter((user) => user.id === workout.publisher)[0]
+  const publisher = users.filter((user) => user.id === workout.publisher)[0];
 
   const isCollected = workout.collectedBy?.includes(currentUser?.uid);
 
@@ -510,7 +524,7 @@ export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
         batch.set(commentRef, {
           content: commentContent,
           createdAt: firebase.firestore.Timestamp.now(),
-          publisher: firebase.auth().currentUser.uid
+          publisher: firebase.auth().currentUser.uid,
         });
 
         batch.commit().then(() => {
@@ -518,8 +532,8 @@ export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
         });
       }
     } else {
-      close()
-      setSignInOpen(true)
+      close();
+      setSignInOpen(true);
     }
   }
 
@@ -544,23 +558,19 @@ export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
           });
       }
     } else {
-      close()
-      setSignInOpen(true)
+      close();
+      setSignInOpen(true);
     }
   }
-  
+
   function popupClose() {
-    close()
-    setVideoReady(false)
+    close();
+    setVideoReady(false);
   }
 
   return (
     <StyledPopup open={open} closeOnDocumentClick onClose={popupClose}>
       <input type="text" autofocus="autofocus" style={{ display: 'none' }} />
-      <StyledAddToCollectIcon
-        onClick={toggleCollected}
-        isCollected={isCollected}
-      />
       <StyledVideo
         src={workout.videoURL}
         autoPlay
@@ -584,6 +594,12 @@ export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
               }
             />
             <StyledTitle>{workout.title}</StyledTitle>
+            <StyledCollectIconContainer onClick={toggleCollected}>
+              <StyledAddToCollectIcon
+                isCollected={isCollected}
+              />
+              <StyledCollectIconText isCollected={isCollected}>Collect</StyledCollectIconText>
+            </StyledCollectIconContainer>
           </StyledTitleContainer>
           <Waypoint
             onEnter={() => {
@@ -624,7 +640,7 @@ export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
                   onChange={(e) => {
                     setCommentContent(e.target.value);
                   }}
-                  placeholder='your comment...'
+                  placeholder="your comment..."
                 />
               </StyledCommentInputContainer>
               <StyledLeaveCommentBtnContainer>

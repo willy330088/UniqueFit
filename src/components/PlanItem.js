@@ -119,24 +119,25 @@ const StyledPlanMediaContainer = styled.div`
 
 const StyledPlanCollectionContainer = styled.div`
   display: flex;
-  align-items: baseline;
+  align-items: center;
 `;
 
-const StyledPlanCollectionIcon = styled(BsFillBookmarkHeartFill)`
+const StyledPlanCollectionIcon = styled(FaDumbbell)`
   color: #222d35;
-  font-size: 25px;
+  font-size: 27px;
   margin-right: 5px;
 `;
 
 const StyledPlanCollectionNum = styled.div`
   color: #222d35;
   font-size: 35px;
+  padding-top: 3px;
 `;
 
 const StyledPlanCommentContainer = styled.div`
   display: flex;
   margin-left: 20px;
-  align-items: baseline;
+  align-items: center;
 `;
 
 const StyledPlanCommentIcon = styled(RiMessage2Fill)`
@@ -148,12 +149,14 @@ const StyledPlanCommentIcon = styled(RiMessage2Fill)`
 const StyledPlanCommentNum = styled.div`
   color: #222d35;
   font-size: 35px;
+  padding-top: 3px;
 `;
 
 const StyledPlanText = styled.div`
   margin: 10px 0;
   color: #222d35;
   font-size: 16px;
+  word-break: break-all;
 `;
 
 const StyledPlanWorkouts = styled.div`

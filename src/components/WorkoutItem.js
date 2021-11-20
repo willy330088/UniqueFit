@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { HiUserCircle } from 'react-icons/hi';
 import { ImPlay } from 'react-icons/im';
-import { BsFillBookmarkHeartFill } from 'react-icons/bs';
 import { RiMessage2Fill } from 'react-icons/ri';
-import Popup from 'reactjs-popup';
 import muscleGroups from '../utils/muscleGroup';
 import WorkoutPopup from './WorkoutPopup';
 import { useSelector } from 'react-redux';
+import { FaDumbbell } from 'react-icons/fa';
 
 const StyledWorkoutItemContainer = styled.div`
   display: flex;
@@ -108,8 +107,27 @@ const StyledWorkoutItemSocial = styled.div`
 
   @media (min-width: 500px) {
     display: flex;
-    align-items: baseline;
+    align-items: center;
   } ;
+`;
+
+const StyledContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const StyledContainer2 = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+`;
+
+const StyledCollectNum = styled.div`
+  padding-top: 3px;
+`;
+
+const StyledCommentNum = styled.div`
+  padding-top: 3px;
 `;
 
 const StyledPlayIcon = styled(ImPlay)`
@@ -120,16 +138,14 @@ const StyledPlayIcon = styled(ImPlay)`
   display: ${(props) => (props.hover ? 'block' : 'none')};
 `;
 
-const StyledCollectIcon = styled(BsFillBookmarkHeartFill)`
-  font-size: 15px;
+const StyledCollectIcon = styled(FaDumbbell)`
+  font-size: 18px;
   margin-right: 5px;
 `;
 
 const StyledMessageIcon = styled(RiMessage2Fill)`
   font-size: 15px;
-  @media (min-width: 500px) {
-    margin: 0px 5px 0 10px;
-  } ;
+  margin-right: 5px;
 `;
 
 export default function WorkoutItem({ workout, setSignInOpen }) {
@@ -137,7 +153,7 @@ export default function WorkoutItem({ workout, setSignInOpen }) {
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
   const users = useSelector((state) => state.users);
-  const publisher = users.filter((user) => user.id === workout.publisher)[0]
+  const publisher = users.filter((user) => user.id === workout.publisher)[0];
 
   return (
     <>
@@ -169,21 +185,30 @@ export default function WorkoutItem({ workout, setSignInOpen }) {
             ) : (
               <StyledPublisherIcon />
             )}
-            <StyledPublisherName>
-              {publisher?.displayName}
-            </StyledPublisherName>
+            <StyledPublisherName>{publisher?.displayName}</StyledPublisherName>
           </StyledWorkoutItemPublisher>
           <StyledWorkoutItemSocial>
-            <div>
-              <StyledCollectIcon /> Collected ({workout.collectedBy.length}){' '}
-            </div>
-            <div>
-              <StyledMessageIcon /> Comments ({workout.commentsCount || 0})
-            </div>
+            <StyledContainer>
+              <StyledCollectIcon />{' '}
+              <StyledCollectNum>
+                Collected ({workout.collectedBy.length})
+              </StyledCollectNum>{' '}
+            </StyledContainer>
+            <StyledContainer2>
+              <StyledMessageIcon />{' '}
+              <StyledCommentNum>
+                Comments ({workout.commentsCount || 0})
+              </StyledCommentNum>
+            </StyledContainer2>
           </StyledWorkoutItemSocial>
         </StyledWorkoutItemDescription>
       </StyledWorkoutItemContainer>
-      <WorkoutPopup workout={workout} close={closeModal} open={open} setSignInOpen={setSignInOpen}/>
+      <WorkoutPopup
+        workout={workout}
+        close={closeModal}
+        open={open}
+        setSignInOpen={setSignInOpen}
+      />
     </>
   );
 }

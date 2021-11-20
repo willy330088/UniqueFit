@@ -4,9 +4,8 @@ import Header from './Header';
 import Banner from './Banner';
 import styled from 'styled-components';
 import { HiUserCircle } from 'react-icons/hi';
-import { BsFillBookmarkHeartFill } from 'react-icons/bs';
+import { FaDumbbell } from 'react-icons/fa';
 import { RiMessage2Fill } from 'react-icons/ri';
-import { BsBookmarkFill } from 'react-icons/bs';
 import { BiTimeFive } from 'react-icons/bi';
 import { RiArticleLine } from 'react-icons/ri';
 import firebase from '../utils/firebase';
@@ -54,11 +53,14 @@ const StyledPlanContainer = styled.div`
 const StyledPlanInfoContainer = styled.div`
   display: flex;
   align-items: center;
+  position: relative;
 `;
 
 const StyledPlanInfoImage = styled.img`
   width: 90px;
   margin-right: 20px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 50%;
 
   @media (min-width: 550px) {
     width: 130px;
@@ -108,24 +110,25 @@ const StyledPlanMediaContainer = styled.div`
 
 const StyledPlanCollectionContainer = styled.div`
   display: flex;
-  align-items: baseline;
+  align-items: center;
 `;
 
-const StyledPlanCollectionIcon = styled(BsFillBookmarkHeartFill)`
+const StyledPlanCollectionIcon = styled(FaDumbbell)`
   color: #222d35;
-  font-size: 35px;
+  font-size: 37px;
   margin-right: 5px;
 `;
 
 const StyledPlanCollectionNum = styled.div`
   color: #222d35;
   font-size: 50px;
+  padding-top: 4px;
 `;
 
 const StyledPlanCommentContainer = styled.div`
   display: flex;
   margin-left: 35px;
-  align-items: baseline;
+  align-items: center;
 `;
 
 const StyledPlanCommentIcon = styled(RiMessage2Fill)`
@@ -137,6 +140,7 @@ const StyledPlanCommentIcon = styled(RiMessage2Fill)`
 const StyledPlanCommentNum = styled.div`
   color: #222d35;
   font-size: 50px;
+  padding-top: 4px;
 `;
 
 const StyledPlanText = styled.div`
@@ -165,17 +169,35 @@ const StyledPlanWorkouts = styled.div`
 
 const StyledPlanWorkoutsContainer = styled.div``;
 
-const StyledPlanCollectIcon = styled(BsBookmarkFill)`
+const StyledCollectIconContainer = styled.div`
+  position: absolute;
+  right: 40px;
+  top: 300px;
+  letter-spacing: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media (min-width: 500px) {
+    right: 40px;
+    top: 250px;
+  }
+
+  @media (min-width: 500px) {
+    right: 40px;
+    top: 100px;
+  }
+`;
+
+const StyledCollectIconText = styled.div`
+  font-size: 15px;
+  color: ${(props) => (props.isCollected ? '#1face1' : '#808080')};
+`;
+
+const StyledPlanCollectIcon = styled(FaDumbbell)`
   color: ${(props) => (props.isCollected ? '#1face1' : '#808080')};
   font-size: 50px;
-  position: absolute;
-  top: 40px;
-  left: 20px;
   cursor: pointer;
-
-  &:hover {
-    color: #1face1;
-  }
 
   @media (min-width: 550px) {
     font-size: 70px;
@@ -250,6 +272,7 @@ const StyledTrainingBtn = styled.button`
   background-color: transparent;
   cursor: pointer;
   margin-top: 20px;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
 
   &:hover {
     color: white;
@@ -257,6 +280,15 @@ const StyledTrainingBtn = styled.button`
   }
 `;
 
+const StyledPlanTextContent = styled.div`
+  word-break: break-all;
+  width: calc(100% - 30px);
+`;
+
+const StyledPlanTextContentContext = styled.div`
+  color: #666666;
+  font-weight: 600;
+`;
 
 export default function SpecificPlanPage() {
   const { planId } = useParams();
@@ -269,7 +301,7 @@ export default function SpecificPlanPage() {
   const workouts = useSelector((state) => state.workouts);
   let plan = plans.filter((plan) => plan.id === planId)[0];
   const users = useSelector((state) => state.users);
-  const publisher = users.filter((user) => user.id === plan.publisher)[0]
+  const publisher = users.filter((user) => user.id === plan.publisher)[0];
   const [signInOpen, setSignInOpen] = useState(false);
   const closeSignIn = () => setSignInOpen(false);
 
@@ -301,7 +333,7 @@ export default function SpecificPlanPage() {
         });
       }
     } else {
-      setSignInOpen(true)
+      setSignInOpen(true);
     }
   }
 
@@ -335,7 +367,7 @@ export default function SpecificPlanPage() {
         batch.set(commentRef, {
           content: commentContent,
           createdAt: firebase.firestore.Timestamp.now(),
-          publisher: currentUser.uid
+          publisher: currentUser.uid,
         });
 
         batch.commit().then(() => {
@@ -343,7 +375,7 @@ export default function SpecificPlanPage() {
         });
       }
     } else {
-      setSignInOpen(true)
+      setSignInOpen(true);
     }
   }
 
@@ -354,10 +386,12 @@ export default function SpecificPlanPage() {
       <SignInPopup open={signInOpen} closeModal={closeSignIn} />
       <StyledSpecificPlanPageContainer>
         <StyledPlanContainer>
-          <StyledPlanCollectIcon
-            onClick={toggleCollected}
-            isCollected={isCollected}
-          />
+          <StyledCollectIconContainer onClick={toggleCollected}>
+            <StyledPlanCollectIcon isCollected={isCollected} />
+            <StyledCollectIconText isCollected={isCollected}>
+              Collect
+            </StyledCollectIconText>
+          </StyledCollectIconContainer>
           <StyledPlanInfoContainer>
             <StyledPlanInfoImage
               src={
@@ -417,11 +451,22 @@ export default function SpecificPlanPage() {
           ) : (
             <>
               <StyledPlanText>
-                <StyledTimeIcon /> Estimated Training Time:{' '}
-                {plan.estimatedTrainingTime} mins
+                <StyledTimeIcon />{' '}
+                <StyledPlanTextContent>
+                  Estimated Training Time:{' '}
+                  <StyledPlanTextContentContext>
+                    {plan.estimatedTrainingTime} mins
+                  </StyledPlanTextContentContext>
+                </StyledPlanTextContent>
               </StyledPlanText>
               <StyledPlanText>
-                <StyledTextIcon /> Description: {plan.description}
+                <StyledTextIcon />{' '}
+                <StyledPlanTextContent>
+                  Description:{' '}
+                  <StyledPlanTextContentContext>
+                    {plan.description}
+                  </StyledPlanTextContentContext>
+                </StyledPlanTextContent>
               </StyledPlanText>
             </>
           )}
@@ -452,7 +497,7 @@ export default function SpecificPlanPage() {
                 onChange={(e) => {
                   setCommentContent(e.target.value);
                 }}
-                placeholder='your comment...'
+                placeholder="your comment..."
               />
             </StyledCommentInputContainer>
             <StyledLeaveCommentBtnContainer>
@@ -479,6 +524,6 @@ export default function SpecificPlanPage() {
       {/* <StopWatch /> */}
     </StyledBody>
   ) : (
-    <FullPageLoading/>
+    <FullPageLoading />
   );
 }
