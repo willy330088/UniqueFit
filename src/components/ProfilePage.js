@@ -57,15 +57,19 @@ const StyledPersonalImage = styled.img`
   width: 50px;
   border-radius: 50%;
   margin-right: 10px;
+  object-fit: cover;
+  object-position: center;
+  height: 50px;
 
   @media (min-width: 450px) {
     width: 60px;
+    height: 60px;
   }
 
   @media (min-width: 750px) {
     width: 120px;
-    border-radius: 50%;
     margin-right: 40px;
+    height: 120px;
   }
 `;
 
@@ -210,7 +214,7 @@ const StyledMainContent = styled.div`
   }
 `;
 
-export default function CreateWorkoutPage() {
+export default function ProfilePage() {
   const history = useHistory();
   const workouts = useSelector((state) => state.workouts);
   const plans = useSelector((state) => state.plans);

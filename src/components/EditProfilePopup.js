@@ -35,6 +35,7 @@ const StyledPhoto = styled.div`
   background-image: url(${(props) => props.src});
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
   border-radius: 50%;
   position: relative;
   cursor: pointer;

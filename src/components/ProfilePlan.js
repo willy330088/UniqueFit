@@ -82,6 +82,7 @@ const StyledPlanInfoTitle = styled.div`
   color: #1face1;
   font-size: 30px;
   margin-bottom: 10px;
+  word-break: break-all;
 `;
 
 const StyledPlanInfoPublisherContainer = styled.div`
@@ -104,6 +105,7 @@ const StyledPlanInfoPublisherImage = styled.img`
   width: 25px;
   border-radius: 50%;
   margin-right: 5px;
+  height: 25px;
 `;
 
 const StyledPlanMediaContainer = styled.div`

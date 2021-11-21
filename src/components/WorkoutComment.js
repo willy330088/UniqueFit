@@ -22,6 +22,7 @@ const StyledCommentWrap = styled.div`
 
 const StyledCommentUserImage = styled.img`
   width: 40px;
+  height: 40px;
   border-radius: 50%;
   margin-left: 10px;
 `;

@@ -7,9 +7,9 @@ import styled from 'styled-components';
 import Popup from 'reactjs-popup';
 import ScheduleForm from './ScheduleForm';
 import ScheduleDetails from './ScheduleDetails';
-import CalendarHover from '../images/AddCalendar.png';
 import Calendar from '../images/AddCalendar-2.png';
 import { useSelector } from 'react-redux';
+import ScheduleRecord from './ScheduleRecord';
 
 const StyledCalendarContainer = styled.div`
   background: white;
@@ -156,10 +156,17 @@ export default function ScheduleCalendar() {
   const openModal = () => setOpen(true);
   const [selectedModal, setSelectedModal] = useState('');
   const [selectedEvent, setSelectedEvent] = useState();
+  const plans = useSelector((state) => state.plans)
   const currentUser = useSelector((state) => state.currentUser);
-  const events = useSelector((state) => state.users).filter(
+  const eventsId = useSelector((state) => state.users).filter(
     (user) => user.id === currentUser.uid
   )[0].events;
+
+  const events = eventsId.map((events) => {
+    const targetPlan = plans.filter((plan) => plan.id === events.extendedProps.planId)[0]
+    events.title = targetPlan.title
+    return events
+  })
 
   let initialDate = new Date().toISOString();
 
@@ -209,6 +216,7 @@ export default function ScheduleCalendar() {
           />
         ) : null}
       </StyledPopup>
+      <ScheduleRecord/>
     </StyledCalendarContainer>
   );
 }

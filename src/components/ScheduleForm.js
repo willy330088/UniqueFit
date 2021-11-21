@@ -7,6 +7,7 @@ import firebase from '../utils/firebase';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from 'react-redux';
 
 const StyledLabel = styled.div`
   color: #1face1;
@@ -64,49 +65,33 @@ const StyledAddTrainingBtn = styled.button`
 `;
 
 export default function ScheduleForm({ closeModal }) {
-  // Date Picker State
+  const currentUser = useSelector((state) => state.currentUser);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [startDateTime, setStartDateTime] = useState(new Date());
-  const [plans, setPlans] = useState([]);
+  const plans = useSelector((state) => state.plans).filter((plan) => plan.collectedBy.includes(currentUser?.uid));
   const [selectedPlan, setSelectedPlan] = useState();
 
-  // Add start and end date time when state changes
   useEffect(() => {
     let formattedDate = moment(selectedDate).format('YYYY-MM-DD');
     setStartDateTime(formattedDate);
   }, [selectedDate]);
 
-  useEffect(() => {
-    firebase
-      .firestore()
-      .collection('plans')
-      .where('collectedBy', 'array-contains', firebase.auth().currentUser.uid)
-      .get()
-      .then((collectionSnapshot) => {
-        const data = collectionSnapshot.docs.map((docSnapshot) => {
-          const id = docSnapshot.id;
-          return { ...docSnapshot.data(), id };
-        });
-        setPlans(data);
-      });
-  }, []);
-
-  // onSubmit Function
   const onSubmit = () => {
     if (!selectedPlan) {
       toast.error('Please select a plan!', {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 2000,
       });
-      return
+      return;
     }
 
-    const planId = selectedPlan.split(',')[0];
-    const planTitle = selectedPlan.split(',')[1];
     const eventContent = {
-      title: planTitle,
-      id: planId,
+      id: uuid(),
       start: startDateTime,
+      extendedProps: {
+        planId: selectedPlan,
+        completed: false
+      }
     };
 
     const scheduleRef = firebase
@@ -144,7 +129,11 @@ export default function ScheduleForm({ closeModal }) {
       <input type="text" autofocus="autofocus" style={{ display: 'none' }} />
       <StyledDateContainer>
         <StyledLabel>Choose Training Date</StyledLabel>
-        <StyledDatePicker selected={selectedDate} onChange={setSelectedDate} />
+        <StyledDatePicker
+          selected={selectedDate}
+          onChange={setSelectedDate}
+          minDate={new Date()}
+        />
       </StyledDateContainer>
       <StyledPlanContainer>
         <StyledLabel>Choose Training Plan</StyledLabel>
@@ -157,7 +146,7 @@ export default function ScheduleForm({ closeModal }) {
             Choose A Collected Plan
           </option>
           {plans.map((plan) => {
-            return <option value={[plan.id, plan.title]}>{plan.title}</option>;
+            return <option value={plan.id}>{plan.title}</option>;
           })}
         </StyledPlanSelect>
       </StyledPlanContainer>

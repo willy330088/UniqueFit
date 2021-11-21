@@ -15,9 +15,12 @@ const StyledNoResultContainer = styled.div`
   border-radius: 5px;
 `;
 
-
 const StyledNoResultGif = styled.img`
-  width: 450px;
+  width: 350px;
+
+  @media (min-width: 500px) {
+    width: 450px;
+  }
 `;
 
 const StyledNoResultTextContainer = styled.div`

@@ -100,6 +100,7 @@ const StyledPublisherIcon = styled(HiUserCircle)`
 const StyledPublisherImage = styled.img`
   border-radius: 50%;
   width: 30px;
+  height: 30px;
   margin-right: 10px;
 `;
 

@@ -74,6 +74,7 @@ const StyledPlanInfoContentContainer = styled.div`
 const StyledPlanInfoTitle = styled.div`
   color: #1face1;
   font-size: 40px;
+  word-break: break-all;
 
   @media (min-width: 550px) {
     font-size: 50px;
@@ -100,6 +101,7 @@ const StyledPlanInfoPublisherImage = styled.img`
   width: 35px;
   border-radius: 50%;
   margin-right: 10px;
+  height: 35px;
 `;
 
 const StyledPlanMediaContainer = styled.div`
@@ -293,6 +295,7 @@ const StyledPlanTextContent = styled.div`
 `;
 
 const StyledPlanTextContentContext = styled.div`
+  margin-top: 10px;
   color: #666666;
   font-weight: 600;
 `;
@@ -460,7 +463,7 @@ export default function SpecificPlanPage() {
               <StyledPlanText>
                 <StyledTimeIcon />{' '}
                 <StyledPlanTextContent>
-                  Estimated Training Time:{' '}
+                  Estimated Training Time{' '}
                   <StyledPlanTextContentContext>
                     {plan.estimatedTrainingTime} mins
                   </StyledPlanTextContentContext>
@@ -469,7 +472,7 @@ export default function SpecificPlanPage() {
               <StyledPlanText>
                 <StyledTextIcon />{' '}
                 <StyledPlanTextContent>
-                  Description:{' '}
+                  Description{' '}
                   <StyledPlanTextContentContext>
                     {plan.description}
                   </StyledPlanTextContentContext>

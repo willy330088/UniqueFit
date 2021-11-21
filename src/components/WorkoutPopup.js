@@ -149,13 +149,16 @@ const StyledPublisherIcon = styled(HiUserCircle)`
 const StyledPublisherImage = styled.img`
   border-radius: 50%;
   width: 25px;
+  height: 25px;
   margin-right: 10px;
   @media (min-width: 500px) {
     width: 30px;
+    height: 30px;
   }
 
   @media (min-width: 700px) {
     width: 50px;
+    height: 50px;
   } ;
 `;
 
