@@ -103,8 +103,8 @@ export default function ScheduleRecord() {
   const currentUser = useSelector((state) => state.currentUser);
   const plans = useSelector((state) => state.plans);
   const events = useSelector((state) => state.users).filter(
-    (user) => user.id === currentUser.uid
-  )[0].events;
+    (user) => user.id === currentUser?.uid
+  )[0]?.events;
   const trainedMuscleGroups = [];
   const [isFront, setIsFront] = useState(true);
 
