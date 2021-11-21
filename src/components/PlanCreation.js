@@ -96,7 +96,7 @@ export default function PlanCreation({ plan }) {
   const closeModal = () => setOpen(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const closeConfirm = () => setConfirmOpen(false);
-  const schedules = useSelector((state) => state.schedules);
+  const users = useSelector((state) => state.users)
 
   function deletePlan() {
     firebase
@@ -106,19 +106,22 @@ export default function PlanCreation({ plan }) {
       .delete()
       .then(() => {
         const batch = firebase.firestore().batch();
-        schedules.forEach((schedule) => {
-          const scheduleEvents = schedule.events;
-          const modified = scheduleEvents.filter((scheduleEvent) => {
-            if (scheduleEvent.id !== plan.id) {
+        users.forEach((user) => {
+          const scheduleEvents = user.events;
+          const modified = scheduleEvents?.filter((scheduleEvent) => {
+            if (scheduleEvent.extendedProps.planId !== plan.id) {
               return scheduleEvent;
             }
           });
-          batch.update(
-            firebase.firestore().collection('schedules').doc(schedule.id),
-            {
-              events: modified,
-            }
-          );
+          console.log(modified)
+          if (modified) {
+            batch.update(
+              firebase.firestore().collection('users').doc(user.id),
+              {
+                events: modified,
+              }
+            ); 
+          }
         });
         batch.commit().then(() => {
           toast.success('Deleted Successfully', {

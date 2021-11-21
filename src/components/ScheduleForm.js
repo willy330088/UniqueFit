@@ -132,7 +132,7 @@ export default function ScheduleForm({ closeModal }) {
         <StyledDatePicker
           selected={selectedDate}
           onChange={setSelectedDate}
-          minDate={new Date()}
+          // minDate={new Date()}
         />
       </StyledDateContainer>
       <StyledPlanContainer>

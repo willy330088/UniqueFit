@@ -87,7 +87,7 @@ const StyledPlanInfoTitle = styled.div`
   color: #1face1;
   font-size: 30px;
   margin-bottom: 10px;
-  word-break: break-all;
+  word-break: keep-all;
 `;
 
 const StyledPlanInfoPublisherContainer = styled.div`

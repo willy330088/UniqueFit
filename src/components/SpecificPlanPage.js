@@ -74,7 +74,7 @@ const StyledPlanInfoContentContainer = styled.div`
 const StyledPlanInfoTitle = styled.div`
   color: #1face1;
   font-size: 40px;
-  word-break: break-all;
+  word-break: keep-all;
 
   @media (min-width: 550px) {
     font-size: 50px;

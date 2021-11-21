@@ -159,10 +159,10 @@ export default function ScheduleCalendar() {
   const plans = useSelector((state) => state.plans)
   const currentUser = useSelector((state) => state.currentUser);
   const eventsId = useSelector((state) => state.users).filter(
-    (user) => user.id === currentUser.uid
+    (user) => user.id === currentUser?.uid
   )[0].events;
 
-  const events = eventsId.map((events) => {
+  const events = eventsId?.map((events) => {
     const targetPlan = plans.filter((plan) => plan.id === events.extendedProps.planId)[0]
     events.title = targetPlan.title
     return events

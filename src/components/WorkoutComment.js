@@ -71,8 +71,9 @@ const StyledCommentThreeDot = styled(BsThreeDots)`
 `;
 
 const StyledPlanInfoPublisherIcon = styled(HiUserCircle)`
-  color: #222d35;
-  font-size: 50px;
+  color: #d6d6d6;
+  font-size: 55px;
+  margin-left: 10px;
 `;
 
 const StyledCommentToolContainer = styled.div`
