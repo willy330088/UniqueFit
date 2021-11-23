@@ -114,11 +114,13 @@ const StyledToggle = styled.button`
 `;
 
 export default function ScheduleDetails({ closeModal, selectedEvent }) {
-  const [completed, setCompleted] = useState(selectedEvent.extendedProps.completed)
+  const [completed, setCompleted] = useState(
+    selectedEvent.extendedProps.completed
+  );
   const currentUser = useSelector((state) => state.currentUser);
   const events = useSelector((state) => state.users).filter(
     (user) => user.id === currentUser.uid
-  )[0].events
+  )[0].events;
 
   const onRemove = () => {
     const eventContent = {
@@ -144,20 +146,26 @@ export default function ScheduleDetails({ closeModal, selectedEvent }) {
   };
 
   const toggleCompleted = () => {
-    const event = events.filter((event) => event.id === selectedEvent._def.publicId)[0]
+    const event = events.filter(
+      (event) => event.id === selectedEvent._def.publicId
+    )[0];
     const index = events.indexOf(event);
-    event.extendedProps.completed = !event.extendedProps.completed
-    events[index] = event
+    event.extendedProps.completed = !event.extendedProps.completed;
+    events[index] = event;
+    events.forEach((event) => {
+      delete event['title'];
+    });
 
     firebase
       .firestore()
       .collection('users')
       .doc(firebase.auth().currentUser.uid)
       .update({
-        events: events
-      }).then(() => {
-        setCompleted(!completed)
+        events: events,
       })
+      .then(() => {
+        setCompleted(!completed);
+      });
   };
 
   return (
@@ -169,12 +177,8 @@ export default function ScheduleDetails({ closeModal, selectedEvent }) {
       <StyledStatusContainer>
         <StyledLabel>Status</StyledLabel>
         <StyledStatusInputContainer>
-          <StyledTitle>
-            {completed
-              ? 'Completed'
-              : 'Incomplete'}
-          </StyledTitle>
-          <StyledToggle completed={completed} onClick={toggleCompleted}/>
+          <StyledTitle>{completed ? 'Completed' : 'Incomplete'}</StyledTitle>
+          <StyledToggle completed={completed} onClick={toggleCompleted} />
         </StyledStatusInputContainer>
       </StyledStatusContainer>
       <StyledBtnContainer>

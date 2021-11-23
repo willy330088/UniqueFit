@@ -51,7 +51,6 @@ const StyledCalendarContainer = styled.div`
     &:hover {
       box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     }
-
   }
 
   .fc-event-title {
@@ -156,17 +155,19 @@ export default function ScheduleCalendar() {
   const openModal = () => setOpen(true);
   const [selectedModal, setSelectedModal] = useState('');
   const [selectedEvent, setSelectedEvent] = useState();
-  const plans = useSelector((state) => state.plans)
+  const plans = useSelector((state) => state.plans);
   const currentUser = useSelector((state) => state.currentUser);
   const eventsId = useSelector((state) => state.users).filter(
     (user) => user.id === currentUser?.uid
   )[0]?.events;
 
   const events = eventsId?.map((events) => {
-    const targetPlan = plans.filter((plan) => plan.id === events.extendedProps.planId)[0]
-    events.title = targetPlan.title
-    return events
-  })
+    const targetPlan = plans.filter(
+      (plan) => plan.id === events.extendedProps.planId
+    )[0];
+    events.title = targetPlan.title;
+    return events;
+  });
 
   let initialDate = new Date().toISOString();
 
@@ -216,7 +217,7 @@ export default function ScheduleCalendar() {
           />
         ) : null}
       </StyledPopup>
-      <ScheduleRecord/>
+      <ScheduleRecord />
     </StyledCalendarContainer>
   );
 }

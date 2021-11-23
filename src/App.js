@@ -4,13 +4,14 @@ import {
   Route,
   Switch,
   Redirect,
-  useHistory
+  useHistory,
 } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import WorkoutListPage from './components/WorkoutListPage';
 import ProfilePage from './components/ProfilePage';
 import PlanListPage from './components/PlanListPage';
 import SpecificPlanPage from './components/SpecificPlanPage';
+import NotFoundPage from './components/NotFoundPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
@@ -23,7 +24,7 @@ import {
   getWorkouts,
   getPlans,
   getCurrentUser,
-  getUsers
+  getUsers,
 } from '../src/redux/actions';
 import FullPageLoading from './components/FullPageLoading';
 
@@ -52,8 +53,6 @@ const StyledToastContainer = styled(ToastContainer).attrs({
 function App() {
   const dispatch = useDispatch();
   const [currentUser, setCurrentUser] = useState();
-  const history = useHistory()
-  // const currentUser = useSelector((state) => state.currentUser);
 
   useEffect(() => {
     firebase
@@ -122,7 +121,7 @@ function App() {
             )}
           </Route>
 
-          <Route path="/profile" exact>
+          <Route exact path="/profile">
             {currentUser !== null ? (
               currentUser !== undefined ? (
                 <ProfilePage />
@@ -135,16 +134,22 @@ function App() {
           </Route>
 
           <Route exact path="/home">
-            <HomePage currentUser={currentUser}/>
+            <HomePage currentUser={currentUser} />
           </Route>
-          <Route path="/workouts" exact>
-            <WorkoutListPage currentUser={currentUser}/>
+          <Route exact path="/workouts">
+            <WorkoutListPage currentUser={currentUser} />
           </Route>
-          <Route path="/plans" exact>
-            <PlanListPage currentUser={currentUser}/>
+          <Route exact path="/plans">
+            <PlanListPage currentUser={currentUser} />
           </Route>
-          <Route path="/plans/:planId" exact>
-            <SpecificPlanPage currentUser={currentUser}/>
+          <Route exact path="/plans/:planId">
+            <SpecificPlanPage currentUser={currentUser} />
+          </Route>
+          <Route exact path="/pageNotFound">
+            <NotFoundPage />
+          </Route>
+          <Route>
+            <NotFoundPage />
           </Route>
         </Switch>
       </Router>
