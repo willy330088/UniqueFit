@@ -9,6 +9,7 @@ const StyledBackground = styled.div`
   background-image: url(${NotFoundPageBackground});
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
   display: flex;
   justify-content: center;
   position: relative;
@@ -16,28 +17,42 @@ const StyledBackground = styled.div`
 
 const StyledText = styled.div`
   color: white;
-  font-size: 60px;
+  font-size: 30px;
   position: absolute;
   top: 25%;
+  text-align: center;
+  width: 90%;
+
+  @media (min-width: 800px) {
+    font-size: 60px;
+  }
 `;
 
 const StyledRedirectBtn = styled.div`
-  font-size: 35px;
-  height: 60px;
-  width: 200px;
+  font-size: 25px;
+  height: 40px;
+  width: 120px;
   cursor: pointer;
   color: #1face1;
   border-radius: 5px;
   background-color: transparent;
   text-align: center;
-  line-height: 60px;
+  line-height: 40px;
   border: 2px solid #1face1;
   position: absolute;
-  top: 40%;
+  top: 45%;
 
   &:hover {
     color: white;
     background-color: #1face1;
+  }
+
+  @media (min-width: 800px) {
+    top: 40%;
+    font-size: 35px;
+    height: 60px;
+    width: 200px;
+    line-height: 60px;
   }
 `;
 

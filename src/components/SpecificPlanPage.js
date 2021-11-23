@@ -19,8 +19,8 @@ import ProgressBar from '@ramonak/react-progress-bar';
 import SpecificPlanWorkoutItem from './SpecificPlanWorkoutItem';
 import SignInPopup from './SignInPopup';
 import { useSelector } from 'react-redux';
-import LogoDumbbell from '../images/logoDumbbell.png';
 import FullPageLoading from './FullPageLoading';
+import { Redirect } from 'react-router-dom';
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -281,7 +281,8 @@ const StyledTrainingBtn = styled.button`
   background-color: transparent;
   cursor: pointer;
   margin-top: 20px;
-  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px,
+    rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
 
   &:hover {
     color: white;
@@ -315,20 +316,30 @@ export default function SpecificPlanPage() {
   const [signInOpen, setSignInOpen] = useState(false);
   const closeSignIn = () => setSignInOpen(false);
 
-  if (!plan) {
-    plan = {
-      collectedBy: [],
-      publisher: null,
-      workoutSet: [],
-    };
-  }
-  const workoutSet = plan.workoutSet;
-  const workoutSetDetails = plan.workoutSet.map((workoutSet) => {
+  const workoutSet = plan?.workoutSet;
+  const workoutSetDetails = plan?.workoutSet.map((workoutSet) => {
     return workouts.filter((workout) => workout.id === workoutSet.workoutId)[0];
   });
+  const isCollected = plan?.collectedBy.includes(currentUser?.uid);
 
-  const isCollected = plan.collectedBy?.includes(currentUser?.uid);
   const planRef = firebase.firestore().collection('plans').doc(planId);
+
+  useEffect(() => {
+    planRef
+      .collection('comments')
+      .orderBy('createdAt', 'desc')
+      .onSnapshot((collectionSnapshot) => {
+        const data = collectionSnapshot.docs.map((doc) => {
+          const id = doc.id;
+          return { ...doc.data(), id };
+        });
+        setComments(data);
+      });
+  }, []);
+
+  if (plans.length !== 0 && !plan) {
+    return <Redirect to="/pageNotFound" />;
+  }
 
   function toggleCollected() {
     if (currentUser) {
@@ -346,19 +357,6 @@ export default function SpecificPlanPage() {
       setSignInOpen(true);
     }
   }
-
-  useEffect(() => {
-    planRef
-      .collection('comments')
-      .orderBy('createdAt', 'desc')
-      .onSnapshot((collectionSnapshot) => {
-        const data = collectionSnapshot.docs.map((doc) => {
-          const id = doc.id;
-          return { ...doc.data(), id };
-        });
-        setComments(data);
-      });
-  }, []);
 
   function onSubmitComment() {
     if (currentUser) {
@@ -389,7 +387,10 @@ export default function SpecificPlanPage() {
     }
   }
 
-  return publisher ? (
+  console.log(plans);
+  console.log(plan);
+
+  return plans.length !== 0 ? (
     <StyledBody>
       <Header />
       <Banner slogan={'Explore Your Plan'} />
@@ -416,13 +417,13 @@ export default function SpecificPlanPage() {
             <StyledPlanInfoContentContainer>
               <StyledPlanInfoTitle>{plan.title}</StyledPlanInfoTitle>
               <StyledPlanInfoPublisherContainer>
-                {publisher.photoURL ? (
-                  <StyledPlanInfoPublisherImage src={publisher.photoURL} />
+                {publisher?.photoURL ? (
+                  <StyledPlanInfoPublisherImage src={publisher?.photoURL} />
                 ) : (
                   <StyledPlanInfoPublisherIcon />
                 )}
                 <StyledPlanInfoPublisherName>
-                  {publisher.displayName}
+                  {publisher?.displayName}
                 </StyledPlanInfoPublisherName>
               </StyledPlanInfoPublisherContainer>
             </StyledPlanInfoContentContainer>

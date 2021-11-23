@@ -9,6 +9,7 @@ import Muscle from '../images/muscle.png';
 import styled from 'styled-components';
 import Logo from '../images/logo.png';
 import LogoDumbbell from '../images/logoDumbbell.png';
+require('dotenv').config();
 
 const StyledInfoHeader = styled.h2`
   color: #3264a8;
@@ -158,7 +159,7 @@ const mapContainerStyle = {
 
 export default function App() {
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyAbsCYT5vZNuhGd3Z2e5GoqDk_N_lntlGI',
+    googleMapsApiKey: process.env.REACT_APP_GOOGLEMAP_API_KEY,
     libraries,
   });
 
@@ -170,18 +171,6 @@ export default function App() {
   const [isNavigating, setIsNavigating] = useState(true);
   const [selected, setSelected] = useState(null);
   const [nearby, setNearyby] = useState();
-  // const mapRef = useRef();
-  // const onMapLoad = useCallback((map) => {
-  //   mapRef.current = map;
-  // }, []);
-
-  // useEffect(() => {
-  //   setIsFetching(true)
-  //   console.log(currentLocation)
-  //   fetch(`https://us-central1-uniquefit-william.cloudfunctions.net/getGoogleNearbySearch?lat=${currentLocation.lat}&lng=${currentLocation.lng}`)
-  //     .then(res => res.json())
-  //     .then(json => setNearyby(json.results))
-  // }, []);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(

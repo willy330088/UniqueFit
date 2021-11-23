@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { NavLink, useHistory } from 'react-router-dom';
 import Logo from '../images/logo.png';
 import Burger from './Burger';
 import { useSelector } from 'react-redux';
-import Popup from 'reactjs-popup';
 import SignInPopup from './SignInPopup';
 
 const StyledHeader = styled.div`

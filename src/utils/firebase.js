@@ -1,14 +1,15 @@
-import firebase from "firebase/app";
+import firebase from 'firebase/app';
+require('dotenv').config();
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBaqodtY0fD_qxjjma_vm348kFyujqlNOg",
-  authDomain: "uniquefit-william.firebaseapp.com",
-  projectId: "uniquefit-william",
-  storageBucket: "uniquefit-william.appspot.com",
-  messagingSenderId: "816683170232",
-  appId: "1:816683170232:web:11b8f9e861b2a8ce64774d"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
-firebase.initializeApp(firebaseConfig)
+firebase.initializeApp(firebaseConfig);
 
 export default firebase;
