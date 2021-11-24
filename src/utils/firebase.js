@@ -30,7 +30,7 @@ function socialMediaAuth(provider) {
     });
 }
 
-function setUserData(userData) {
+function setSocialMediaUserData(userData) {
   return userRef.doc(userData.uid).set({
     displayName: userData.displayName,
     photoURL: userData.photoURL,
@@ -42,5 +42,5 @@ export {
   facebookProvider,
   googleProvider,
   socialMediaAuth,
-  setUserData,
+  setSocialMediaUserData,
 };

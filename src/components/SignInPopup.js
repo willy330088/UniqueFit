@@ -11,7 +11,7 @@ import {
   facebookProvider,
   googleProvider,
   socialMediaAuth,
-  setUserData,
+  setSocialMediaUserData,
 } from '../utils/firebase';
 import { signInToast } from '../utils/toast';
 import 'firebase/auth';
@@ -38,7 +38,7 @@ export default function SignInPopup({ open, closeModal }) {
 
   async function socialMediaSignIn(provider) {
     const userData = await socialMediaAuth(provider);
-    await setUserData(userData);
+    await setSocialMediaUserData(userData);
     signInComplete();
   }
 
