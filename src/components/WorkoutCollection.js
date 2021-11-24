@@ -1,8 +1,8 @@
-import React from 'react'
+import React from 'react';
 import styled from 'styled-components';
-import ProfileWorkout from './ProfileWorkout'
+import ProfileWorkout from './ProfileWorkout';
 import { FaDumbbell } from 'react-icons/fa';
-import firebase from '../utils/firebase';
+import { firebase } from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/auth';
@@ -11,7 +11,7 @@ const StyledWorkoutCreationContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 50px 0px ;
+  margin: 50px 0px;
   @media (min-width: 800px) {
     flex-direction: row;
   }
@@ -46,8 +46,8 @@ export default function WorkoutCreation({ workout }) {
 
   return (
     <StyledWorkoutCreationContainer>
-      <ProfileWorkout workout={workout}/>
-      <StyledCollectIcon onClick={removeCollected}/>
+      <ProfileWorkout workout={workout} />
+      <StyledCollectIcon onClick={removeCollected} />
     </StyledWorkoutCreationContainer>
-  )
+  );
 }

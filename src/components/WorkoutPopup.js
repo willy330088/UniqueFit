@@ -4,7 +4,7 @@ import muscleGroups from '../utils/muscleGroup';
 import { HiUserCircle } from 'react-icons/hi';
 import { FaDumbbell } from 'react-icons/fa';
 import { RiMessage2Fill } from 'react-icons/ri';
-import firebase from '../utils/firebase';
+import { firebase } from '../utils/firebase';
 import 'firebase/firestore';
 import WorkoutComment from './WorkoutComment';
 import { Waypoint } from 'react-waypoint';
@@ -67,9 +67,9 @@ const StyledMuscleIcon = styled.img`
 const StyledTitle = styled.div`
   color: #1face1;
   font-size: 30px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   width: 200px;
 
   @media (min-width: 500px) {
@@ -458,8 +458,8 @@ const StyledLogoDumbbell = styled.div`
   margin: 0 5px;
 
   @media (min-width: 500px) {
-  width: 33px;
-  height: 65px;
+    width: 33px;
+    height: 65px;
   }
 `;
 
@@ -616,10 +616,10 @@ export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
             />
             <StyledTitle>{workout.title}</StyledTitle>
             <StyledCollectIconContainer onClick={toggleCollected}>
-              <StyledAddToCollectIcon
-                isCollected={isCollected}
-              />
-              <StyledCollectIconText isCollected={isCollected}>Collect</StyledCollectIconText>
+              <StyledAddToCollectIcon isCollected={isCollected} />
+              <StyledCollectIconText isCollected={isCollected}>
+                Collect
+              </StyledCollectIconText>
             </StyledCollectIconContainer>
           </StyledTitleContainer>
           <Waypoint

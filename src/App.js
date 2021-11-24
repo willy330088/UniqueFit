@@ -18,7 +18,7 @@ import styled from 'styled-components';
 import ScrollToTop from './components/ScrollToTop';
 import HomePage from './components/HomePage';
 import { useDispatch, useSelector } from 'react-redux';
-import firebase from './utils/firebase';
+import { firebase } from './utils/firebase';
 import 'firebase/firestore';
 import {
   getWorkouts,

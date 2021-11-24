@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { BsThreeDots } from 'react-icons/bs';
 import { HiUserCircle } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
-import firebase from '../utils/firebase';
+import { firebase } from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/auth';
@@ -137,12 +137,12 @@ const StyledCommentEditSaveBtn = styled.div`
   }
 `;
 
-export default function WorkoutComment({ comment, workoutId, currentUser}) {
+export default function WorkoutComment({ comment, workoutId, currentUser }) {
   const [showTool, setShowTool] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [commentContent, setCommentContent] = useState(comment.content);
   const users = useSelector((state) => state.users);
-  const publisher = users.filter((user) => user.id === comment.publisher)[0]
+  const publisher = users.filter((user) => user.id === comment.publisher)[0];
 
   function onSaveComment() {
     firebase
@@ -160,7 +160,7 @@ export default function WorkoutComment({ comment, workoutId, currentUser}) {
   }
 
   function onDeleteComment() {
-    setShowTool(false)
+    setShowTool(false);
     const firestore = firebase.firestore();
     const batch = firestore.batch();
 
@@ -189,9 +189,7 @@ export default function WorkoutComment({ comment, workoutId, currentUser}) {
         <StyledPlanInfoPublisherIcon />
       )}
       <StyledNameCommentWrap>
-        <StyledCommentUserName>
-          {publisher.displayName}
-        </StyledCommentUserName>
+        <StyledCommentUserName>{publisher.displayName}</StyledCommentUserName>
         {isEditing ? (
           <StyledCommentEditInputContainer>
             {' '}
@@ -201,7 +199,10 @@ export default function WorkoutComment({ comment, workoutId, currentUser}) {
                 setCommentContent(e.target.value);
               }}
             />
-            <StyledCommentEditSaveBtn onClick={onSaveComment} commentContent={commentContent}>
+            <StyledCommentEditSaveBtn
+              onClick={onSaveComment}
+              commentContent={commentContent}
+            >
               Save
             </StyledCommentEditSaveBtn>
           </StyledCommentEditInputContainer>

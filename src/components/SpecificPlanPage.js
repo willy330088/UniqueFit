@@ -8,7 +8,7 @@ import { FaDumbbell } from 'react-icons/fa';
 import { RiMessage2Fill } from 'react-icons/ri';
 import { BiTimeFive } from 'react-icons/bi';
 import { RiArticleLine } from 'react-icons/ri';
-import firebase from '../utils/firebase';
+import { firebase } from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/auth';

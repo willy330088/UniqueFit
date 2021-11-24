@@ -6,7 +6,7 @@ import PlanDetailsInputP1 from './PlanDetailsInputP1';
 import PlanDetailsInputP2 from './PlanDetailsInputP2';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import firebase from '../utils/firebase';
+import { firebase } from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { v4 as uuid } from 'uuid';
@@ -38,7 +38,8 @@ const StyledCreateWorkoutBtn = styled.div`
   cursor: ${(props) => (props.createDisabled ? 'not-allowed' : 'pointer')};
   color: ${(props) => (props.createDisabled ? '#d1d1d1' : '#1face1')};
   border-radius: 5px;
-  background-color: ${(props) => (props.createDisabled ? '#969696' : 'transparent')};
+  background-color: ${(props) =>
+    props.createDisabled ? '#969696' : 'transparent'};
   text-align: center;
   line-height: 40px;
   margin: 10px 0;
@@ -46,7 +47,8 @@ const StyledCreateWorkoutBtn = styled.div`
 
   &:hover {
     color: ${(props) => (props.createDisabled ? '#d1d1d1' : 'white')};
-    background-color: ${(props) => (props.createDisabled ? '#969696' : '#1face1')};
+    background-color: ${(props) =>
+      props.createDisabled ? '#969696' : '#1face1'};
   }
 
   @media (min-width: 500px) {
@@ -75,7 +77,12 @@ const StyledCreateLabel = styled.div`
   width: 100%;
 `;
 
-export default function CreatePlanPage({ paging, setPaging, originalPlan, close }) {
+export default function CreatePlanPage({
+  paging,
+  setPaging,
+  originalPlan,
+  close,
+}) {
   const [title, setTitle] = useState(originalPlan.title);
   const [description, setDescription] = useState(originalPlan.description);
   const [targetMuscleGroup, setTargetMuscleGroup] = useState(
@@ -103,8 +110,8 @@ export default function CreatePlanPage({ paging, setPaging, originalPlan, close 
     ).then((values) => {
       setPlan({
         workoutSet: values.map((value, index) => {
-          const reps = originalPlan.workoutSet[index].reps
-          const weight = originalPlan.workoutSet[index].weight
+          const reps = originalPlan.workoutSet[index].reps;
+          const weight = originalPlan.workoutSet[index].weight;
           const workoutId = value.id;
           const id = uuid();
           return { ...value.data(), workoutId, reps, weight, id };
@@ -115,36 +122,39 @@ export default function CreatePlanPage({ paging, setPaging, originalPlan, close 
 
   function savePlan() {
     if (createDisabled) {
-      return
+      return;
     } else {
-      setCreateDisabled(true)
-      const documentRef = firebase.firestore().collection('plans').doc(originalPlan.id);
-      let checked = false
+      setCreateDisabled(true);
+      const documentRef = firebase
+        .firestore()
+        .collection('plans')
+        .doc(originalPlan.id);
+      let checked = false;
 
       if (title === '') {
         toast.error('Please fill in title', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
-        return
+        return;
       } else if (!estimatedTrainingTime) {
         toast.error('Please fill in estimated training time', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
-        return
+        return;
       } else if (description === '') {
         toast.error('Please fill in description', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
-        return
+        return;
       } else if (plan.workoutSet.length === 0) {
         toast.error('Please add workouts', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
-        return
+        return;
       }
 
       plan.workoutSet.every((workout) => {
@@ -154,11 +164,11 @@ export default function CreatePlanPage({ paging, setPaging, originalPlan, close 
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000,
           });
-          return false
+          return false;
         }
         checked = true;
-        return true
-      })
+        return true;
+      });
 
       if (checked) {
         const planEditing = toast.loading('Editing Plan...', {
@@ -189,8 +199,8 @@ export default function CreatePlanPage({ paging, setPaging, originalPlan, close 
               position: toast.POSITION.TOP_CENTER,
               autoClose: 2000,
             });
-            close()
-            setCreateDisabled(false)
+            close();
+            setCreateDisabled(false);
           });
       }
     }
@@ -223,7 +233,10 @@ export default function CreatePlanPage({ paging, setPaging, originalPlan, close 
           <StyledCreateLabel>Order Your Workouts</StyledCreateLabel>
           <DragandDrop plan={plan} setPlan={setPlan} />
           <StyledChangeWorkoutBtnContainer>
-            <StyledCreateWorkoutBtn onClick={savePlan} createDisabled={createDisabled}>
+            <StyledCreateWorkoutBtn
+              onClick={savePlan}
+              createDisabled={createDisabled}
+            >
               Save
             </StyledCreateWorkoutBtn>
           </StyledChangeWorkoutBtnContainer>

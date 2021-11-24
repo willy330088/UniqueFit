@@ -5,7 +5,7 @@ import { BsFillPencilFill } from 'react-icons/bs';
 import { FaTrashAlt } from 'react-icons/fa';
 import Popup from 'reactjs-popup';
 import EditWorkoutPopup from './EditWorkoutPopup';
-import firebase from '../utils/firebase';
+import { firebase } from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/auth';
@@ -139,25 +139,25 @@ export default function WorkoutCreation({ workout }) {
     <StyledWorkoutCreationContainer>
       <ProfileWorkout workout={workout} />
       <StyledToolContainer>
-      <StyledPencilIcon
-        onClick={() => {
-          setOpen(true);
-        }}
-      />
-      <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
-        <EditWorkoutPopup workout={workout} close={closeModal} />
-      </StyledPopup>
-      <StyledRemoveIcon
-        onClick={() => {
-          setConfirmOpen(true);
-        }}
-      />
-      <ConfirmPopup
-        confirmOpen={confirmOpen}
-        closeConfirm={closeConfirm}
-        action={deleteWorkout}
-        type={'delete'}
-      />
+        <StyledPencilIcon
+          onClick={() => {
+            setOpen(true);
+          }}
+        />
+        <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
+          <EditWorkoutPopup workout={workout} close={closeModal} />
+        </StyledPopup>
+        <StyledRemoveIcon
+          onClick={() => {
+            setConfirmOpen(true);
+          }}
+        />
+        <ConfirmPopup
+          confirmOpen={confirmOpen}
+          closeConfirm={closeConfirm}
+          action={deleteWorkout}
+          type={'delete'}
+        />
       </StyledToolContainer>
     </StyledWorkoutCreationContainer>
   );

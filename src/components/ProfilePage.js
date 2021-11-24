@@ -8,7 +8,7 @@ import WorkoutCollection from './WorkoutCollection';
 import PlanCollection from './PlanCollection';
 import ScheduleCalendar from './ScheduleCalendar';
 import styled from 'styled-components';
-import firebase from '../utils/firebase';
+import { firebase } from '../utils/firebase';
 import { BsFillPencilFill } from 'react-icons/bs';
 import 'firebase/auth';
 import ProfileSubMenu from './ProfileSubMenu';
@@ -32,11 +32,11 @@ const StyledProfilePageContainer = styled.div`
   min-height: 800px;
 
   @media (min-width: 950px) {
-   padding: 50px 15% 100px;
+    padding: 50px 15% 100px;
   }
 
   @media (min-width: 1100px) {
-   padding: 50px 5% 100px;
+    padding: 50px 5% 100px;
   }
 
   @media (min-width: 1400px) {
@@ -165,7 +165,7 @@ const StyledProfileContentContainer = styled.div`
 
   @media (min-width: 1100px) {
     margin-top: 0px;
-   padding: 0px 0px 50px 50px;
+    padding: 0px 0px 50px 50px;
   }
 
   @media (min-width: 1500px) {

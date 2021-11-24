@@ -1,4 +1,7 @@
 import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
+import 'firebase/storage';
 require('dotenv').config();
 
 const firebaseConfig = {
@@ -10,6 +13,21 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
+const facebookProvider = new firebase.auth.FacebookAuthProvider();
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+function socialMediaAuth(provider) {
+  return firebase
+    .auth()
+    .signInWithPopup(provider)
+    .then((res) => {
+      return res.user;
+    })
+    .catch((err) => {
+      return err;
+    });
+}
+
 firebase.initializeApp(firebaseConfig);
 
-export default firebase;
+export { firebase, facebookProvider, googleProvider, socialMediaAuth };

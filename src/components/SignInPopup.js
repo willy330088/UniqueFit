@@ -1,16 +1,215 @@
 import React, { useState } from 'react';
-import Fit from '../images/fit.jpeg';
+
 import styled, { keyframes } from 'styled-components';
-import Popup from 'reactjs-popup';
-import firebase from '../utils/firebase';
-import 'firebase/auth';
-import { facebookProvider, googleProvider } from '../utils/authMethod';
-import socialMediaAuth from '../utils/auth';
 import { useHistory, useLocation } from 'react-router-dom';
+import Popup from 'reactjs-popup';
 import { FcGoogle } from 'react-icons/fc';
 import { BsFacebook } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import {
+  firebase,
+  facebookProvider,
+  googleProvider,
+  socialMediaAuth,
+} from '../utils/firebase';
+import 'firebase/auth';
+import Fit from '../images/fit.jpeg';
+
+export default function SignInPopup({ open, closeModal }) {
+  const history = useHistory();
+  const location = useLocation();
+  const [isSigningIn, setIsSigningIn] = useState(true);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const userRef = firebase.firestore().collection('users');
+
+  const handleOnClick = async (provider) => {
+    const res = await socialMediaAuth(provider);
+    userRef
+      .doc(res.uid)
+      .set({
+        displayName: res.displayName,
+        photoURL: res.photoURL,
+      })
+      .then(() => {
+        if (location.pathname === '/') {
+          history.push('/home');
+        } else {
+          closeModal();
+        }
+        toast.success('Sign in successfully!', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+        });
+      });
+  };
+
+  const onSubmit = () => {
+    if (isSigningIn === false) {
+      if (name === '') {
+        setErrorMessage('Please fill in username');
+        return;
+      }
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((res) => {
+          console.log(res);
+          firebase.auth().currentUser.updateProfile({
+            displayName: name,
+          });
+          userRef
+            .doc(res.user.uid)
+            .set({
+              displayName: name,
+              photoURL: null,
+            })
+            .then(() => {
+              if (location.pathname === '/') {
+                history.push('/home');
+              } else {
+                closeModal();
+              }
+              toast.success('Sign in successfully!', {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 2000,
+              });
+            });
+        })
+        .catch((error) => {
+          switch (error.code) {
+            case 'auth/email-already-in-use':
+              setErrorMessage('Email is already in use');
+              break;
+            case 'auth/invalid-email':
+              setErrorMessage('Invalid email');
+              break;
+            case 'auth/weak-password':
+              setErrorMessage('Weak password');
+              break;
+            default:
+          }
+        });
+    } else if (isSigningIn === true) {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(() => {
+          if (location.pathname === '/') {
+            history.push('/home');
+          } else {
+            closeModal();
+          }
+          toast.success('Sign in successfully!', {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+          });
+        })
+        .catch((error) => {
+          switch (error.code) {
+            case 'auth/user-not-found':
+              setErrorMessage('Cannot find this user');
+              break;
+            case 'auth/invalid-email':
+              setErrorMessage('Invalid email');
+              break;
+            case 'auth/wrong-password':
+              setErrorMessage('Wrong password');
+              break;
+            default:
+          }
+        });
+    }
+  };
+
+  return (
+    <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
+      <StyledPopupImage src={Fit} />
+      <StyledContainer>
+        {isSigningIn ? (
+          <>
+            <StyledSignInTitle>Sign In</StyledSignInTitle>
+            <StyledInput
+              placeholder={'Email'}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <StyledInput
+              placeholder={'Password'}
+              onChange={(e) => setPassword(e.target.value)}
+              type={'password'}
+            />
+            {errorMessage && <StyledMessage>{errorMessage}</StyledMessage>}
+            <StyledSignInBtn onClick={onSubmit}>Sign In</StyledSignInBtn>
+            <StyledSeparator>OR</StyledSeparator>
+            <StyledSignInMediaBtn
+              onClick={() => handleOnClick(facebookProvider)}
+            >
+              <StyledFacebookIcon />
+              <StyledSignInMediaText>Facebook Sign In</StyledSignInMediaText>
+            </StyledSignInMediaBtn>
+            <StyledSignInMediaBtn onClick={() => handleOnClick(googleProvider)}>
+              <StyledGoogleIcon />
+              <StyledSignInMediaText>Google Sign In</StyledSignInMediaText>
+            </StyledSignInMediaBtn>
+            <StyledCreateAccountBtn
+              onClick={() => {
+                setErrorMessage('');
+                setIsSigningIn(false);
+              }}
+            >
+              Create Account?
+            </StyledCreateAccountBtn>
+            <StyledCloseBtn
+              onClick={() => {
+                closeModal();
+              }}
+            >
+              Close
+            </StyledCloseBtn>
+          </>
+        ) : (
+          <>
+            <StyledSignInTitle>Sign Up</StyledSignInTitle>
+            <StyledInput
+              placeholder={'Email'}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <StyledInput
+              placeholder={'Password'}
+              onChange={(e) => setPassword(e.target.value)}
+              type={'password'}
+            />
+            <StyledInput
+              placeholder={'User Name'}
+              onChange={(e) => setName(e.target.value)}
+            />
+            {errorMessage && <StyledMessage>{errorMessage}</StyledMessage>}
+            <StyledSignInBtn onClick={onSubmit}>Sign Up</StyledSignInBtn>
+            <StyledCreateAccountBtn
+              onClick={() => {
+                setErrorMessage('');
+                setIsSigningIn(true);
+              }}
+            >
+              Back To Sign In
+            </StyledCreateAccountBtn>
+            <StyledCloseBtn
+              onClick={() => {
+                closeModal();
+              }}
+            >
+              Close
+            </StyledCloseBtn>
+          </>
+        )}
+      </StyledContainer>
+    </StyledPopup>
+  );
+}
 
 const StyledPopupImage = styled.img`
   height: 100%;
@@ -211,198 +410,3 @@ const StyledPopup = styled(Popup)`
     }
   }
 `;
-
-export default function SignInPopup({ open, closeModal }) {
-  const history = useHistory();
-  const location = useLocation();
-  const [isSigningIn, setIsSigningIn] = useState(true);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const userRef = firebase.firestore().collection('users');
-
-  const handleOnClick = async (provider) => {
-    const res = await socialMediaAuth(provider);
-    userRef
-      .doc(res.uid)
-      .set({
-        displayName: res.displayName,
-        photoURL: res.photoURL,
-      })
-      .then(() => {
-        if (location.pathname === '/') {
-          history.push('/home');
-        } else {
-          closeModal();
-        }
-        toast.success('Sign in successfully!', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 2000,
-        });
-      });
-    console.log(res);
-  };
-
-  const onSubmit = () => {
-    if (isSigningIn === false) {
-      if (name === '') {
-        setErrorMessage('Please fill in username');
-        return;
-      }
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then((res) => {
-          console.log(res);
-          firebase.auth().currentUser.updateProfile({
-            displayName: name,
-          });
-          userRef
-            .doc(res.user.uid)
-            .set({
-              displayName: name,
-              photoURL: null,
-            })
-            .then(() => {
-              if (location.pathname === '/') {
-                history.push('/home');
-              } else {
-                closeModal();
-              }
-              toast.success('Sign in successfully!', {
-                position: toast.POSITION.TOP_CENTER,
-                autoClose: 2000,
-              });
-            });
-        })
-        .catch((error) => {
-          switch (error.code) {
-            case 'auth/email-already-in-use':
-              setErrorMessage('Email is already in use');
-              break;
-            case 'auth/invalid-email':
-              setErrorMessage('Invalid email');
-              break;
-            case 'auth/weak-password':
-              setErrorMessage('Weak password');
-              break;
-            default:
-          }
-        });
-    } else if (isSigningIn === true) {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(() => {
-          if (location.pathname === '/') {
-            history.push('/home');
-          } else {
-            closeModal();
-          }
-          toast.success('Sign in successfully!', {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 2000,
-          });
-        })
-        .catch((error) => {
-          switch (error.code) {
-            case 'auth/user-not-found':
-              setErrorMessage('Cannot find this user');
-              break;
-            case 'auth/invalid-email':
-              setErrorMessage('Invalid email');
-              break;
-            case 'auth/wrong-password':
-              setErrorMessage('Wrong password');
-              break;
-            default:
-          }
-        });
-    }
-  };
-
-  return (
-    <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
-      <StyledPopupImage src={Fit} />
-      <StyledContainer>
-        {isSigningIn ? (
-          <>
-            <StyledSignInTitle>Sign In</StyledSignInTitle>
-            <StyledInput
-              placeholder={'Email'}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <StyledInput
-              placeholder={'Password'}
-              onChange={(e) => setPassword(e.target.value)}
-              type={'password'}
-            />
-            {errorMessage && <StyledMessage>{errorMessage}</StyledMessage>}
-            <StyledSignInBtn onClick={onSubmit}>Sign In</StyledSignInBtn>
-            <StyledSeparator>OR</StyledSeparator>
-            <StyledSignInMediaBtn
-              onClick={() => handleOnClick(facebookProvider)}
-            >
-              <StyledFacebookIcon />
-              <StyledSignInMediaText>Facebook Sign In</StyledSignInMediaText>
-            </StyledSignInMediaBtn>
-            <StyledSignInMediaBtn onClick={() => handleOnClick(googleProvider)}>
-              <StyledGoogleIcon />
-              <StyledSignInMediaText>Google Sign In</StyledSignInMediaText>
-            </StyledSignInMediaBtn>
-            <StyledCreateAccountBtn
-              onClick={() => {
-                setErrorMessage('');
-                setIsSigningIn(false);
-              }}
-            >
-              Create Account?
-            </StyledCreateAccountBtn>
-            <StyledCloseBtn
-              onClick={() => {
-                closeModal();
-              }}
-            >
-              Close
-            </StyledCloseBtn>
-          </>
-        ) : (
-          <>
-            <StyledSignInTitle>Sign Up</StyledSignInTitle>
-            <StyledInput
-              placeholder={'Email'}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <StyledInput
-              placeholder={'Password'}
-              onChange={(e) => setPassword(e.target.value)}
-              type={'password'}
-            />
-            <StyledInput
-              placeholder={'User Name'}
-              onChange={(e) => setName(e.target.value)}
-            />
-            {errorMessage && <StyledMessage>{errorMessage}</StyledMessage>}
-            <StyledSignInBtn onClick={onSubmit}>Sign Up</StyledSignInBtn>
-            <StyledCreateAccountBtn
-              onClick={() => {
-                setErrorMessage('');
-                setIsSigningIn(true);
-              }}
-            >
-              Back To Sign In
-            </StyledCreateAccountBtn>
-            <StyledCloseBtn
-              onClick={() => {
-                closeModal();
-              }}
-            >
-              Close
-            </StyledCloseBtn>
-          </>
-        )}
-      </StyledContainer>
-    </StyledPopup>
-  );
-}

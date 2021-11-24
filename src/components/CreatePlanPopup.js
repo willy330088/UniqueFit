@@ -6,7 +6,7 @@ import PlanDetailsInputP1 from './PlanDetailsInputP1';
 import PlanDetailsInputP2 from './PlanDetailsInputP2';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import firebase from '../utils/firebase';
+import { firebase } from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 
@@ -45,7 +45,8 @@ const StyledCreateWorkoutBtn = styled.div`
   cursor: ${(props) => (props.createDisabled ? 'not-allowed' : 'pointer')};
   color: ${(props) => (props.createDisabled ? '#d1d1d1' : '#1face1')};
   border-radius: 5px;
-  background-color: ${(props) => (props.createDisabled ? '#969696' : 'transparent')};
+  background-color: ${(props) =>
+    props.createDisabled ? '#969696' : 'transparent'};
   text-align: center;
   line-height: 40px;
   margin: 10px 0;
@@ -53,7 +54,8 @@ const StyledCreateWorkoutBtn = styled.div`
 
   &:hover {
     color: ${(props) => (props.createDisabled ? '#d1d1d1' : 'white')};
-    background-color: ${(props) => (props.createDisabled ? '#969696' : '#1face1')};
+    background-color: ${(props) =>
+      props.createDisabled ? '#969696' : '#1face1'};
   }
 
   @media (min-width: 500px) {
@@ -82,7 +84,7 @@ const StyledCreateLabel = styled.div`
   width: 100%;
 `;
 
-export default function CreatePlanPage({paging, setPaging, close}) {
+export default function CreatePlanPage({ paging, setPaging, close }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [targetMuscleGroup, setTargetMuscleGroup] = useState('');
@@ -95,42 +97,42 @@ export default function CreatePlanPage({paging, setPaging, close}) {
 
   function createPlan() {
     if (createDisabled) {
-      return
+      return;
     } else {
-      setCreateDisabled(true)
+      setCreateDisabled(true);
       const documentRef = firebase.firestore().collection('plans').doc();
-      let checked = false
+      let checked = false;
 
       if (title === '') {
         toast.error('Please fill in title', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
-        return
+        return;
       } else if (targetMuscleGroup === '') {
         toast.error('Please choose target muscle group', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
-        return
+        return;
       } else if (!estimatedTrainingTime) {
         toast.error('Please fill in estimated training time', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
-        return
+        return;
       } else if (description === '') {
         toast.error('Please fill in description', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
-        return
+        return;
       } else if (plan.workoutSet.length === 0) {
         toast.error('Please add workouts', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
-        return
+        return;
       }
 
       plan.workoutSet.every((workout) => {
@@ -140,11 +142,11 @@ export default function CreatePlanPage({paging, setPaging, close}) {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000,
           });
-          return false
+          return false;
         }
         checked = true;
-        return true
-      })
+        return true;
+      });
 
       if (checked) {
         const planCreating = toast.loading('Creating Plan...', {
@@ -164,7 +166,7 @@ export default function CreatePlanPage({paging, setPaging, close}) {
                 workoutId: item.workoutId,
                 reps: item.reps,
                 weight: item.weight,
-                title: item.title
+                title: item.title,
               };
             }),
             collectedBy: [],
@@ -178,8 +180,8 @@ export default function CreatePlanPage({paging, setPaging, close}) {
               position: toast.POSITION.TOP_CENTER,
               autoClose: 2000,
             });
-            close()
-            setCreateDisabled(false)
+            close();
+            setCreateDisabled(false);
           });
       }
     }
@@ -197,7 +199,7 @@ export default function CreatePlanPage({paging, setPaging, close}) {
           setEstimatedTrainingTime={setEstimatedTrainingTime}
         />
       );
-    } else if (paging === 2){
+    } else if (paging === 2) {
       return (
         <PlanDetailsInputP2
           description={description}
@@ -212,12 +214,15 @@ export default function CreatePlanPage({paging, setPaging, close}) {
           <StyledCreateLabel>Order Your Workouts</StyledCreateLabel>
           <DragandDrop plan={plan} setPlan={setPlan} createPlan={createPlan} />
           <StyledChangeWorkoutBtnContainer>
-            <StyledCreateWorkoutBtn onClick={createPlan} createDisabled={createDisabled}>
+            <StyledCreateWorkoutBtn
+              onClick={createPlan}
+              createDisabled={createDisabled}
+            >
               Create
             </StyledCreateWorkoutBtn>
           </StyledChangeWorkoutBtnContainer>
-        </>  
-      )
+        </>
+      );
     }
   }
 

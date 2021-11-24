@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import ProfilePlan from './ProfilePlan';
 import { FaDumbbell } from 'react-icons/fa';
-import firebase from '../utils/firebase';
+import { firebase } from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/auth';
@@ -50,7 +50,7 @@ export default function WorkoutCreation({ plan }) {
   return (
     <StyledPlanCreationContainer>
       <ProfilePlan plan={plan} />
-      <StyledCollectIcon onClick={removeCollected}/>
+      <StyledCollectIcon onClick={removeCollected} />
     </StyledPlanCreationContainer>
   );
 }

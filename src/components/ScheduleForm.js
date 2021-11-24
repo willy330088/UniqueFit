@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import { v4 as uuid } from 'uuid';
 import 'react-datepicker/dist/react-datepicker.css';
-import firebase from '../utils/firebase';
+import { firebase } from '../utils/firebase';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -68,7 +68,9 @@ export default function ScheduleForm({ closeModal }) {
   const currentUser = useSelector((state) => state.currentUser);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [startDateTime, setStartDateTime] = useState(new Date());
-  const plans = useSelector((state) => state.plans).filter((plan) => plan.collectedBy.includes(currentUser?.uid));
+  const plans = useSelector((state) => state.plans).filter((plan) =>
+    plan.collectedBy.includes(currentUser?.uid)
+  );
   const [selectedPlan, setSelectedPlan] = useState();
 
   useEffect(() => {
@@ -90,8 +92,8 @@ export default function ScheduleForm({ closeModal }) {
       start: startDateTime,
       extendedProps: {
         planId: selectedPlan,
-        completed: false
-      }
+        completed: false,
+      },
     };
 
     const scheduleRef = firebase

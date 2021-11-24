@@ -4,7 +4,7 @@ import Popup from 'reactjs-popup';
 import { useSelector } from 'react-redux';
 import { BsCameraFill } from 'react-icons/bs';
 import { HiUserCircle } from 'react-icons/hi';
-import firebase from '../utils/firebase';
+import { firebase } from '../utils/firebase';
 import 'firebase/auth';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -267,7 +267,7 @@ export default function EditProfilePopup({ closeModal, open }) {
               setPersonalHover(false);
             }}
           >
-            <StyledPersonalIcon hover={personalHover}/>
+            <StyledPersonalIcon hover={personalHover} />
             <StyledPhotoIconPersonal hover={personalHover} />
           </StyledPersonalIconContainer>
         )}

@@ -5,7 +5,7 @@ import { AiOutlineRightCircle, AiOutlineLeftCircle } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import VideoInput from './VideoInput';
-import firebase from '../utils/firebase';
+import { firebase } from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 
@@ -16,7 +16,8 @@ const StyledCreateWorkoutBtn = styled.div`
   cursor: ${(props) => (props.createDisabled ? 'not-allowed' : 'pointer')};
   color: ${(props) => (props.createDisabled ? '#d1d1d1' : '#1face1')};
   border-radius: 5px;
-  background-color: ${(props) => (props.createDisabled ? '#969696' : 'transparent')};
+  background-color: ${(props) =>
+    props.createDisabled ? '#969696' : 'transparent'};
   text-align: center;
   line-height: 40px;
   margin: 10px 0;
@@ -24,7 +25,8 @@ const StyledCreateWorkoutBtn = styled.div`
 
   &:hover {
     color: ${(props) => (props.createDisabled ? '#d1d1d1' : 'white')};
-    background-color: ${(props) => (props.createDisabled ? '#969696' : '#1face1')};
+    background-color: ${(props) =>
+      props.createDisabled ? '#969696' : '#1face1'};
   }
 
   @media (min-width: 500px) {
@@ -84,11 +86,13 @@ export default function CreateWorkoutPage({ close }) {
 
   function createWorkout() {
     if (createDisabled) {
-      return
+      return;
     } else {
-      setCreateDisabled(true)
+      setCreateDisabled(true);
       const documentRef = firebase.firestore().collection('workouts').doc();
-      const fileRef = firebase.storage().ref('workout-videos/' + documentRef.id);
+      const fileRef = firebase
+        .storage()
+        .ref('workout-videos/' + documentRef.id);
       const metadata = {
         contentType: videoFile.type,
       };
@@ -98,25 +102,25 @@ export default function CreateWorkoutPage({ close }) {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
-        return
+        return;
       } else if (targetMuscleGroup === '') {
         toast.error('Please choose target muscle group', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
-        return
+        return;
       } else if (description === '') {
         toast.error('Please fill in description', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
-        return
+        return;
       } else if (videoFile === '') {
         toast.error('Please upload video', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
-        return
+        return;
       }
 
       const workoutCreating = toast.loading('Creating Workouts...', {
@@ -145,7 +149,7 @@ export default function CreateWorkoutPage({ close }) {
                 autoClose: 2000,
               });
               close();
-              setCreateDisabled(false)
+              setCreateDisabled(false);
             });
         });
       });
@@ -175,7 +179,10 @@ export default function CreateWorkoutPage({ close }) {
             setSource={setSource}
           />
           <StyledChangeWorkoutBtnContainer>
-            <StyledCreateWorkoutBtn onClick={createWorkout} createDisabled={createDisabled}>
+            <StyledCreateWorkoutBtn
+              onClick={createWorkout}
+              createDisabled={createDisabled}
+            >
               Create
             </StyledCreateWorkoutBtn>
           </StyledChangeWorkoutBtnContainer>

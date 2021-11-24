@@ -5,7 +5,7 @@ import EditPlanPopup from './EditPlanPopup';
 import { BsFillPencilFill } from 'react-icons/bs';
 import { FaTrashAlt } from 'react-icons/fa';
 import Popup from 'reactjs-popup';
-import firebase from '../utils/firebase';
+import { firebase } from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/auth';
@@ -96,7 +96,7 @@ export default function PlanCreation({ plan }) {
   const closeModal = () => setOpen(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const closeConfirm = () => setConfirmOpen(false);
-  const users = useSelector((state) => state.users)
+  const users = useSelector((state) => state.users);
 
   function deletePlan() {
     firebase
@@ -113,14 +113,14 @@ export default function PlanCreation({ plan }) {
               return scheduleEvent;
             }
           });
-          console.log(modified)
+          console.log(modified);
           if (modified) {
             batch.update(
               firebase.firestore().collection('users').doc(user.id),
               {
                 events: modified,
               }
-            ); 
+            );
           }
         });
         batch.commit().then(() => {

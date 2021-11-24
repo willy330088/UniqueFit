@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { GoListUnordered } from 'react-icons/go';
 import { FaTrashAlt } from 'react-icons/fa';
-import firebase from '../utils/firebase';
+import { firebase } from '../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/auth';
 import muscleGroups from '../utils/muscleGroup';
@@ -31,8 +31,9 @@ const Item = styled.div`
   line-height: 1.5;
   border-radius: 3px;
   background: #fff;
-  /* border: 1px ${(props) => (props.isDragging ? 'dashed #000' : 'solid #ddd')}; */
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  /* border: 1px ${(props) =>
+    props.isDragging ? 'dashed #000' : 'solid #ddd'}; */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 `;
 
 const Clone = styled(Item)`
@@ -57,7 +58,7 @@ const Handle = styled.div`
 
 const List = styled.div`
   border: 1px solid #ddd;
-    /* ${(props) => (props.isDraggingOver ? 'dashed #000' : 'solid #ddd')}; */
+  /* ${(props) => (props.isDraggingOver ? 'dashed #000' : 'solid #ddd')}; */
   background: #fff;
   padding: 0.5rem 0.5rem 0;
   border-radius: 3px;
@@ -93,9 +94,9 @@ const Notice = styled.div`
 const StyledRemoveIcon = styled(FaTrashAlt)`
   font-size: 20px;
   cursor: pointer;
-  color: hsla(0, 0%,70%);
-  &:hover{
-    color: hsla(0, 0%,50%);
+  color: hsla(0, 0%, 70%);
+  &:hover {
+    color: hsla(0, 0%, 50%);
   }
 `;
 
@@ -175,7 +176,7 @@ const copy = (source, destination, droppableSource, droppableDestination) => {
   const destClone = Array.from(destination);
   const item = sourceClone[droppableSource.index];
 
-  console.log(item)
+  console.log(item);
 
   destClone.splice(droppableDestination.index, 0, {
     title: item.title,
@@ -213,9 +214,9 @@ function DragAndDrop({ plan, setPlan }) {
 
         destClone.splice(destination.index, 0, {
           title: 'rest',
-          time: 0
+          time: 0,
         });
-        console.log(destClone)
+        console.log(destClone);
         return;
       } else {
         setPlan({
@@ -225,8 +226,8 @@ function DragAndDrop({ plan, setPlan }) {
             source,
             destination
           ),
-        })
-      };
+        });
+      }
     }
   }
 
@@ -245,7 +246,7 @@ function DragAndDrop({ plan, setPlan }) {
       });
   }, []);
 
-  console.log(plan.workoutSet)
+  console.log(plan.workoutSet);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -278,7 +279,8 @@ function DragAndDrop({ plan, setPlan }) {
                                 src={
                                   muscleGroups.filter((muscleGroup) => {
                                     if (
-                                      muscleGroup.name === item.targetMuscleGroup
+                                      muscleGroup.name ===
+                                      item.targetMuscleGroup
                                     )
                                       return muscleGroup;
                                   })[0].src
@@ -341,9 +343,11 @@ function DragAndDrop({ plan, setPlan }) {
                             <StyledRemoveIcon
                               onClick={() => {
                                 setPlan({
-                                  workoutSet: plan.workoutSet.filter((single) => {
-                                    if (single !== item) return single;
-                                  }),
+                                  workoutSet: plan.workoutSet.filter(
+                                    (single) => {
+                                      if (single !== item) return single;
+                                    }
+                                  ),
                                 });
                               }}
                             />
