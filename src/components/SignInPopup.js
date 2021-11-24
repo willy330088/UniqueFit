@@ -5,15 +5,15 @@ import { useHistory, useLocation } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import { FcGoogle } from 'react-icons/fc';
 import { BsFacebook } from 'react-icons/bs';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import {
   firebase,
   facebookProvider,
   googleProvider,
   socialMediaAuth,
+  setUserData,
 } from '../utils/firebase';
+import { signInToast } from '../utils/toast';
 import 'firebase/auth';
 import Fit from '../images/fit.jpeg';
 
@@ -27,28 +27,22 @@ export default function SignInPopup({ open, closeModal }) {
   const [errorMessage, setErrorMessage] = useState('');
   const userRef = firebase.firestore().collection('users');
 
-  const handleOnClick = async (provider) => {
-    const res = await socialMediaAuth(provider);
-    userRef
-      .doc(res.uid)
-      .set({
-        displayName: res.displayName,
-        photoURL: res.photoURL,
-      })
-      .then(() => {
-        if (location.pathname === '/') {
-          history.push('/home');
-        } else {
-          closeModal();
-        }
-        toast.success('Sign in successfully!', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 2000,
-        });
-      });
-  };
+  function signInComplete() {
+    if (location.pathname === '/') {
+      history.push('/home');
+    } else {
+      closeModal();
+    }
+    signInToast();
+  }
 
-  const onSubmit = () => {
+  async function socialMediaSignIn(provider) {
+    const userData = await socialMediaAuth(provider);
+    await setUserData(userData);
+    signInComplete();
+  }
+
+  function onSubmit() {
     if (isSigningIn === false) {
       if (name === '') {
         setErrorMessage('Please fill in username');
@@ -74,10 +68,7 @@ export default function SignInPopup({ open, closeModal }) {
               } else {
                 closeModal();
               }
-              toast.success('Sign in successfully!', {
-                position: toast.POSITION.TOP_CENTER,
-                autoClose: 2000,
-              });
+              signInToast();
             });
         })
         .catch((error) => {
@@ -104,10 +95,7 @@ export default function SignInPopup({ open, closeModal }) {
           } else {
             closeModal();
           }
-          toast.success('Sign in successfully!', {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 2000,
-          });
+          signInToast();
         })
         .catch((error) => {
           switch (error.code) {
@@ -124,7 +112,7 @@ export default function SignInPopup({ open, closeModal }) {
           }
         });
     }
-  };
+  }
 
   return (
     <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
@@ -146,12 +134,14 @@ export default function SignInPopup({ open, closeModal }) {
             <StyledSignInBtn onClick={onSubmit}>Sign In</StyledSignInBtn>
             <StyledSeparator>OR</StyledSeparator>
             <StyledSignInMediaBtn
-              onClick={() => handleOnClick(facebookProvider)}
+              onClick={() => socialMediaSignIn(facebookProvider)}
             >
               <StyledFacebookIcon />
               <StyledSignInMediaText>Facebook Sign In</StyledSignInMediaText>
             </StyledSignInMediaBtn>
-            <StyledSignInMediaBtn onClick={() => handleOnClick(googleProvider)}>
+            <StyledSignInMediaBtn
+              onClick={() => socialMediaSignIn(googleProvider)}
+            >
               <StyledGoogleIcon />
               <StyledSignInMediaText>Google Sign In</StyledSignInMediaText>
             </StyledSignInMediaBtn>

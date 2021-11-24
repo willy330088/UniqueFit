@@ -12,7 +12,9 @@ const firebaseConfig = {
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
+firebase.initializeApp(firebaseConfig);
 
+const userRef = firebase.firestore().collection('users');
 const facebookProvider = new firebase.auth.FacebookAuthProvider();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
@@ -28,6 +30,17 @@ function socialMediaAuth(provider) {
     });
 }
 
-firebase.initializeApp(firebaseConfig);
+function setUserData(userData) {
+  return userRef.doc(userData.uid).set({
+    displayName: userData.displayName,
+    photoURL: userData.photoURL,
+  });
+}
 
-export { firebase, facebookProvider, googleProvider, socialMediaAuth };
+export {
+  firebase,
+  facebookProvider,
+  googleProvider,
+  socialMediaAuth,
+  setUserData,
+};
