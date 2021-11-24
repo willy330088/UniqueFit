@@ -87,6 +87,32 @@ function createPlan(
   });
 }
 
+function editPlan(
+  title,
+  publicity,
+  description,
+  targetMuscleGroup,
+  estimatedTrainingTime,
+  plan,
+  planId
+) {
+  return planRef.doc(planId).update({
+    title: title,
+    public: publicity,
+    description: description,
+    targetMuscleGroup: targetMuscleGroup,
+    estimatedTrainingTime: estimatedTrainingTime,
+    workoutSet: plan.workoutSet.map((item) => {
+      return {
+        workoutId: item.workoutId,
+        reps: item.reps,
+        weight: item.weight,
+        title: item.title,
+      };
+    }),
+  });
+}
+
 export {
   firebase,
   facebookProvider,
@@ -98,4 +124,5 @@ export {
   setNativeUserData,
   nativeSignIn,
   createPlan,
+  editPlan,
 };

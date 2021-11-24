@@ -50,6 +50,25 @@ function noWeightOrRepsError() {
   });
 }
 
+function planManaging(type) {
+  const text = type === 'Create' ? 'Creating Plan...' : 'Editing Plan...';
+  return toast.loading(text, {
+    position: toast.POSITION.TOP_CENTER,
+  });
+}
+
+function planComplete(type, alert) {
+  const text =
+    type === 'Create' ? 'Created Successfully' : 'Edited Successfully';
+  return toast.update(alert, {
+    render: text,
+    type: 'success',
+    isLoading: false,
+    position: toast.POSITION.TOP_CENTER,
+    autoClose: 2000,
+  });
+}
+
 export {
   signInToast,
   noTitleError,
@@ -58,4 +77,6 @@ export {
   noDescriptionError,
   noWorkoutsError,
   noWeightOrRepsError,
+  planManaging,
+  planComplete,
 };
