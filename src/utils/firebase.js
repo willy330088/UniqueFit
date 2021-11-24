@@ -37,10 +37,35 @@ function setSocialMediaUserData(userData) {
   });
 }
 
+function nativeUserSignUp(email, password) {
+  return firebase.auth().createUserWithEmailAndPassword(email, password);
+}
+
+function updateNativeUserName(name) {
+  return firebase.auth().currentUser.updateProfile({
+    displayName: name,
+  });
+}
+
+function setNativeUserData(user, name) {
+  return userRef.doc(user.uid).set({
+    displayName: name,
+    photoURL: null,
+  });
+}
+
+function nativeSignIn(email, password) {
+  return firebase.auth().signInWithEmailAndPassword(email, password);
+}
+
 export {
   firebase,
   facebookProvider,
   googleProvider,
   socialMediaAuth,
   setSocialMediaUserData,
+  nativeUserSignUp,
+  updateNativeUserName,
+  setNativeUserData,
+  nativeSignIn,
 };

@@ -1,21 +1,25 @@
 import React, { useState } from 'react';
 
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { useHistory, useLocation } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import { FcGoogle } from 'react-icons/fc';
 import { BsFacebook } from 'react-icons/bs';
 
 import {
-  firebase,
   facebookProvider,
   googleProvider,
   socialMediaAuth,
   setSocialMediaUserData,
+  nativeUserSignUp,
+  updateNativeUserName,
+  setNativeUserData,
+  nativeSignIn,
 } from '../utils/firebase';
 import { signInToast } from '../utils/toast';
 import 'firebase/auth';
 import Fit from '../images/fit.jpeg';
+import { anvil } from '../utils/animation';
 
 export default function SignInPopup({ open, closeModal }) {
   const history = useHistory();
@@ -25,7 +29,6 @@ export default function SignInPopup({ open, closeModal }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const userRef = firebase.firestore().collection('users');
 
   function signInComplete() {
     if (location.pathname === '/') {
@@ -42,75 +45,49 @@ export default function SignInPopup({ open, closeModal }) {
     signInComplete();
   }
 
-  function onSubmit() {
+  async function onSubmit() {
     if (isSigningIn === false) {
       if (name === '') {
         setErrorMessage('Please fill in username');
         return;
       }
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then((res) => {
-          console.log(res);
-          firebase.auth().currentUser.updateProfile({
-            displayName: name,
-          });
-          userRef
-            .doc(res.user.uid)
-            .set({
-              displayName: name,
-              photoURL: null,
-            })
-            .then(() => {
-              if (location.pathname === '/') {
-                history.push('/home');
-              } else {
-                closeModal();
-              }
-              signInToast();
-            });
-        })
-        .catch((error) => {
-          switch (error.code) {
-            case 'auth/email-already-in-use':
-              setErrorMessage('Email is already in use');
-              break;
-            case 'auth/invalid-email':
-              setErrorMessage('Invalid email');
-              break;
-            case 'auth/weak-password':
-              setErrorMessage('Weak password');
-              break;
-            default:
-          }
-        });
+      try {
+        const userData = await nativeUserSignUp(email, password);
+        await setNativeUserData(userData.user, name);
+        await updateNativeUserName(name);
+        signInComplete();
+      } catch (err) {
+        switch (err.code) {
+          case 'auth/email-already-in-use':
+            setErrorMessage('Email is already in use');
+            break;
+          case 'auth/invalid-email':
+            setErrorMessage('Invalid email');
+            break;
+          case 'auth/weak-password':
+            setErrorMessage('Weak password');
+            break;
+          default:
+        }
+      }
     } else if (isSigningIn === true) {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(() => {
-          if (location.pathname === '/') {
-            history.push('/home');
-          } else {
-            closeModal();
-          }
-          signInToast();
-        })
-        .catch((error) => {
-          switch (error.code) {
-            case 'auth/user-not-found':
-              setErrorMessage('Cannot find this user');
-              break;
-            case 'auth/invalid-email':
-              setErrorMessage('Invalid email');
-              break;
-            case 'auth/wrong-password':
-              setErrorMessage('Wrong password');
-              break;
-            default:
-          }
-        });
+      try {
+        await nativeSignIn(email, password);
+        signInComplete();
+      } catch (err) {
+        switch (err.code) {
+          case 'auth/user-not-found':
+            setErrorMessage('Cannot find this user');
+            break;
+          case 'auth/invalid-email':
+            setErrorMessage('Invalid email');
+            break;
+          case 'auth/wrong-password':
+            setErrorMessage('Wrong password');
+            break;
+          default:
+        }
+      }
     }
   }
 
@@ -358,24 +335,6 @@ const StyledMessage = styled.div`
   color: red;
   font-weight: bold;
   margin: 0 auto 10px;
-`;
-
-const anvil = keyframes`
-  0% {
-    transform: scale(1) translateY(0px);
-    opacity: 0;
-    box-shadow: 0 0 0 rgba(241, 241, 241, 0);
-  }
-  1% {
-    transform: scale(0.96) translateY(10px);
-    opacity: 0;
-    box-shadow: 0 0 0 rgba(241, 241, 241, 0);
-  }
-  100% {
-    transform: scale(1) translateY(0px);
-    opacity: 1;
-    box-shadow: 0 0 500px rgba(241, 241, 241, 0);
-  }
 `;
 
 const StyledPopup = styled(Popup)`
