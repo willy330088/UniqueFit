@@ -6,17 +6,18 @@ import {
   Redirect,
   useHistory,
 } from 'react-router-dom';
-import LandingPage from './components/LandingPage';
-import WorkoutListPage from './components/WorkoutListPage';
-import ProfilePage from './components/ProfilePage';
-import PlanListPage from './components/PlanListPage';
-import SpecificPlanPage from './components/SpecificPlanPage';
-import NotFoundPage from './components/NotFoundPage';
+import LandingPage from './components/landingPage/LandingPage';
+import HomePage from './components/homePage/HomePage';
+import WorkoutListPage from './components/workoutPage/WorkoutListPage';
+import PlanListPage from './components/planPage/PlanListPage';
+import SpecificPlanPage from './components/specificPlanPage/SpecificPlanPage';
+import ProfilePage from './components/profilePage/ProfilePage';
+import NotFoundPage from './components/notFoundPage/NotFoundPage';
+import FullPageLoading from './components/common/FullPageLoading';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
-import ScrollToTop from './components/ScrollToTop';
-import HomePage from './components/HomePage';
+import ScrollToTop from './components/common/ScrollToTop';
 import { useDispatch, useSelector } from 'react-redux';
 import { firebase } from './utils/firebase';
 import 'firebase/firestore';
@@ -26,7 +27,6 @@ import {
   getCurrentUser,
   getUsers,
 } from '../src/redux/actions';
-import FullPageLoading from './components/FullPageLoading';
 
 const StyledToastContainer = styled(ToastContainer).attrs({
   className: 'toast-container',
