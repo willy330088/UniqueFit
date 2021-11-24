@@ -257,7 +257,6 @@ export default function PlanItem({ plan }) {
   const [hover, setHover] = useState(false);
   const users = useSelector((state) => state.users);
   const publisher = users.filter((user) => user.id === plan.publisher)[0];
-
   console.log(plan.workoutSet.length);
 
   return (
@@ -288,13 +287,13 @@ export default function PlanItem({ plan }) {
         <StyledPlanInfoContentContainer>
           <StyledPlanInfoTitle>{plan.title}</StyledPlanInfoTitle>
           <StyledPlanInfoPublisherContainer>
-            {publisher.photoURL ? (
+            {publisher?.photoURL ? (
               <StyledPlanInfoPublisherImage src={publisher.photoURL} />
             ) : (
               <StyledPlanInfoPublisherIcon />
             )}
             <StyledPlanInfoPublisherName>
-              {publisher.displayName}
+              {publisher?.displayName}
             </StyledPlanInfoPublisherName>
           </StyledPlanInfoPublisherContainer>
         </StyledPlanInfoContentContainer>

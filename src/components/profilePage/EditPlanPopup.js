@@ -10,6 +10,15 @@ import { firebase } from '../../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { v4 as uuid } from 'uuid';
+import { useSelector } from 'react-redux';
+import {
+  noTitleError,
+  noTargetMuscleGroupError,
+  noDescriptionError,
+  noEstimatedTrainingTimeError,
+  noWorkoutsError,
+  noWeightOrRepsError,
+} from '../../utils/toast';
 
 const StyledArrowRightIcon = styled(AiOutlineRightCircle)`
   font-size: 40px;
@@ -77,7 +86,7 @@ const StyledCreateLabel = styled.div`
   width: 100%;
 `;
 
-export default function CreatePlanPage({
+export default function EditPlanPopup({
   paging,
   setPaging,
   originalPlan,
@@ -96,27 +105,23 @@ export default function CreatePlanPage({
   const [plan, setPlan] = useState({
     workoutSet: [],
   });
+  const workouts = useSelector((state) => state.workouts);
 
   useEffect(() => {
-    console.log('hi');
-    Promise.all(
-      originalPlan.workoutSet.map((workout) => {
-        return firebase
-          .firestore()
-          .collection('workouts')
-          .doc(workout.workoutId)
-          .get();
-      })
-    ).then((values) => {
-      setPlan({
-        workoutSet: values.map((value, index) => {
-          const reps = originalPlan.workoutSet[index].reps;
-          const weight = originalPlan.workoutSet[index].weight;
-          const workoutId = value.id;
-          const id = uuid();
-          return { ...value.data(), workoutId, reps, weight, id };
-        }),
-      });
+    const planWorkouts = originalPlan.workoutSet.map((workoutMove) => {
+      return workouts.filter(
+        (workout) => workout.id === workoutMove.workoutId
+      )[0];
+    });
+
+    setPlan({
+      workoutSet: planWorkouts.map((planWorkout, index) => {
+        const reps = originalPlan.workoutSet[index].reps;
+        const weight = originalPlan.workoutSet[index].weight;
+        const workoutId = planWorkout.id;
+        const id = uuid();
+        return { ...planWorkout, workoutId, reps, weight, id };
+      }),
     });
   }, []);
 
@@ -132,38 +137,26 @@ export default function CreatePlanPage({
       let checked = false;
 
       if (title === '') {
-        toast.error('Please fill in title', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000,
-        });
+        noTitleError();
+        return;
+      } else if (targetMuscleGroup === '') {
+        noTargetMuscleGroupError();
         return;
       } else if (!estimatedTrainingTime) {
-        toast.error('Please fill in estimated training time', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000,
-        });
+        noEstimatedTrainingTimeError();
         return;
       } else if (description === '') {
-        toast.error('Please fill in description', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000,
-        });
+        noDescriptionError();
         return;
       } else if (plan.workoutSet.length === 0) {
-        toast.error('Please add workouts', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000,
-        });
+        noWorkoutsError();
         return;
       }
 
       plan.workoutSet.every((workout) => {
         checked = false;
         if (!workout.reps || !workout.weight) {
-          toast.error(`Please fill in weights and reps`, {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000,
-          });
+          noWeightOrRepsError();
           return false;
         }
         checked = true;

@@ -6,9 +6,15 @@ import PlanDetailsInputP1 from '../common/PlanDetailsInputP1';
 import PlanDetailsInputP2 from '../common/PlanDetailsInputP2';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { firebase } from '../../utils/firebase';
-import 'firebase/firestore';
-import 'firebase/storage';
+import {
+  noTitleError,
+  noTargetMuscleGroupError,
+  noDescriptionError,
+  noEstimatedTrainingTimeError,
+  noWorkoutsError,
+  noWeightOrRepsError,
+} from '../../utils/toast';
+import { createPlan } from '../../utils/firebase';
 
 const StyledArrowRightIcon = styled(AiOutlineRightCircle)`
   font-size: 40px;
@@ -84,7 +90,7 @@ const StyledCreateLabel = styled.div`
   width: 100%;
 `;
 
-export default function CreatePlanPage({ paging, setPaging, close }) {
+export default function CreatePlanPopup({ paging, setPaging, close }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [targetMuscleGroup, setTargetMuscleGroup] = useState('');
@@ -95,53 +101,34 @@ export default function CreatePlanPage({ paging, setPaging, close }) {
     workoutSet: [],
   });
 
-  function createPlan() {
+  async function onCreatePlan() {
     if (createDisabled) {
       return;
     } else {
       setCreateDisabled(true);
-      const documentRef = firebase.firestore().collection('plans').doc();
       let checked = false;
 
       if (title === '') {
-        toast.error('Please fill in title', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000,
-        });
+        noTitleError();
         return;
       } else if (targetMuscleGroup === '') {
-        toast.error('Please choose target muscle group', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000,
-        });
+        noTargetMuscleGroupError();
         return;
       } else if (!estimatedTrainingTime) {
-        toast.error('Please fill in estimated training time', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000,
-        });
+        noEstimatedTrainingTimeError();
         return;
       } else if (description === '') {
-        toast.error('Please fill in description', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000,
-        });
+        noDescriptionError();
         return;
       } else if (plan.workoutSet.length === 0) {
-        toast.error('Please add workouts', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000,
-        });
+        noWorkoutsError();
         return;
       }
 
       plan.workoutSet.every((workout) => {
         checked = false;
         if (!workout.reps || !workout.weight) {
-          toast.error(`Please fill in weights and reps`, {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000,
-          });
+          noWeightOrRepsError();
           return false;
         }
         checked = true;
@@ -153,36 +140,23 @@ export default function CreatePlanPage({ paging, setPaging, close }) {
           position: toast.POSITION.TOP_CENTER,
         });
 
-        documentRef
-          .set({
-            title: title,
-            publisher: firebase.auth().currentUser.uid,
-            public: publicity,
-            description: description,
-            targetMuscleGroup: targetMuscleGroup,
-            estimatedTrainingTime: estimatedTrainingTime,
-            workoutSet: plan.workoutSet.map((item) => {
-              return {
-                workoutId: item.workoutId,
-                reps: item.reps,
-                weight: item.weight,
-                title: item.title,
-              };
-            }),
-            collectedBy: [],
-            createdAt: firebase.firestore.Timestamp.now(),
-          })
-          .then(() => {
-            toast.update(planCreating, {
-              render: 'Created Successfully',
-              type: 'success',
-              isLoading: false,
-              position: toast.POSITION.TOP_CENTER,
-              autoClose: 2000,
-            });
-            close();
-            setCreateDisabled(false);
-          });
+        await createPlan(
+          title,
+          publicity,
+          description,
+          targetMuscleGroup,
+          estimatedTrainingTime,
+          plan
+        );
+        toast.update(planCreating, {
+          render: 'Created Successfully',
+          type: 'success',
+          isLoading: false,
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+        });
+        close();
+        setCreateDisabled(false);
       }
     }
   }
@@ -212,10 +186,10 @@ export default function CreatePlanPage({ paging, setPaging, close }) {
       return (
         <>
           <StyledCreateLabel>Order Your Workouts</StyledCreateLabel>
-          <DragandDrop plan={plan} setPlan={setPlan} createPlan={createPlan} />
+          <DragandDrop plan={plan} setPlan={setPlan} />
           <StyledChangeWorkoutBtnContainer>
             <StyledCreateWorkoutBtn
-              onClick={createPlan}
+              onClick={onCreatePlan}
               createDisabled={createDisabled}
             >
               Create

@@ -4,7 +4,6 @@ import {
   Route,
   Switch,
   Redirect,
-  useHistory,
 } from 'react-router-dom';
 import LandingPage from './components/landingPage/LandingPage';
 import HomePage from './components/homePage/HomePage';
@@ -18,7 +17,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import ScrollToTop from './components/common/ScrollToTop';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { firebase } from './utils/firebase';
 import 'firebase/firestore';
 import {

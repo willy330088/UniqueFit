@@ -15,6 +15,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const userRef = firebase.firestore().collection('users');
+const planRef = firebase.firestore().collection('plans');
 const facebookProvider = new firebase.auth.FacebookAuthProvider();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
@@ -58,6 +59,34 @@ function nativeSignIn(email, password) {
   return firebase.auth().signInWithEmailAndPassword(email, password);
 }
 
+function createPlan(
+  title,
+  publicity,
+  description,
+  targetMuscleGroup,
+  estimatedTrainingTime,
+  plan
+) {
+  return planRef.doc().set({
+    title: title,
+    publisher: firebase.auth().currentUser.uid,
+    public: publicity,
+    description: description,
+    targetMuscleGroup: targetMuscleGroup,
+    estimatedTrainingTime: estimatedTrainingTime,
+    workoutSet: plan.workoutSet.map((item) => {
+      return {
+        workoutId: item.workoutId,
+        reps: item.reps,
+        weight: item.weight,
+        title: item.title,
+      };
+    }),
+    collectedBy: [],
+    createdAt: firebase.firestore.Timestamp.now(),
+  });
+}
+
 export {
   firebase,
   facebookProvider,
@@ -68,4 +97,5 @@ export {
   updateNativeUserName,
   setNativeUserData,
   nativeSignIn,
+  createPlan,
 };
