@@ -69,6 +69,13 @@ function planComplete(type, alert) {
   });
 }
 
+function deleteToast() {
+  return toast.success('Deleted Successfully', {
+    position: toast.POSITION.TOP_CENTER,
+    autoClose: 2000,
+  });
+}
+
 export {
   signInToast,
   noTitleError,
@@ -79,4 +86,5 @@ export {
   noWeightOrRepsError,
   planManaging,
   planComplete,
+  deleteToast,
 };

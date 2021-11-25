@@ -17,3 +17,26 @@ export const anvil = keyframes`
     box-shadow: 0 0 500px rgba(241, 241, 241, 0);
   }
 `;
+
+export const down = keyframes`
+  0% {
+    transform: rotate(-45deg) translate(0, 0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(-45deg) translate(-20px, 20px);
+    opacity: 0;
+  }
+`;
+
+export const blurring = keyframes`
+  0% {
+    filter: blur(0);
+  }
+  100% {
+    filter: blur(6px);
+  }
+`;

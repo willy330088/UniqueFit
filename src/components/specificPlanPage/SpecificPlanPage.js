@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Redirect } from 'react-router-dom';
 import Header from '../common/Header';
 import Banner from '../common/Banner';
 import styled from 'styled-components';
 import { HiUserCircle } from 'react-icons/hi';
 import { FaDumbbell } from 'react-icons/fa';
-import { RiMessage2Fill } from 'react-icons/ri';
+import { RiMessage2Fill, RiArticleLine } from 'react-icons/ri';
 import { BiTimeFive } from 'react-icons/bi';
-import { RiArticleLine } from 'react-icons/ri';
-import { firebase } from '../../utils/firebase';
+import {
+  getPlanComment,
+  addPlanComment,
+  removePlanCollection,
+  addPlanCollection,
+} from '../../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/auth';
@@ -20,7 +24,209 @@ import SpecificPlanWorkoutItem from './SpecificPlanWorkoutItem';
 import SignInPopup from '../common/SignInPopup';
 import { useSelector } from 'react-redux';
 import FullPageLoading from '../common/FullPageLoading';
-import { Redirect } from 'react-router-dom';
+
+export default function SpecificPlanPage() {
+  const { planId } = useParams();
+  const [commentContent, setCommentContent] = useState('');
+  const [comments, setComments] = useState([]);
+  const currentUser = useSelector((state) => state.currentUser);
+  const [completeNum, setCompleteNum] = useState(0);
+  const [trainingMode, setTrainingMode] = useState(false);
+  const plans = useSelector((state) => state.plans);
+  const workouts = useSelector((state) => state.workouts);
+  let plan = plans.filter((plan) => plan.id === planId)[0];
+  const users = useSelector((state) => state.users);
+  const publisher = users.filter((user) => user.id === plan.publisher)[0];
+  const [signInOpen, setSignInOpen] = useState(false);
+  const closeSignIn = () => setSignInOpen(false);
+  const workoutSet = plan?.workoutSet;
+  const workoutSetDetails = plan?.workoutSet.map((workoutSet) => {
+    return workouts.filter((workout) => workout.id === workoutSet.workoutId)[0];
+  });
+  const isCollected = plan?.collectedBy.includes(currentUser?.uid);
+
+  useEffect(() => {
+    getPlanComment(planId, setComments);
+  }, []);
+
+  if (plans.length !== 0 && !plan) {
+    return <Redirect to="/pageNotFound" />;
+  }
+
+  function toggleCollected() {
+    if (currentUser) {
+      const uid = currentUser.uid;
+      if (isCollected) {
+        removePlanCollection(planId, uid);
+      } else {
+        addPlanCollection(planId, uid);
+      }
+    } else {
+      setSignInOpen(true);
+    }
+  }
+
+  async function onSubmitComment() {
+    if (currentUser) {
+      if (commentContent === '') {
+        return;
+      } else {
+        addPlanComment(planId, commentContent);
+        setCommentContent('');
+      }
+    } else {
+      setSignInOpen(true);
+    }
+  }
+
+  return plans.length !== 0 ? (
+    <StyledBody>
+      <Header />
+      <Banner slogan={'Explore Your Plan'} />
+      <SignInPopup open={signInOpen} closeModal={closeSignIn} />
+      <StyledSpecificPlanPageContainer>
+        <StyledPlanContainer>
+          <StyledCollectIconContainer onClick={toggleCollected}>
+            <StyledPlanCollectIcon isCollected={isCollected} />
+            <StyledCollectIconText isCollected={isCollected}>
+              Collect
+            </StyledCollectIconText>
+          </StyledCollectIconContainer>
+          <StyledPlanInfoContainer>
+            <StyledPlanInfoImage
+              src={
+                plan.targetMuscleGroup
+                  ? muscleGroups.filter((muscleGroup) => {
+                      if (muscleGroup.name === plan.targetMuscleGroup)
+                        return muscleGroup;
+                    })[0].src
+                  : null
+              }
+            />
+            <StyledPlanInfoContentContainer>
+              <StyledPlanInfoTitle>{plan.title}</StyledPlanInfoTitle>
+              <StyledPlanInfoPublisherContainer>
+                {publisher?.photoURL ? (
+                  <StyledPlanInfoPublisherImage src={publisher?.photoURL} />
+                ) : (
+                  <StyledPlanInfoPublisherIcon />
+                )}
+                <StyledPlanInfoPublisherName>
+                  {publisher?.displayName}
+                </StyledPlanInfoPublisherName>
+              </StyledPlanInfoPublisherContainer>
+            </StyledPlanInfoContentContainer>
+          </StyledPlanInfoContainer>
+          <StyledPlanMediaContainer>
+            <StyledPlanCollectionContainer>
+              <StyledPlanCollectionIcon />
+              <StyledPlanCollectionNum>
+                {plan.collectedBy.length}
+              </StyledPlanCollectionNum>
+            </StyledPlanCollectionContainer>
+            <StyledPlanCommentContainer>
+              <StyledPlanCommentIcon />
+              <StyledPlanCommentNum>
+                {plan.commentsCount || 0}
+              </StyledPlanCommentNum>
+            </StyledPlanCommentContainer>
+          </StyledPlanMediaContainer>
+          <StyledTrainingBtn
+            onClick={() => {
+              setTrainingMode(!trainingMode);
+            }}
+          >
+            {trainingMode ? 'End Training' : 'Start Training'}
+          </StyledTrainingBtn>
+          {trainingMode ? (
+            <>
+              <StyledProgressText>Progress</StyledProgressText>
+              <ProgressBar
+                completed={Math.round((completeNum / workoutSet.length) * 100)}
+                bgColor={'#1face1'}
+                height={'30px'}
+                margin={'10px 0 40px'}
+              />
+            </>
+          ) : (
+            <>
+              <StyledPlanText>
+                <StyledTimeIcon />{' '}
+                <StyledPlanTextContent>
+                  Estimated Training Time{' '}
+                  <StyledPlanTextContentContext>
+                    {plan.estimatedTrainingTime} mins
+                  </StyledPlanTextContentContext>
+                </StyledPlanTextContent>
+              </StyledPlanText>
+              <StyledPlanText>
+                <StyledTextIcon />{' '}
+                <StyledPlanTextContent>
+                  Description{' '}
+                  <StyledPlanTextContentContext>
+                    {plan.description}
+                  </StyledPlanTextContentContext>
+                </StyledPlanTextContent>
+              </StyledPlanText>
+            </>
+          )}
+          <StyledPlanWorkouts>Workouts</StyledPlanWorkouts>
+          <StyledPlanWorkoutsContainer>
+            {workoutSet.map((workout, index) => {
+              return (
+                <SpecificPlanWorkoutItem
+                  workout={workout}
+                  index={index}
+                  workoutSetDetails={workoutSetDetails}
+                  muscleGroups={muscleGroups}
+                  completeNum={completeNum}
+                  setCompleteNum={setCompleteNum}
+                  trainingMode={trainingMode}
+                  setSignInOpen={setSignInOpen}
+                />
+              );
+            })}
+          </StyledPlanWorkoutsContainer>
+          <StyledCommentContainer>
+            <StyledPlanComments>
+              Comments ({plan.commentsCount || 0})
+            </StyledPlanComments>
+            <StyledCommentInputContainer>
+              <StyledCommentInput
+                value={commentContent}
+                onChange={(e) => {
+                  setCommentContent(e.target.value);
+                }}
+                placeholder="your comment..."
+              />
+            </StyledCommentInputContainer>
+            <StyledLeaveCommentBtnContainer>
+              <StyledLeaveCommentBtn
+                onClick={onSubmitComment}
+                commentContent={commentContent}
+              >
+                Comment
+              </StyledLeaveCommentBtn>
+            </StyledLeaveCommentBtnContainer>
+            {comments.map((comment) => {
+              return (
+                <PlanComment
+                  comment={comment}
+                  planId={planId}
+                  key={comment.id}
+                  currentUser={currentUser}
+                />
+              );
+            })}
+          </StyledCommentContainer>
+        </StyledPlanContainer>
+      </StyledSpecificPlanPageContainer>
+      {/* <StopWatch /> */}
+    </StyledBody>
+  ) : (
+    <FullPageLoading />
+  );
+}
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -300,241 +506,3 @@ const StyledPlanTextContentContext = styled.div`
   color: #666666;
   font-weight: 600;
 `;
-
-export default function SpecificPlanPage() {
-  const { planId } = useParams();
-  const [commentContent, setCommentContent] = useState('');
-  const [comments, setComments] = useState([]);
-  const currentUser = useSelector((state) => state.currentUser);
-  const [completeNum, setCompleteNum] = useState(0);
-  const [trainingMode, setTrainingMode] = useState(false);
-  const plans = useSelector((state) => state.plans);
-  const workouts = useSelector((state) => state.workouts);
-  let plan = plans.filter((plan) => plan.id === planId)[0];
-  const users = useSelector((state) => state.users);
-  const publisher = users.filter((user) => user.id === plan.publisher)[0];
-  const [signInOpen, setSignInOpen] = useState(false);
-  const closeSignIn = () => setSignInOpen(false);
-
-  const workoutSet = plan?.workoutSet;
-  const workoutSetDetails = plan?.workoutSet.map((workoutSet) => {
-    return workouts.filter((workout) => workout.id === workoutSet.workoutId)[0];
-  });
-  const isCollected = plan?.collectedBy.includes(currentUser?.uid);
-
-  const planRef = firebase.firestore().collection('plans').doc(planId);
-
-  useEffect(() => {
-    planRef
-      .collection('comments')
-      .orderBy('createdAt', 'desc')
-      .onSnapshot((collectionSnapshot) => {
-        const data = collectionSnapshot.docs.map((doc) => {
-          const id = doc.id;
-          return { ...doc.data(), id };
-        });
-        setComments(data);
-      });
-  }, []);
-
-  if (plans.length !== 0 && !plan) {
-    return <Redirect to="/pageNotFound" />;
-  }
-
-  function toggleCollected() {
-    if (currentUser) {
-      const uid = currentUser.uid;
-      if (isCollected) {
-        planRef.update({
-          collectedBy: firebase.firestore.FieldValue.arrayRemove(uid),
-        });
-      } else {
-        planRef.update({
-          collectedBy: firebase.firestore.FieldValue.arrayUnion(uid),
-        });
-      }
-    } else {
-      setSignInOpen(true);
-    }
-  }
-
-  function onSubmitComment() {
-    if (currentUser) {
-      if (commentContent === '') {
-        return;
-      } else {
-        const firestore = firebase.firestore();
-
-        const batch = firestore.batch();
-
-        batch.update(planRef, {
-          commentsCount: firebase.firestore.FieldValue.increment(1),
-        });
-
-        const commentRef = planRef.collection('comments').doc();
-        batch.set(commentRef, {
-          content: commentContent,
-          createdAt: firebase.firestore.Timestamp.now(),
-          publisher: currentUser.uid,
-        });
-
-        batch.commit().then(() => {
-          setCommentContent('');
-        });
-      }
-    } else {
-      setSignInOpen(true);
-    }
-  }
-
-  console.log(plans);
-  console.log(plan);
-
-  return plans.length !== 0 ? (
-    <StyledBody>
-      <Header />
-      <Banner slogan={'Explore Your Plan'} />
-      <SignInPopup open={signInOpen} closeModal={closeSignIn} />
-      <StyledSpecificPlanPageContainer>
-        <StyledPlanContainer>
-          <StyledCollectIconContainer onClick={toggleCollected}>
-            <StyledPlanCollectIcon isCollected={isCollected} />
-            <StyledCollectIconText isCollected={isCollected}>
-              Collect
-            </StyledCollectIconText>
-          </StyledCollectIconContainer>
-          <StyledPlanInfoContainer>
-            <StyledPlanInfoImage
-              src={
-                plan.targetMuscleGroup
-                  ? muscleGroups.filter((muscleGroup) => {
-                      if (muscleGroup.name === plan.targetMuscleGroup)
-                        return muscleGroup;
-                    })[0].src
-                  : null
-              }
-            />
-            <StyledPlanInfoContentContainer>
-              <StyledPlanInfoTitle>{plan.title}</StyledPlanInfoTitle>
-              <StyledPlanInfoPublisherContainer>
-                {publisher?.photoURL ? (
-                  <StyledPlanInfoPublisherImage src={publisher?.photoURL} />
-                ) : (
-                  <StyledPlanInfoPublisherIcon />
-                )}
-                <StyledPlanInfoPublisherName>
-                  {publisher?.displayName}
-                </StyledPlanInfoPublisherName>
-              </StyledPlanInfoPublisherContainer>
-            </StyledPlanInfoContentContainer>
-          </StyledPlanInfoContainer>
-          <StyledPlanMediaContainer>
-            <StyledPlanCollectionContainer>
-              <StyledPlanCollectionIcon />
-              <StyledPlanCollectionNum>
-                {plan.collectedBy.length}
-              </StyledPlanCollectionNum>
-            </StyledPlanCollectionContainer>
-            <StyledPlanCommentContainer>
-              <StyledPlanCommentIcon />
-              <StyledPlanCommentNum>
-                {plan.commentsCount || 0}
-              </StyledPlanCommentNum>
-            </StyledPlanCommentContainer>
-          </StyledPlanMediaContainer>
-          <StyledTrainingBtn
-            onClick={() => {
-              setTrainingMode(!trainingMode);
-            }}
-          >
-            {trainingMode ? 'End Training' : 'Start Training'}
-          </StyledTrainingBtn>
-          {trainingMode ? (
-            <>
-              <StyledProgressText>Progress</StyledProgressText>
-              <ProgressBar
-                completed={Math.round((completeNum / workoutSet.length) * 100)}
-                bgColor={'#1face1'}
-                height={'30px'}
-                margin={'10px 0 40px'}
-              />
-            </>
-          ) : (
-            <>
-              <StyledPlanText>
-                <StyledTimeIcon />{' '}
-                <StyledPlanTextContent>
-                  Estimated Training Time{' '}
-                  <StyledPlanTextContentContext>
-                    {plan.estimatedTrainingTime} mins
-                  </StyledPlanTextContentContext>
-                </StyledPlanTextContent>
-              </StyledPlanText>
-              <StyledPlanText>
-                <StyledTextIcon />{' '}
-                <StyledPlanTextContent>
-                  Description{' '}
-                  <StyledPlanTextContentContext>
-                    {plan.description}
-                  </StyledPlanTextContentContext>
-                </StyledPlanTextContent>
-              </StyledPlanText>
-            </>
-          )}
-          <StyledPlanWorkouts>Workouts</StyledPlanWorkouts>
-          <StyledPlanWorkoutsContainer>
-            {workoutSet.map((workout, index) => {
-              return (
-                <SpecificPlanWorkoutItem
-                  workout={workout}
-                  index={index}
-                  workoutSetDetails={workoutSetDetails}
-                  muscleGroups={muscleGroups}
-                  completeNum={completeNum}
-                  setCompleteNum={setCompleteNum}
-                  trainingMode={trainingMode}
-                  setSignInOpen={setSignInOpen}
-                />
-              );
-            })}
-          </StyledPlanWorkoutsContainer>
-          <StyledCommentContainer>
-            <StyledPlanComments>
-              Comments ({plan.commentsCount || 0})
-            </StyledPlanComments>
-            <StyledCommentInputContainer>
-              <StyledCommentInput
-                value={commentContent}
-                onChange={(e) => {
-                  setCommentContent(e.target.value);
-                }}
-                placeholder="your comment..."
-              />
-            </StyledCommentInputContainer>
-            <StyledLeaveCommentBtnContainer>
-              <StyledLeaveCommentBtn
-                onClick={onSubmitComment}
-                commentContent={commentContent}
-              >
-                Comment
-              </StyledLeaveCommentBtn>
-            </StyledLeaveCommentBtnContainer>
-            {comments.map((comment) => {
-              return (
-                <PlanComment
-                  comment={comment}
-                  planId={planId}
-                  key={comment.id}
-                  currentUser={currentUser}
-                />
-              );
-            })}
-          </StyledCommentContainer>
-        </StyledPlanContainer>
-      </StyledSpecificPlanPageContainer>
-      {/* <StopWatch /> */}
-    </StyledBody>
-  ) : (
-    <FullPageLoading />
-  );
-}

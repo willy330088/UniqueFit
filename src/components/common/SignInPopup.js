@@ -17,7 +17,6 @@ import {
   nativeSignIn,
 } from '../../utils/firebase';
 import { signInToast } from '../../utils/toast';
-import 'firebase/auth';
 import Fit from '../../images/fit.jpeg';
 import { anvil } from '../../utils/animation';
 

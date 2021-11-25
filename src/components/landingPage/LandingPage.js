@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import LandingPageBackground from '../../images/landingPageBackground.jpeg';
 import LogoDumbbell from '../../images/logoDumbbell.png';
 import styled from 'styled-components';
-import 'firebase/auth';
 import { useHistory } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -131,7 +130,6 @@ export default function LandingPage() {
   const history = useHistory();
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
-  // const [loading, setLoading] = useState(false);
 
   return (
     <StyledLandingPageContainer>

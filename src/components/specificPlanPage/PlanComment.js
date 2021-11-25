@@ -3,12 +3,82 @@ import styled from 'styled-components';
 import { BsThreeDots } from 'react-icons/bs';
 import { HiUserCircle } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
-import { firebase } from '../../utils/firebase';
-import 'firebase/firestore';
-import 'firebase/storage';
-import 'firebase/auth';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { deletePlanComment, editPlanComment } from '../../utils/firebase';
+import { deleteToast } from '../../utils/toast';
+
+export default function PlanComment({ comment, planId, currentUser }) {
+  const [showTool, setShowTool] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [commentContent, setCommentContent] = useState(comment.content);
+  const users = useSelector((state) => state.users);
+  const publisher = users.filter((user) => user.id === comment.publisher)[0];
+
+  async function onSaveComment() {
+    await editPlanComment(planId, comment.id, commentContent);
+    setIsEditing(false);
+  }
+
+  async function onDeleteComment() {
+    setShowTool(false);
+    await deletePlanComment(planId, comment.id);
+    deleteToast();
+  }
+
+  return (
+    <StyledCommentWrap>
+      {publisher?.photoURL ? (
+        <StyledCommentUserImage src={publisher?.photoURL} />
+      ) : (
+        <StyledPlanInfoPublisherIcon />
+      )}
+      <StyledNameCommentWrap>
+        <StyledCommentUserName>{publisher?.displayName}</StyledCommentUserName>
+        {isEditing ? (
+          <>
+            {' '}
+            <StyledCommentEditInput
+              value={commentContent}
+              onChange={(e) => {
+                setCommentContent(e.target.value);
+              }}
+            />
+            <StyledCommentEditSaveBtn
+              onClick={onSaveComment}
+              commentContent={commentContent}
+            >
+              Save
+            </StyledCommentEditSaveBtn>
+          </>
+        ) : (
+          <StyledCommentUserContext>{comment.content}</StyledCommentUserContext>
+        )}
+        <StyledCommentTimeStamp>
+          {comment.createdAt.toDate().toLocaleString()}
+        </StyledCommentTimeStamp>
+        {publisher?.id === currentUser?.uid ? (
+          <StyledCommentThreeDot
+            onClick={() => {
+              setShowTool(!showTool);
+            }}
+          />
+        ) : null}
+        <StyledCommentToolContainer showTool={showTool}>
+          <StyledCommentToolBtn
+            onClick={() => {
+              setIsEditing(true);
+              setShowTool(false);
+            }}
+          >
+            Edit
+          </StyledCommentToolBtn>
+          <StyledCommentToolBtn onClick={onDeleteComment}>
+            Delete
+          </StyledCommentToolBtn>
+        </StyledCommentToolContainer>
+      </StyledNameCommentWrap>
+    </StyledCommentWrap>
+  );
+}
 
 const StyledCommentWrap = styled.div`
   display: flex;
@@ -115,103 +185,3 @@ const StyledCommentEditSaveBtn = styled.button`
       props.commentContent === '' ? '#969696' : '#1c2d9c'};
   }
 `;
-
-export default function PlanComment({ comment, planId, currentUser }) {
-  const [showTool, setShowTool] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [commentContent, setCommentContent] = useState(comment.content);
-  const users = useSelector((state) => state.users);
-  const publisher = users.filter((user) => user.id === comment.publisher)[0];
-
-  function onSaveComment() {
-    firebase
-      .firestore()
-      .collection('plans')
-      .doc(planId)
-      .collection('comments')
-      .doc(comment.id)
-      .update({
-        content: commentContent,
-      })
-      .then(() => {
-        setIsEditing(false);
-      });
-  }
-
-  function onDeleteComment() {
-    setShowTool(false);
-    const firestore = firebase.firestore();
-    const batch = firestore.batch();
-
-    const planRef = firestore.collection('plans').doc(planId);
-
-    batch.update(planRef, {
-      commentsCount: firebase.firestore.FieldValue.increment(-1),
-    });
-
-    const commentRef = planRef.collection('comments').doc(comment.id);
-    batch.delete(commentRef);
-
-    batch.commit().then(() => {
-      toast.success('Deleted Successfully', {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 2000,
-      });
-    });
-  }
-
-  return (
-    <StyledCommentWrap>
-      {publisher?.photoURL ? (
-        <StyledCommentUserImage src={publisher?.photoURL} />
-      ) : (
-        <StyledPlanInfoPublisherIcon />
-      )}
-      <StyledNameCommentWrap>
-        <StyledCommentUserName>{publisher?.displayName}</StyledCommentUserName>
-        {isEditing ? (
-          <>
-            {' '}
-            <StyledCommentEditInput
-              value={commentContent}
-              onChange={(e) => {
-                setCommentContent(e.target.value);
-              }}
-            />
-            <StyledCommentEditSaveBtn
-              onClick={onSaveComment}
-              commentContent={commentContent}
-            >
-              Save
-            </StyledCommentEditSaveBtn>
-          </>
-        ) : (
-          <StyledCommentUserContext>{comment.content}</StyledCommentUserContext>
-        )}
-        <StyledCommentTimeStamp>
-          {comment.createdAt.toDate().toLocaleString()}
-        </StyledCommentTimeStamp>
-        {publisher?.id === currentUser?.uid ? (
-          <StyledCommentThreeDot
-            onClick={() => {
-              setShowTool(!showTool);
-            }}
-          />
-        ) : null}
-        <StyledCommentToolContainer showTool={showTool}>
-          <StyledCommentToolBtn
-            onClick={() => {
-              setIsEditing(true);
-              setShowTool(false);
-            }}
-          >
-            Edit
-          </StyledCommentToolBtn>
-          <StyledCommentToolBtn onClick={onDeleteComment}>
-            Delete
-          </StyledCommentToolBtn>
-        </StyledCommentToolContainer>
-      </StyledNameCommentWrap>
-    </StyledCommentWrap>
-  );
-}

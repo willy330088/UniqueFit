@@ -1,16 +1,183 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import muscleGroups from '../../utils/muscleGroup';
 import { HiUserCircle } from 'react-icons/hi';
 import { FaDumbbell } from 'react-icons/fa';
 import { RiMessage2Fill } from 'react-icons/ri';
-import { firebase } from '../../utils/firebase';
-import 'firebase/firestore';
+import {
+  getWorkoutComment,
+  addWorkoutComment,
+  removeWorkoutCollection,
+  addWorkoutCollection,
+} from '../../utils/firebase';
 import WorkoutComment from './WorkoutComment';
 import { Waypoint } from 'react-waypoint';
 import LogoDumbbell from '../../images/logoDumbbell.png';
 import { useSelector } from 'react-redux';
 import Popup from 'reactjs-popup';
+import { down, blurring } from '../../utils/animation';
+
+export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
+  const [commentContent, setCommentContent] = useState('');
+  const [comments, setComments] = useState([]);
+  const [scrollDown, setScrollDown] = useState(true);
+  const [videoReady, setVideoReady] = useState(false);
+  const currentUser = useSelector((state) => state.currentUser);
+  const users = useSelector((state) => state.users);
+  const publisher = users.filter((user) => user.id === workout.publisher)[0];
+  const isCollected = workout.collectedBy?.includes(currentUser?.uid);
+
+  useEffect(() => {
+    getWorkoutComment(workout.id, setComments);
+  }, []);
+
+  async function onSubmitComment() {
+    if (currentUser) {
+      if (commentContent === '') {
+        return;
+      } else {
+        await addWorkoutComment(workout.id, commentContent);
+        setCommentContent('');
+      }
+    } else {
+      close();
+      setSignInOpen(true);
+    }
+  }
+
+  function toggleCollected() {
+    if (currentUser) {
+      const uid = currentUser.uid;
+      if (isCollected) {
+        removeWorkoutCollection(workout.id, uid);
+      } else {
+        addWorkoutCollection(workout.id, uid);
+      }
+    } else {
+      close();
+      setSignInOpen(true);
+    }
+  }
+
+  function popupClose() {
+    close();
+    setVideoReady(false);
+  }
+
+  return (
+    <StyledPopup open={open} closeOnDocumentClick onClose={popupClose}>
+      <input type="text" autofocus="autofocus" style={{ display: 'none' }} />
+      <StyledVideo
+        src={workout.videoURL}
+        autoPlay
+        loop
+        playsinline
+        muted
+        onCanPlay={() => {
+          setVideoReady(true);
+        }}
+      ></StyledVideo>
+      {videoReady ? (
+        <StyledDetails>
+          <StyledScrollDown scrollDown={scrollDown}></StyledScrollDown>
+          <StyledTitleContainer>
+            <StyledMuscleIcon
+              src={
+                muscleGroups.filter((muscleGroup) => {
+                  if (muscleGroup.name === workout.targetMuscleGroup)
+                    return muscleGroup;
+                })[0].src
+              }
+            />
+            <StyledTitle>{workout.title}</StyledTitle>
+            <StyledCollectIconContainer onClick={toggleCollected}>
+              <StyledAddToCollectIcon isCollected={isCollected} />
+              <StyledCollectIconText isCollected={isCollected}>
+                Collect
+              </StyledCollectIconText>
+            </StyledCollectIconContainer>
+          </StyledTitleContainer>
+          <Waypoint
+            onEnter={() => {
+              setScrollDown(false);
+            }}
+          />
+          <StyledContentContainer>
+            <StyledPulisherContainer>
+              {publisher.photoURL ? (
+                <StyledPublisherImage src={publisher.photoURL} />
+              ) : (
+                <StyledPublisherIcon />
+              )}
+              {publisher.displayName}
+            </StyledPulisherContainer>
+            <StyledCollectionContainer>
+              <StyledCollectIcon />{' '}
+              <StyledCollectionNum>
+                {workout.collectedBy.length}
+              </StyledCollectionNum>
+            </StyledCollectionContainer>
+            <StyledTextContent>
+              Target Muscle Group : {workout.targetMuscleGroup}
+            </StyledTextContent>
+            <StyledTextContent>
+              Description : {workout.description}
+            </StyledTextContent>
+            <StyledCommentContainer>
+              <StyledCommentTitleContainer>
+                <StyledCommentIcon />{' '}
+                <StyledCommentTitleText>
+                  Comments ({workout.commentsCount || 0})
+                </StyledCommentTitleText>
+              </StyledCommentTitleContainer>
+              <StyledCommentInputContainer>
+                <StyledCommentInput
+                  value={commentContent}
+                  onChange={(e) => {
+                    setCommentContent(e.target.value);
+                  }}
+                  placeholder="your comment..."
+                />
+              </StyledCommentInputContainer>
+              <StyledLeaveCommentBtnContainer>
+                <StyledLeaveCommentBtn
+                  onClick={onSubmitComment}
+                  commentContent={commentContent}
+                >
+                  Comment
+                </StyledLeaveCommentBtn>
+              </StyledLeaveCommentBtnContainer>
+              {comments.map((comment) => {
+                return (
+                  <WorkoutComment
+                    comment={comment}
+                    workoutId={workout.id}
+                    key={comment.id}
+                    currentUser={currentUser}
+                  />
+                );
+              })}
+            </StyledCommentContainer>
+          </StyledContentContainer>
+        </StyledDetails>
+      ) : (
+        <StyledOverlay>
+          <StyledLogoContainer>
+            <StyledLogoText1>U</StyledLogoText1>
+            <StyledLogoText1>N</StyledLogoText1>
+            <StyledLogoText1>I</StyledLogoText1>
+            <StyledLogoText1>Q</StyledLogoText1>
+            <StyledLogoText1>U</StyledLogoText1>
+            <StyledLogoText1>E</StyledLogoText1>
+            <StyledLogoText2>F</StyledLogoText2>
+            <StyledLogoDumbbell src={LogoDumbbell} />
+            <StyledLogoText2>T</StyledLogoText2>
+          </StyledLogoContainer>
+        </StyledOverlay>
+      )}
+    </StyledPopup>
+  );
+}
 
 const StyledVideo = styled.video`
   position: fixed;
@@ -28,7 +195,6 @@ const StyledVideo = styled.video`
     height: 400px;
   } ;
 `;
-//
 
 const StyledTitleContainer = styled.div`
   display: flex;
@@ -62,7 +228,6 @@ const StyledMuscleIcon = styled.img`
     margin-right: 30px;
   } ;
 `;
-//
 
 const StyledTitle = styled.div`
   color: #1face1;
@@ -82,7 +247,6 @@ const StyledTitle = styled.div`
     width: 420px;
   } ;
 `;
-//
 
 const StyledDetails = styled.div`
   background: #222d35;
@@ -338,23 +502,9 @@ const StyledScrollDown = styled.span`
   border-left: 5px solid #fff;
   border-bottom: 5px solid #fff;
   transform: rotate(-45deg);
-  animation: down 3s infinite;
+  animation: ${down} 3s infinite;
   box-sizing: border-box;
   display: ${(props) => (props.scrollDown ? 'block' : 'none')};
-
-  @keyframes down {
-    0% {
-      transform: rotate(-45deg) translate(0, 0);
-      opacity: 0;
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      transform: rotate(-45deg) translate(-20px, 20px);
-      opacity: 0;
-    }
-  }
 
   @media (min-width: 500px) {
     top: 50px;
@@ -387,46 +537,31 @@ const StyledLogoContainer = styled.div`
   align-items: center;
 
   div:nth-child(1) {
-    animation: blurring 1.2s linear 0s infinite alternate;
+    animation: ${blurring} 1.2s linear 0s infinite alternate;
   }
   div:nth-child(2) {
-    animation: blurring 1.2s linear 0.15s infinite alternate;
+    animation: ${blurring} 1.2s linear 0.15s infinite alternate;
   }
   div:nth-child(3) {
-    animation: blurring 1.2s linear 0.3s infinite alternate;
+    animation: ${blurring} 1.2s linear 0.3s infinite alternate;
   }
-
   div:nth-child(4) {
-    animation: blurring 1.2s linear 0.45s infinite alternate;
+    animation: ${blurring} 1.2s linear 0.45s infinite alternate;
   }
-
   div:nth-child(5) {
-    animation: blurring 1.2s linear 0.6s infinite alternate;
+    animation: ${blurring} 1.2s linear 0.6s infinite alternate;
   }
-
   div:nth-child(6) {
-    animation: blurring 1.2s linear 0.75s infinite alternate;
+    animation: ${blurring} 1.2s linear 0.75s infinite alternate;
   }
-
   div:nth-child(7) {
-    animation: blurring 1.2s linear 0.9s infinite alternate;
+    animation: ${blurring} 1.2s linear 0.9s infinite alternate;
   }
-
   div:nth-child(8) {
-    animation: blurring 1.2s linear 1.05s infinite alternate;
+    animation: ${blurring} 1.2s linear 1.05s infinite alternate;
   }
-
   div:nth-child(9) {
-    animation: blurring 1.2s linear 1.2s infinite alternate;
-  }
-
-  @keyframes blurring {
-    0% {
-      filter: blur(0);
-    }
-    100% {
-      filter: blur(6px);
-    }
+    animation: ${blurring} 1.2s linear 1.2s infinite alternate;
   }
 `;
 
@@ -500,206 +635,3 @@ const StyledCollectIconText = styled.div`
   font-size: 15px;
   color: ${(props) => (props.isCollected ? '#1face1' : '#808080')};
 `;
-
-export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
-  const [commentContent, setCommentContent] = useState('');
-  const [comments, setComments] = useState([]);
-  const [scrollDown, setScrollDown] = useState(true);
-  const [videoReady, setVideoReady] = useState(false);
-  const currentUser = useSelector((state) => state.currentUser);
-  const users = useSelector((state) => state.users);
-  const publisher = users.filter((user) => user.id === workout.publisher)[0];
-
-  const isCollected = workout.collectedBy?.includes(currentUser?.uid);
-
-  useEffect(() => {
-    firebase
-      .firestore()
-      .collection('workouts')
-      .doc(workout.id)
-      .collection('comments')
-      .orderBy('createdAt', 'desc')
-      .onSnapshot((collectionSnapshot) => {
-        const data = collectionSnapshot.docs.map((doc) => {
-          const id = doc.id;
-          return { ...doc.data(), id };
-        });
-        setComments(data);
-      });
-  }, []);
-
-  function onSubmitComment() {
-    if (currentUser) {
-      const firestore = firebase.firestore();
-      const batch = firestore.batch();
-      const planRef = firestore.collection('workouts').doc(workout.id);
-
-      if (commentContent === '') {
-        return;
-      } else {
-        batch.update(planRef, {
-          commentsCount: firebase.firestore.FieldValue.increment(1),
-        });
-
-        const commentRef = planRef.collection('comments').doc();
-        batch.set(commentRef, {
-          content: commentContent,
-          createdAt: firebase.firestore.Timestamp.now(),
-          publisher: firebase.auth().currentUser.uid,
-        });
-
-        batch.commit().then(() => {
-          setCommentContent('');
-        });
-      }
-    } else {
-      close();
-      setSignInOpen(true);
-    }
-  }
-
-  function toggleCollected() {
-    if (currentUser) {
-      const uid = currentUser.uid;
-      if (isCollected) {
-        firebase
-          .firestore()
-          .collection('workouts')
-          .doc(workout.id)
-          .update({
-            collectedBy: firebase.firestore.FieldValue.arrayRemove(uid),
-          });
-      } else {
-        firebase
-          .firestore()
-          .collection('workouts')
-          .doc(workout.id)
-          .update({
-            collectedBy: firebase.firestore.FieldValue.arrayUnion(uid),
-          });
-      }
-    } else {
-      close();
-      setSignInOpen(true);
-    }
-  }
-
-  function popupClose() {
-    close();
-    setVideoReady(false);
-  }
-
-  return (
-    <StyledPopup open={open} closeOnDocumentClick onClose={popupClose}>
-      <input type="text" autofocus="autofocus" style={{ display: 'none' }} />
-      <StyledVideo
-        src={workout.videoURL}
-        autoPlay
-        loop
-        playsinline
-        muted
-        onCanPlay={() => {
-          setVideoReady(true);
-        }}
-      ></StyledVideo>
-      {videoReady ? (
-        <StyledDetails>
-          <StyledScrollDown scrollDown={scrollDown}></StyledScrollDown>
-          <StyledTitleContainer>
-            <StyledMuscleIcon
-              src={
-                muscleGroups.filter((muscleGroup) => {
-                  if (muscleGroup.name === workout.targetMuscleGroup)
-                    return muscleGroup;
-                })[0].src
-              }
-            />
-            <StyledTitle>{workout.title}</StyledTitle>
-            <StyledCollectIconContainer onClick={toggleCollected}>
-              <StyledAddToCollectIcon isCollected={isCollected} />
-              <StyledCollectIconText isCollected={isCollected}>
-                Collect
-              </StyledCollectIconText>
-            </StyledCollectIconContainer>
-          </StyledTitleContainer>
-          <Waypoint
-            onEnter={() => {
-              setScrollDown(false);
-            }}
-          />
-          <StyledContentContainer>
-            <StyledPulisherContainer>
-              {publisher.photoURL ? (
-                <StyledPublisherImage src={publisher.photoURL} />
-              ) : (
-                <StyledPublisherIcon />
-              )}
-              {publisher.displayName}
-            </StyledPulisherContainer>
-            <StyledCollectionContainer>
-              <StyledCollectIcon />{' '}
-              <StyledCollectionNum>
-                {workout.collectedBy.length}
-              </StyledCollectionNum>
-            </StyledCollectionContainer>
-            <StyledTextContent>
-              Target Muscle Group : {workout.targetMuscleGroup}
-            </StyledTextContent>
-            <StyledTextContent>
-              Description : {workout.description}
-            </StyledTextContent>
-            <StyledCommentContainer>
-              <StyledCommentTitleContainer>
-                <StyledCommentIcon />{' '}
-                <StyledCommentTitleText>
-                  Comments ({workout.commentsCount || 0})
-                </StyledCommentTitleText>
-              </StyledCommentTitleContainer>
-              <StyledCommentInputContainer>
-                <StyledCommentInput
-                  value={commentContent}
-                  onChange={(e) => {
-                    setCommentContent(e.target.value);
-                  }}
-                  placeholder="your comment..."
-                />
-              </StyledCommentInputContainer>
-              <StyledLeaveCommentBtnContainer>
-                <StyledLeaveCommentBtn
-                  onClick={onSubmitComment}
-                  commentContent={commentContent}
-                >
-                  Comment
-                </StyledLeaveCommentBtn>
-              </StyledLeaveCommentBtnContainer>
-              {comments.map((comment) => {
-                return (
-                  <WorkoutComment
-                    comment={comment}
-                    workoutId={workout.id}
-                    key={comment.id}
-                    currentUser={currentUser}
-                  />
-                );
-              })}
-            </StyledCommentContainer>
-          </StyledContentContainer>
-        </StyledDetails>
-      ) : (
-        <StyledOverlay>
-          <StyledLogoContainer>
-            <StyledLogoText1>U</StyledLogoText1>
-            <StyledLogoText1>N</StyledLogoText1>
-            <StyledLogoText1>I</StyledLogoText1>
-            <StyledLogoText1>Q</StyledLogoText1>
-            <StyledLogoText1>U</StyledLogoText1>
-            <StyledLogoText1>E</StyledLogoText1>
-            <StyledLogoText2>F</StyledLogoText2>
-            <StyledLogoDumbbell src={LogoDumbbell} />
-            <StyledLogoText2>T</StyledLogoText2>
-          </StyledLogoContainer>
-        </StyledOverlay>
-      )}
-    </StyledPopup>
-  );
-}

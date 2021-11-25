@@ -16,6 +16,9 @@ firebase.initializeApp(firebaseConfig);
 
 const userRef = firebase.firestore().collection('users');
 const planRef = firebase.firestore().collection('plans');
+const workoutRef = firebase.firestore().collection('workouts');
+const batch = firebase.firestore().batch();
+
 const facebookProvider = new firebase.auth.FacebookAuthProvider();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
@@ -113,6 +116,126 @@ function editPlan(
   });
 }
 
+function deleteWorkoutComment(workoutId, commentId) {
+  const workoutIdRef = workoutRef.doc(workoutId);
+  batch.update(workoutIdRef, {
+    commentsCount: firebase.firestore.FieldValue.increment(-1),
+  });
+
+  const commentRef = workoutIdRef.collection('comments').doc(commentId);
+  batch.delete(commentRef);
+
+  return batch.commit();
+}
+
+function editWorkoutComment(workoutId, commentId, commentContent) {
+  return workoutRef
+    .doc(workoutId)
+    .collection('comments')
+    .doc(commentId)
+    .update({
+      content: commentContent,
+    });
+}
+
+function deletePlanComment(planId, commentId) {
+  const planIdRef = planRef.doc(planId);
+  batch.update(planIdRef, {
+    commentsCount: firebase.firestore.FieldValue.increment(-1),
+  });
+
+  const commentRef = planIdRef.collection('comments').doc(commentId);
+  batch.delete(commentRef);
+
+  return batch.commit();
+}
+
+function editPlanComment(planId, commentId, commentContent) {
+  return planRef.doc(planId).collection('comments').doc(commentId).update({
+    content: commentContent,
+  });
+}
+
+function getWorkoutComment(workoutId, setComments) {
+  workoutRef
+    .doc(workoutId)
+    .collection('comments')
+    .orderBy('createdAt', 'desc')
+    .onSnapshot((collectionSnapshot) => {
+      const data = collectionSnapshot.docs.map((doc) => {
+        const id = doc.id;
+        return { ...doc.data(), id };
+      });
+      setComments(data);
+    });
+}
+
+function addWorkoutComment(workoutId, commentContent) {
+  const workoutIdRef = workoutRef.doc(workoutId);
+  batch.update(workoutIdRef, {
+    commentsCount: firebase.firestore.FieldValue.increment(1),
+  });
+  const commentRef = workoutIdRef.collection('comments').doc();
+  batch.set(commentRef, {
+    content: commentContent,
+    createdAt: firebase.firestore.Timestamp.now(),
+    publisher: firebase.auth().currentUser.uid,
+  });
+  return batch.commit();
+}
+
+function removeWorkoutCollection(workoutId, userId) {
+  return workoutRef.doc(workoutId).update({
+    collectedBy: firebase.firestore.FieldValue.arrayRemove(userId),
+  });
+}
+
+function addWorkoutCollection(workoutId, userId) {
+  return workoutRef.doc(workoutId).update({
+    collectedBy: firebase.firestore.FieldValue.arrayUnion(userId),
+  });
+}
+
+function getPlanComment(planId, setComments) {
+  planRef
+    .doc(planId)
+    .collection('comments')
+    .orderBy('createdAt', 'desc')
+    .onSnapshot((collectionSnapshot) => {
+      const data = collectionSnapshot.docs.map((doc) => {
+        const id = doc.id;
+        return { ...doc.data(), id };
+      });
+      setComments(data);
+    });
+}
+
+function addPlanComment(planId, commentContent) {
+  const planIdRef = planRef.doc(planId);
+  batch.update(planIdRef, {
+    commentsCount: firebase.firestore.FieldValue.increment(1),
+  });
+  const commentRef = planIdRef.collection('comments').doc();
+  batch.set(commentRef, {
+    content: commentContent,
+    createdAt: firebase.firestore.Timestamp.now(),
+    publisher: firebase.auth().currentUser.uid,
+  });
+  return batch.commit();
+}
+
+function removePlanCollection(planId, userId) {
+  return planRef.doc(planId).update({
+    collectedBy: firebase.firestore.FieldValue.arrayRemove(userId),
+  });
+}
+
+function addPlanCollection(planId, userId) {
+  return planRef.doc(planId).update({
+    collectedBy: firebase.firestore.FieldValue.arrayUnion(userId),
+  });
+}
+
 export {
   firebase,
   facebookProvider,
@@ -125,4 +248,16 @@ export {
   nativeSignIn,
   createPlan,
   editPlan,
+  deleteWorkoutComment,
+  editWorkoutComment,
+  deletePlanComment,
+  editPlanComment,
+  getWorkoutComment,
+  addWorkoutComment,
+  removeWorkoutCollection,
+  addWorkoutCollection,
+  getPlanComment,
+  addPlanComment,
+  removePlanCollection,
+  addPlanCollection,
 };
