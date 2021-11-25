@@ -5,7 +5,7 @@ import { BsFillPencilFill } from 'react-icons/bs';
 import { FaTrashAlt } from 'react-icons/fa';
 import Popup from 'reactjs-popup';
 import EditWorkoutPopup from './EditWorkoutPopup';
-import { firebase } from '../../utils/firebase';
+import { firebase, deleteWorkout } from '../../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/auth';
@@ -13,6 +13,49 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSelector } from 'react-redux';
 import ConfirmPopup from '../common/ConfirmPopup';
+import { loadingToast, loadingCompletedToast } from '../../utils/toast';
+
+export default function WorkoutCreation({ workout }) {
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const closeConfirm = () => setConfirmOpen(false);
+  const plans = useSelector((state) => state.plans);
+
+  async function deleteWorkoutCreation() {
+    const workoutDeleting = loadingToast('Deleting Workout...');
+    await deleteWorkout(workout.id, plans);
+    loadingCompletedToast('Deleted Successfully', workoutDeleting);
+    closeConfirm();
+  }
+
+  return (
+    <StyledWorkoutCreationContainer>
+      <ProfileWorkout workout={workout} />
+      <StyledToolContainer>
+        <StyledPencilIcon
+          onClick={() => {
+            setOpen(true);
+          }}
+        />
+        <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
+          <EditWorkoutPopup workout={workout} close={closeModal} />
+        </StyledPopup>
+        <StyledRemoveIcon
+          onClick={() => {
+            setConfirmOpen(true);
+          }}
+        />
+        <ConfirmPopup
+          confirmOpen={confirmOpen}
+          closeConfirm={closeConfirm}
+          action={deleteWorkoutCreation}
+          type={'delete'}
+        />
+      </StyledToolContainer>
+    </StyledWorkoutCreationContainer>
+  );
+}
 
 const StyledWorkoutCreationContainer = styled.div`
   margin: 50px 0px;
@@ -80,83 +123,3 @@ const StyledToolContainer = styled.div`
     margin-left: auto;
   }
 `;
-
-export default function WorkoutCreation({ workout }) {
-  const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const closeConfirm = () => setConfirmOpen(false);
-  const plans = useSelector((state) => state.plans);
-
-  function deleteWorkout() {
-    const workoutDeleting = toast.loading('Deleting Workout...', {
-      position: toast.POSITION.TOP_CENTER,
-    });
-
-    firebase
-      .firestore()
-      .collection('workouts')
-      .doc(workout.id)
-      .delete()
-      .then(() => {
-        firebase
-          .storage()
-          .ref('workout-videos/' + workout.id)
-          .delete()
-          .then(() => {
-            const batch = firebase.firestore().batch();
-            plans.forEach((plan) => {
-              const workoutContents = plan.workoutSet;
-              const modified = workoutContents.filter((workoutContent) => {
-                if (workoutContent.workoutId !== workout.id) {
-                  return workoutContent;
-                }
-              });
-              batch.update(
-                firebase.firestore().collection('plans').doc(plan.id),
-                {
-                  workoutSet: modified,
-                }
-              );
-            });
-            batch.commit().then(() => {
-              toast.update(workoutDeleting, {
-                render: 'Deleted Successfully',
-                type: 'success',
-                isLoading: false,
-                position: toast.POSITION.TOP_CENTER,
-                autoClose: 2000,
-              });
-              closeConfirm();
-            });
-          });
-      });
-  }
-
-  return (
-    <StyledWorkoutCreationContainer>
-      <ProfileWorkout workout={workout} />
-      <StyledToolContainer>
-        <StyledPencilIcon
-          onClick={() => {
-            setOpen(true);
-          }}
-        />
-        <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
-          <EditWorkoutPopup workout={workout} close={closeModal} />
-        </StyledPopup>
-        <StyledRemoveIcon
-          onClick={() => {
-            setConfirmOpen(true);
-          }}
-        />
-        <ConfirmPopup
-          confirmOpen={confirmOpen}
-          closeConfirm={closeConfirm}
-          action={deleteWorkout}
-          type={'delete'}
-        />
-      </StyledToolContainer>
-    </StyledWorkoutCreationContainer>
-  );
-}

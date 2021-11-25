@@ -3,11 +3,80 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import { v4 as uuid } from 'uuid';
 import 'react-datepicker/dist/react-datepicker.css';
-import { firebase } from '../../utils/firebase';
+import { addScheduleEvent } from '../../utils/firebase';
 import styled from 'styled-components';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useSelector } from 'react-redux';
+import { successToast, errorToast } from '../../utils/toast';
+
+export default function ScheduleForm({ closeModal }) {
+  const currentUser = useSelector((state) => state.currentUser);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [startDateTime, setStartDateTime] = useState(new Date());
+  const plans = useSelector((state) => state.plans).filter((plan) =>
+    plan.collectedBy.includes(currentUser?.uid)
+  );
+  const [selectedPlan, setSelectedPlan] = useState();
+
+  useEffect(() => {
+    let formattedDate = moment(selectedDate).format('YYYY-MM-DD');
+    setStartDateTime(formattedDate);
+  }, [selectedDate]);
+
+  async function onSubmit() {
+    if (!selectedPlan) {
+      errorToast('Please select a plan!');
+      return;
+    }
+
+    const eventContent = {
+      id: uuid(),
+      start: startDateTime,
+      extendedProps: {
+        planId: selectedPlan,
+        completed: false,
+      },
+    };
+
+    await addScheduleEvent(currentUser.uid, eventContent);
+    successToast('Added Successfully');
+    setStartDateTime(new Date());
+    closeModal();
+  }
+
+  return (
+    <>
+      <input type="text" autofocus="autofocus" style={{ display: 'none' }} />
+      <StyledDateContainer>
+        <StyledLabel>Choose Training Date</StyledLabel>
+        <StyledDatePicker
+          selected={selectedDate}
+          onChange={setSelectedDate}
+          minDate={new Date()}
+        />
+      </StyledDateContainer>
+      <StyledPlanContainer>
+        <StyledLabel>Choose Training Plan</StyledLabel>
+        <StyledPlanSelect
+          onChange={(e) => {
+            setSelectedPlan(e.target.value);
+          }}
+        >
+          <option selected="true" disabled="disabled">
+            Choose A Collected Plan
+          </option>
+          {plans.map((plan) => {
+            return <option value={plan.id}>{plan.title}</option>;
+          })}
+        </StyledPlanSelect>
+      </StyledPlanContainer>
+      <StyledAddTrainingContainer>
+        <StyledAddTrainingBtn onClick={onSubmit}>
+          Add Training
+        </StyledAddTrainingBtn>
+      </StyledAddTrainingContainer>
+    </>
+  );
+}
 
 const StyledLabel = styled.div`
   color: #1face1;
@@ -63,100 +132,3 @@ const StyledAddTrainingBtn = styled.button`
     background-color: #1face1;
   }
 `;
-
-export default function ScheduleForm({ closeModal }) {
-  const currentUser = useSelector((state) => state.currentUser);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [startDateTime, setStartDateTime] = useState(new Date());
-  const plans = useSelector((state) => state.plans).filter((plan) =>
-    plan.collectedBy.includes(currentUser?.uid)
-  );
-  const [selectedPlan, setSelectedPlan] = useState();
-
-  useEffect(() => {
-    let formattedDate = moment(selectedDate).format('YYYY-MM-DD');
-    setStartDateTime(formattedDate);
-  }, [selectedDate]);
-
-  const onSubmit = () => {
-    if (!selectedPlan) {
-      toast.error('Please select a plan!', {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 2000,
-      });
-      return;
-    }
-
-    const eventContent = {
-      id: uuid(),
-      start: startDateTime,
-      extendedProps: {
-        planId: selectedPlan,
-        completed: false,
-      },
-    };
-
-    const scheduleRef = firebase
-      .firestore()
-      .collection('users')
-      .doc(firebase.auth().currentUser.uid);
-
-    scheduleRef
-      .get()
-      .then((docSnapshot) => {
-        if (docSnapshot.exists) {
-          scheduleRef.update({
-            events: firebase.firestore.FieldValue.arrayUnion(eventContent),
-          });
-        } else {
-          scheduleRef.set({ events: [eventContent] });
-        }
-      })
-      .then(() => {
-        toast.success('Added Successfully', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 2000,
-        });
-        setStartDateTime(new Date());
-        closeModal();
-      });
-  };
-
-  console.log(selectedDate);
-  console.log(startDateTime);
-  console.log(plans);
-  console.log(selectedPlan);
-  return (
-    <>
-      <input type="text" autofocus="autofocus" style={{ display: 'none' }} />
-      <StyledDateContainer>
-        <StyledLabel>Choose Training Date</StyledLabel>
-        <StyledDatePicker
-          selected={selectedDate}
-          onChange={setSelectedDate}
-          minDate={new Date()}
-        />
-      </StyledDateContainer>
-      <StyledPlanContainer>
-        <StyledLabel>Choose Training Plan</StyledLabel>
-        <StyledPlanSelect
-          onChange={(e) => {
-            setSelectedPlan(e.target.value);
-          }}
-        >
-          <option selected="true" disabled="disabled">
-            Choose A Collected Plan
-          </option>
-          {plans.map((plan) => {
-            return <option value={plan.id}>{plan.title}</option>;
-          })}
-        </StyledPlanSelect>
-      </StyledPlanContainer>
-      <StyledAddTrainingContainer>
-        <StyledAddTrainingBtn onClick={onSubmit}>
-          Add Training
-        </StyledAddTrainingBtn>
-      </StyledAddTrainingContainer>
-    </>
-  );
-}

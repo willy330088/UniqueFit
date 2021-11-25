@@ -1,10 +1,75 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { firebase } from '../../utils/firebase';
+import {
+  removeScheduleEvent,
+  toggleScheduleEventCompleted,
+} from '../../utils/firebase';
 import moment from 'moment';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useSelector } from 'react-redux';
+import { successToast } from '../../utils/toast';
+
+export default function ScheduleDetails({ closeModal, selectedEvent }) {
+  const [completed, setCompleted] = useState(
+    selectedEvent.extendedProps.completed
+  );
+  const currentUser = useSelector((state) => state.currentUser);
+  const events = useSelector((state) => state.users).filter(
+    (user) => user.id === currentUser.uid
+  )[0].events;
+
+  async function removeEvent() {
+    const eventContent = {
+      extendedProps: selectedEvent._def.extendedProps,
+      id: selectedEvent._def.publicId,
+      start: moment(selectedEvent._instance.range.start).format('YYYY-MM-DD'),
+    };
+
+    await removeScheduleEvent(currentUser.uid, eventContent);
+    successToast('Removed Successfully');
+    closeModal();
+  }
+
+  async function toggleCompleted() {
+    const event = events.filter(
+      (event) => event.id === selectedEvent._def.publicId
+    )[0];
+    const index = events.indexOf(event);
+    event.extendedProps.completed = !event.extendedProps.completed;
+    events[index] = event;
+    events.forEach((event) => {
+      delete event['title'];
+    });
+
+    await toggleScheduleEventCompleted(currentUser.uid, events);
+    setCompleted(!completed);
+  }
+
+  return (
+    <>
+      <StyledTitleContainer>
+        <StyledLabel>Training Plan</StyledLabel>
+        <StyledTitle>{selectedEvent._def.title}</StyledTitle>
+      </StyledTitleContainer>
+      <StyledStatusContainer>
+        <StyledLabel>Status</StyledLabel>
+        <StyledStatusInputContainer>
+          <StyledTitle>{completed ? 'Completed' : 'Incomplete'}</StyledTitle>
+          <StyledToggle completed={completed} onClick={toggleCompleted} />
+        </StyledStatusInputContainer>
+      </StyledStatusContainer>
+      <StyledBtnContainer>
+        <StyledCheckoutBtn
+          onClick={() => {
+            window.open(`/plans/${selectedEvent._def.extendedProps.planId}`);
+          }}
+        >
+          Checkout
+        </StyledCheckoutBtn>
+        <StyledCancelBtn onClick={removeEvent}>Remove</StyledCancelBtn>
+      </StyledBtnContainer>
+    </>
+  );
+}
 
 const StyledLabel = styled.div`
   color: #1face1;
@@ -112,85 +177,3 @@ const StyledToggle = styled.button`
     }
   }
 `;
-
-export default function ScheduleDetails({ closeModal, selectedEvent }) {
-  const [completed, setCompleted] = useState(
-    selectedEvent.extendedProps.completed
-  );
-  const currentUser = useSelector((state) => state.currentUser);
-  const events = useSelector((state) => state.users).filter(
-    (user) => user.id === currentUser.uid
-  )[0].events;
-
-  const onRemove = () => {
-    const eventContent = {
-      extendedProps: selectedEvent._def.extendedProps,
-      id: selectedEvent._def.publicId,
-      start: moment(selectedEvent._instance.range.start).format('YYYY-MM-DD'),
-    };
-
-    firebase
-      .firestore()
-      .collection('users')
-      .doc(firebase.auth().currentUser.uid)
-      .update({
-        events: firebase.firestore.FieldValue.arrayRemove(eventContent),
-      })
-      .then(() => {
-        toast.success('Removed successfully!', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 2000,
-        });
-        closeModal();
-      });
-  };
-
-  const toggleCompleted = () => {
-    const event = events.filter(
-      (event) => event.id === selectedEvent._def.publicId
-    )[0];
-    const index = events.indexOf(event);
-    event.extendedProps.completed = !event.extendedProps.completed;
-    events[index] = event;
-    events.forEach((event) => {
-      delete event['title'];
-    });
-
-    firebase
-      .firestore()
-      .collection('users')
-      .doc(firebase.auth().currentUser.uid)
-      .update({
-        events: events,
-      })
-      .then(() => {
-        setCompleted(!completed);
-      });
-  };
-
-  return (
-    <>
-      <StyledTitleContainer>
-        <StyledLabel>Training Plan</StyledLabel>
-        <StyledTitle>{selectedEvent._def.title}</StyledTitle>
-      </StyledTitleContainer>
-      <StyledStatusContainer>
-        <StyledLabel>Status</StyledLabel>
-        <StyledStatusInputContainer>
-          <StyledTitle>{completed ? 'Completed' : 'Incomplete'}</StyledTitle>
-          <StyledToggle completed={completed} onClick={toggleCompleted} />
-        </StyledStatusInputContainer>
-      </StyledStatusContainer>
-      <StyledBtnContainer>
-        <StyledCheckoutBtn
-          onClick={() => {
-            window.open(`/plans/${selectedEvent._def.extendedProps.planId}`);
-          }}
-        >
-          Checkout
-        </StyledCheckoutBtn>
-        <StyledCancelBtn onClick={onRemove}>Remove</StyledCancelBtn>
-      </StyledBtnContainer>
-    </>
-  );
-}

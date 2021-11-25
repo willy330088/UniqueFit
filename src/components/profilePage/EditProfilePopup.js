@@ -6,12 +6,11 @@ import { BsCameraFill } from 'react-icons/bs';
 import { HiUserCircle } from 'react-icons/hi';
 import {
   uploadUserPhoto,
-  getUserPhotoURL,
   updateUserPhotoAndName,
   updateUserInfo,
   updateUserName,
 } from '../../utils/firebase';
-import { profileUpdating, profileUpdateComplete } from '../../utils/toast';
+import { loadingToast, loadingCompletedToast } from '../../utils/toast';
 
 export default function EditProfilePopup({ closeModal, open }) {
   const currentUser = useSelector((state) => state.currentUser);
@@ -39,11 +38,14 @@ export default function EditProfilePopup({ closeModal, open }) {
   };
 
   async function onSave() {
-    const profileUpdatingToast = profileUpdating();
+    const profileUpdatingToast = loadingToast('Updating Profile...');
     if (photoFile) {
       const metadata = { contentType: photoFile.type };
-      await uploadUserPhoto(photoFile, metadata);
-      const userPhotoURL = await getUserPhotoURL();
+      const userPhotoURL = await uploadUserPhoto(
+        photoFile,
+        metadata,
+        currentUser.uid
+      );
       await updateUserPhotoAndName(userName, userPhotoURL);
       await updateUserInfo(userName, userPhotoURL);
       setPhotoFile(null);
@@ -52,7 +54,7 @@ export default function EditProfilePopup({ closeModal, open }) {
       await updateUserName(userName);
       await updateUserInfo(userName, null);
     }
-    profileUpdateComplete(profileUpdatingToast);
+    loadingCompletedToast('Updated Successfully', profileUpdatingToast);
     closeModal();
   }
 

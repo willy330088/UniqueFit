@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-
 import styled from 'styled-components';
 import { useHistory, useLocation } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import { FcGoogle } from 'react-icons/fc';
 import { BsFacebook } from 'react-icons/bs';
-
 import {
   facebookProvider,
   googleProvider,
@@ -16,7 +14,7 @@ import {
   setNativeUserData,
   nativeSignIn,
 } from '../../utils/firebase';
-import { signInToast } from '../../utils/toast';
+import { successToast } from '../../utils/toast';
 import Fit from '../../images/fit.jpeg';
 import { anvil } from '../../utils/animation';
 
@@ -35,7 +33,7 @@ export default function SignInPopup({ open, closeModal }) {
     } else {
       closeModal();
     }
-    signInToast();
+    successToast('Sign in successfully!');
   }
 
   async function socialMediaSignIn(provider) {

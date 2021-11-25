@@ -122,8 +122,8 @@ export default function ScheduleRecord() {
     const plan = plans.filter(
       (plan) => plan.id === event.extendedProps.planId
     )[0];
-    if (!trainedMuscleGroups.includes(plan.targetMuscleGroup)) {
-      trainedMuscleGroups.push(plan.targetMuscleGroup);
+    if (!trainedMuscleGroups.includes(plan?.targetMuscleGroup)) {
+      trainedMuscleGroups.push(plan?.targetMuscleGroup);
     }
     return plan;
   });
@@ -145,7 +145,7 @@ export default function ScheduleRecord() {
                   {event.start}
                 </StyledScheduleCompleteListTime>
                 <StyledScheduleCompleteListTitle>
-                  {plansDetails[index].title}
+                  {plansDetails[index]?.title}
                 </StyledScheduleCompleteListTitle>
               </StyledScheduleCompleteListItem>
             );

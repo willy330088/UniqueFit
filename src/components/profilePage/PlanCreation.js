@@ -5,14 +5,62 @@ import EditPlanPopup from './EditPlanPopup';
 import { BsFillPencilFill } from 'react-icons/bs';
 import { FaTrashAlt } from 'react-icons/fa';
 import Popup from 'reactjs-popup';
-import { firebase } from '../../utils/firebase';
-import 'firebase/firestore';
-import 'firebase/storage';
-import 'firebase/auth';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { deletePlan } from '../../utils/firebase';
+import { successToast } from '../../utils/toast';
 import { useSelector } from 'react-redux';
 import ConfirmPopup from '../common/ConfirmPopup';
+
+export default function PlanCreation({ plan }) {
+  const [paging, setPaging] = useState(1);
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const closeConfirm = () => setConfirmOpen(false);
+  const users = useSelector((state) => state.users);
+
+  async function deletePlanCreation() {
+    await deletePlan(plan.id, users);
+    successToast('Deleted Successfully');
+    closeConfirm();
+  }
+
+  return (
+    <StyledPlanCreationContainer>
+      <ProfilePlan plan={plan} />
+      <StyledToolContainer>
+        <StyledPencilIcon
+          onClick={() => {
+            setOpen(true);
+          }}
+        />
+        <StyledPopup
+          open={open}
+          closeOnDocumentClick
+          onClose={closeModal}
+          paging={paging}
+        >
+          <EditPlanPopup
+            paging={paging}
+            setPaging={setPaging}
+            originalPlan={plan}
+            close={closeModal}
+          />
+        </StyledPopup>
+        <StyledRemoveIcon
+          onClick={() => {
+            setConfirmOpen(true);
+          }}
+        />
+        <ConfirmPopup
+          confirmOpen={confirmOpen}
+          closeConfirm={closeConfirm}
+          action={deletePlanCreation}
+          type={'delete'}
+        />
+      </StyledToolContainer>
+    </StyledPlanCreationContainer>
+  );
+}
 
 const StyledPlanCreationContainer = styled.div`
   margin: 20px 0px 50px 0;
@@ -89,84 +137,3 @@ const StyledToolContainer = styled.div`
     margin-left: auto;
   }
 `;
-
-export default function PlanCreation({ plan }) {
-  const [paging, setPaging] = useState(1);
-  const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const closeConfirm = () => setConfirmOpen(false);
-  const users = useSelector((state) => state.users);
-
-  function deletePlan() {
-    firebase
-      .firestore()
-      .collection('plans')
-      .doc(plan.id)
-      .delete()
-      .then(() => {
-        const batch = firebase.firestore().batch();
-        users.forEach((user) => {
-          const scheduleEvents = user.events;
-          const modified = scheduleEvents?.filter((scheduleEvent) => {
-            if (scheduleEvent.extendedProps.planId !== plan.id) {
-              return scheduleEvent;
-            }
-          });
-          console.log(modified);
-          if (modified) {
-            batch.update(
-              firebase.firestore().collection('users').doc(user.id),
-              {
-                events: modified,
-              }
-            );
-          }
-        });
-        batch.commit().then(() => {
-          toast.success('Deleted Successfully', {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 2000,
-          });
-          closeConfirm();
-        });
-      });
-  }
-
-  return (
-    <StyledPlanCreationContainer>
-      <ProfilePlan plan={plan} />
-      <StyledToolContainer>
-        <StyledPencilIcon
-          onClick={() => {
-            setOpen(true);
-          }}
-        />
-        <StyledPopup
-          open={open}
-          closeOnDocumentClick
-          onClose={closeModal}
-          paging={paging}
-        >
-          <EditPlanPopup
-            paging={paging}
-            setPaging={setPaging}
-            originalPlan={plan}
-            close={closeModal}
-          />
-        </StyledPopup>
-        <StyledRemoveIcon
-          onClick={() => {
-            setConfirmOpen(true);
-          }}
-        />
-        <ConfirmPopup
-          confirmOpen={confirmOpen}
-          closeConfirm={closeConfirm}
-          action={deletePlan}
-          type={'delete'}
-        />
-      </StyledToolContainer>
-    </StyledPlanCreationContainer>
-  );
-}

@@ -4,7 +4,7 @@ import { BsThreeDots } from 'react-icons/bs';
 import { HiUserCircle } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import { deletePlanComment, editPlanComment } from '../../utils/firebase';
-import { deleteToast } from '../../utils/toast';
+import { successToast } from '../../utils/toast';
 
 export default function PlanComment({ comment, planId, currentUser }) {
   const [showTool, setShowTool] = useState(false);
@@ -21,7 +21,7 @@ export default function PlanComment({ comment, planId, currentUser }) {
   async function onDeleteComment() {
     setShowTool(false);
     await deletePlanComment(planId, comment.id);
-    deleteToast();
+    successToast('Deleted Successfully');
   }
 
   return (

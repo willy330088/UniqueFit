@@ -13,9 +13,6 @@ import {
   removePlanCollection,
   addPlanCollection,
 } from '../../utils/firebase';
-import 'firebase/firestore';
-import 'firebase/storage';
-import 'firebase/auth';
 import muscleGroups from '../../utils/muscleGroup';
 import PlanComment from './PlanComment';
 // import StopWatch from '../Timer/StopWatch';

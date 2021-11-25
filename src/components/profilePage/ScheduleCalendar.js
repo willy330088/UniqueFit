@@ -165,7 +165,7 @@ export default function ScheduleCalendar() {
     const targetPlan = plans.filter(
       (plan) => plan.id === events.extendedProps.planId
     )[0];
-    events.title = targetPlan.title;
+    events.title = targetPlan?.title;
     return events;
   });
 

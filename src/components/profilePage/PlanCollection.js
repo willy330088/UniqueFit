@@ -2,10 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import ProfilePlan from './ProfilePlan';
 import { FaDumbbell } from 'react-icons/fa';
-import { firebase } from '../../utils/firebase';
-import 'firebase/firestore';
-import 'firebase/storage';
-import 'firebase/auth';
+import { removePlanCollection } from '../../utils/firebase';
 
 const StyledPlanCreationContainer = styled.div`
   margin: 20px 0px 50px 0;
@@ -35,16 +32,9 @@ const StyledCollectIcon = styled(FaDumbbell)`
   }
 `;
 
-export default function WorkoutCreation({ plan }) {
+export default function WorkoutCreation({ plan, userId }) {
   function removeCollected() {
-    const uid = firebase.auth().currentUser.uid;
-    firebase
-      .firestore()
-      .collection('plans')
-      .doc(plan.id)
-      .update({
-        collectedBy: firebase.firestore.FieldValue.arrayRemove(uid),
-      });
+    removePlanCollection(plan.id, userId);
   }
 
   return (

@@ -18,11 +18,6 @@ const userRef = firebase.firestore().collection('users');
 const planRef = firebase.firestore().collection('plans');
 const workoutRef = firebase.firestore().collection('workouts');
 const batch = firebase.firestore().batch();
-
-const userPhotoFileRef = firebase
-  .storage()
-  .ref('user-photos/' + firebase.auth().currentUser?.uid);
-
 const facebookProvider = new firebase.auth.FacebookAuthProvider();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
@@ -64,6 +59,10 @@ function setNativeUserData(user, name) {
 
 function nativeSignIn(email, password) {
   return firebase.auth().signInWithEmailAndPassword(email, password);
+}
+
+function signOut() {
+  firebase.auth().signOut();
 }
 
 async function createWorkout(
@@ -299,11 +298,9 @@ function addPlanCollection(planId, userId) {
   });
 }
 
-function uploadUserPhoto(photoFile, metadata) {
-  return userPhotoFileRef.put(photoFile, metadata);
-}
-
-function getUserPhotoURL() {
+async function uploadUserPhoto(photoFile, metadata, userId) {
+  const userPhotoFileRef = firebase.storage().ref('user-photos/' + userId);
+  await userPhotoFileRef.put(photoFile, metadata);
   return userPhotoFileRef.getDownloadURL();
 }
 
@@ -327,6 +324,68 @@ function updateUserInfo(userName, imageURL) {
   }
 }
 
+async function deletePlan(planId, users) {
+  await planRef.doc(planId).delete();
+  users.forEach((user) => {
+    const scheduleEvents = user.events;
+    const modified = scheduleEvents?.filter((scheduleEvent) => {
+      if (scheduleEvent.extendedProps.planId !== planId) {
+        return scheduleEvent;
+      }
+    });
+    console.log(modified);
+    if (modified) {
+      batch.update(userRef.doc(user.id), {
+        events: modified,
+      });
+    }
+  });
+  return batch.commit();
+}
+
+async function deleteWorkout(workoutId, plans) {
+  await workoutRef.doc(workoutId).delete();
+  await firebase
+    .storage()
+    .ref('workout-videos/' + workoutId)
+    .delete();
+  plans.forEach((plan) => {
+    const workoutContents = plan.workoutSet;
+    const modified = workoutContents.filter((workoutContent) => {
+      if (workoutContent.workoutId !== workoutId) {
+        return workoutContent;
+      }
+    });
+    batch.update(planRef.doc(plan.id), {
+      workoutSet: modified,
+    });
+  });
+  return batch.commit();
+}
+
+function removeScheduleEvent(userId, eventContent) {
+  return userRef.doc(userId).update({
+    events: firebase.firestore.FieldValue.arrayRemove(eventContent),
+  });
+}
+
+function toggleScheduleEventCompleted(userId, events) {
+  return userRef.doc(userId).update({
+    events: events,
+  });
+}
+
+async function addScheduleEvent(userId, eventContent) {
+  const docSnapshot = await userRef.doc(userId).get();
+  if (docSnapshot.exists) {
+    userRef.doc(userId).update({
+      events: firebase.firestore.FieldValue.arrayUnion(eventContent),
+    });
+  } else {
+    userRef.doc(userId).set({ events: [eventContent] });
+  }
+}
+
 export {
   firebase,
   facebookProvider,
@@ -337,6 +396,7 @@ export {
   updateUserName,
   setNativeUserData,
   nativeSignIn,
+  signOut,
   createWorkout,
   editWorkout,
   createPlan,
@@ -354,7 +414,11 @@ export {
   removePlanCollection,
   addPlanCollection,
   uploadUserPhoto,
-  getUserPhotoURL,
   updateUserPhotoAndName,
   updateUserInfo,
+  deletePlan,
+  deleteWorkout,
+  removeScheduleEvent,
+  toggleScheduleEventCompleted,
+  addScheduleEvent,
 };

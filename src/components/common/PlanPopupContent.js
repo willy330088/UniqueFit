@@ -5,14 +5,9 @@ import { AiOutlineRightCircle, AiOutlineLeftCircle } from 'react-icons/ai';
 import PlanDetailsInputP1 from './PlanDetailsInputP1';
 import PlanDetailsInputP2 from './PlanDetailsInputP2';
 import {
-  noTitleError,
-  noTargetMuscleGroupError,
-  noDescriptionError,
-  noEstimatedTrainingTimeError,
-  noWorkoutsError,
-  noWeightOrRepsError,
-  planManaging,
-  planComplete,
+  errorToast,
+  loadingToast,
+  loadingCompletedToast,
 } from '../../utils/toast';
 import { createPlan, editPlan } from '../../utils/firebase';
 
@@ -45,26 +40,26 @@ export default function PlanPopupContent({
       let checked = false;
 
       if (title === '') {
-        noTitleError();
+        errorToast('Please fill in title');
         return;
       } else if (targetMuscleGroup === '') {
-        noTargetMuscleGroupError();
+        errorToast('Please choose target muscle group');
         return;
       } else if (!estimatedTrainingTime) {
-        noEstimatedTrainingTimeError();
+        errorToast('Please fill in estimated training time');
         return;
       } else if (description === '') {
-        noDescriptionError();
+        errorToast('Please fill in description');
         return;
       } else if (plan.workoutSet.length === 0) {
-        noWorkoutsError();
+        errorToast('Please add workouts');
         return;
       }
 
       plan.workoutSet.every((workout) => {
         checked = false;
         if (!workout.reps || !workout.weight) {
-          noWeightOrRepsError();
+          errorToast('Please fill in weights and reps');
           return false;
         }
         checked = true;
@@ -73,7 +68,7 @@ export default function PlanPopupContent({
 
       if (checked) {
         if (type === 'Create') {
-          const planCreating = planManaging('Create');
+          const planCreating = loadingToast('Creating Plan...');
           await createPlan(
             title,
             publicity,
@@ -82,9 +77,9 @@ export default function PlanPopupContent({
             estimatedTrainingTime,
             plan
           );
-          planComplete('Create', planCreating);
+          loadingCompletedToast('Created Successfully', planCreating);
         } else {
-          const planEditing = planManaging('Edit');
+          const planEditing = loadingToast('Editing Plan...');
           await editPlan(
             title,
             publicity,
@@ -94,7 +89,7 @@ export default function PlanPopupContent({
             plan,
             originalPlan.id
           );
-          planComplete('Edit', planEditing);
+          loadingCompletedToast('Edited Successfully', planEditing);
         }
 
         close();

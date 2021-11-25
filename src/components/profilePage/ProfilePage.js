@@ -8,19 +8,216 @@ import WorkoutCollection from './WorkoutCollection';
 import PlanCollection from './PlanCollection';
 import ScheduleCalendar from './ScheduleCalendar';
 import styled from 'styled-components';
-import { firebase } from '../../utils/firebase';
+import { signOut } from '../../utils/firebase';
 import { BsFillPencilFill } from 'react-icons/bs';
-import 'firebase/auth';
 import ProfileSubMenu from './ProfileSubMenu';
 import SidebarData from '../../utils/profileSidebarData';
 import { HiUserCircle } from 'react-icons/hi';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import NoResult from './NoResult';
-import { useHistory } from 'react-router-dom';
 import ConfirmPopup from '../common/ConfirmPopup';
 import EditProfilePopup from './EditProfilePopup';
 import FullPageLoading from '../common/FullPageLoading';
+
+export default function ProfilePage() {
+  const workouts = useSelector((state) => state.workouts);
+  const plans = useSelector((state) => state.plans);
+  const currentUser = useSelector((state) => state.currentUser);
+  const [mainContent, setMainContent] = useState('My Workout Creations');
+  const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const closeConfirm = () => setConfirmOpen(false);
+  const gymWorkouts = workouts.filter(
+    (workout) => workout.type === 'Gymworkout'
+  );
+  const homeWorkouts = workouts.filter(
+    (workout) => workout.type === 'Homeworkout'
+  );
+
+  useEffect(() => {
+    window.scrollTo({ top: 300, left: 0, behavior: 'smooth' });
+  }, [mainContent]);
+
+  function showCreationWorkout() {
+    if (gymWorkoutTypeSelected) {
+      return gymWorkouts.filter(
+        (workout) => workout.publisher === currentUser?.uid
+      );
+    } else {
+      return homeWorkouts.filter(
+        (workout) => workout.publisher === currentUser?.uid
+      );
+    }
+  }
+
+  function showCollectionWorkout() {
+    if (gymWorkoutTypeSelected) {
+      return gymWorkouts.filter((workout) =>
+        workout.collectedBy.includes(currentUser?.uid)
+      );
+    } else {
+      return homeWorkouts.filter((workout) =>
+        workout.collectedBy.includes(currentUser?.uid)
+      );
+    }
+  }
+
+  function showMainContent() {
+    if (mainContent === 'My Nearby Gyms') {
+      return (
+        <>
+          <GoogleMap />
+        </>
+      );
+    } else if (mainContent === 'My Workout Creations') {
+      if (showCreationWorkout().length === 0) {
+        return <NoResult type={'workout'} />;
+      } else {
+        return (
+          <>
+            {showCreationWorkout().map((workout) => {
+              return <WorkoutCreation workout={workout} />;
+            })}
+          </>
+        );
+      }
+    } else if (mainContent === 'My Workout Collections') {
+      if (showCollectionWorkout().length === 0) {
+        return <NoResult type={'workout'} />;
+      } else {
+        return (
+          <>
+            {showCollectionWorkout().map((workout) => {
+              return (
+                <WorkoutCollection workout={workout} userId={currentUser.uid} />
+              );
+            })}
+          </>
+        );
+      }
+    } else if (mainContent === 'My Plan Creations') {
+      if (
+        plans.filter((plan) => plan.publisher === currentUser?.uid).length === 0
+      ) {
+        return <NoResult type={'plan'} />;
+      } else {
+        return (
+          <>
+            {plans
+              .filter((plan) => plan.publisher === currentUser?.uid)
+              .map((plan) => {
+                return <PlanCreation plan={plan} />;
+              })}
+          </>
+        );
+      }
+    } else if (mainContent === 'My Plan Collections') {
+      if (
+        plans.filter((plan) => plan.collectedBy.includes(currentUser?.uid))
+          .length === 0
+      ) {
+        return <NoResult type={'plan'} />;
+      } else {
+        return (
+          <>
+            {plans
+              .filter((plan) => plan.collectedBy.includes(currentUser?.uid))
+              .map((plan) => {
+                return <PlanCollection plan={plan} userId={currentUser.uid} />;
+              })}
+          </>
+        );
+      }
+    } else if (mainContent === 'My Schedule') {
+      return (
+        <>
+          <ScheduleCalendar />
+        </>
+      );
+    }
+  }
+
+  return workouts.length !== 0 ? (
+    <StyledBody>
+      <Header />
+      <Banner slogan={'My Profile'} />
+      <StyledProfilePageContainer>
+        <StyledPersonalInfoContainer>
+          {currentUser?.photoURL ? (
+            <StyledPersonalImage src={currentUser?.photoURL} />
+          ) : (
+            <StyledPersonalIcon />
+          )}
+          <StyledPersonalInfo>
+            <StyledPersonalName>{currentUser?.displayName}</StyledPersonalName>
+            <StyledPersonalEmail>{currentUser?.email}</StyledPersonalEmail>
+          </StyledPersonalInfo>
+          <StyledPencilIcon
+            onClick={() => {
+              setOpen(true);
+            }}
+          />
+          <EditProfilePopup open={open} closeModal={closeModal} />
+          <StyledSignOutIcon
+            onClick={() => {
+              setConfirmOpen(true);
+            }}
+          />
+          <ConfirmPopup
+            confirmOpen={confirmOpen}
+            closeConfirm={closeConfirm}
+            action={signOut}
+            type={'signOut'}
+          />
+        </StyledPersonalInfoContainer>
+        <StyledMainContent>
+          <StyledSideBarContainer>
+            {SidebarData.map((item) => {
+              return (
+                <ProfileSubMenu
+                  item={item}
+                  setMainContent={setMainContent}
+                  mainContent={mainContent}
+                />
+              );
+            })}
+          </StyledSideBarContainer>
+          <StyledProfileContentContainer>
+            <StyledProfileContentTitle>{mainContent}</StyledProfileContentTitle>
+            {mainContent === 'My Workout Collections' ||
+            mainContent === 'My Workout Creations' ? (
+              <StyledBookmark>
+                <StyledWorkoutTypeTag
+                  selected={gymWorkoutTypeSelected}
+                  onClick={() => {
+                    setGymWorkoutTypeSelected(true);
+                  }}
+                >
+                  Gym Workout
+                </StyledWorkoutTypeTag>
+                <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
+                <StyledWorkoutTypeTag
+                  selected={!gymWorkoutTypeSelected}
+                  onClick={() => {
+                    setGymWorkoutTypeSelected(false);
+                  }}
+                >
+                  Home Workout
+                </StyledWorkoutTypeTag>
+              </StyledBookmark>
+            ) : null}
+            {showMainContent()}
+          </StyledProfileContentContainer>
+        </StyledMainContent>
+      </StyledProfilePageContainer>
+    </StyledBody>
+  ) : (
+    <FullPageLoading />
+  );
+}
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -213,205 +410,3 @@ const StyledMainContent = styled.div`
     display: flex;
   }
 `;
-
-export default function ProfilePage() {
-  const history = useHistory();
-  const workouts = useSelector((state) => state.workouts);
-  const plans = useSelector((state) => state.plans);
-  const currentUser = useSelector((state) => state.currentUser);
-  const [mainContent, setMainContent] = useState('My Workout Creations');
-  const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
-  const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const closeConfirm = () => setConfirmOpen(false);
-  const gymWorkouts = workouts.filter(
-    (workout) => workout.type === 'Gymworkout'
-  );
-  const homeWorkouts = workouts.filter(
-    (workout) => workout.type === 'Homeworkout'
-  );
-
-  useEffect(() => {
-    window.scrollTo({ top: 300, left: 0, behavior: 'smooth' });
-  }, [mainContent]);
-
-  function showCreationWorkout() {
-    if (gymWorkoutTypeSelected) {
-      return gymWorkouts.filter(
-        (workout) => workout.publisher === currentUser?.uid
-      );
-    } else {
-      return homeWorkouts.filter(
-        (workout) => workout.publisher === currentUser?.uid
-      );
-    }
-  }
-
-  function showCollectionWorkout() {
-    if (gymWorkoutTypeSelected) {
-      return gymWorkouts.filter((workout) =>
-        workout.collectedBy.includes(currentUser?.uid)
-      );
-    } else {
-      return homeWorkouts.filter((workout) =>
-        workout.collectedBy.includes(currentUser?.uid)
-      );
-    }
-  }
-
-  function showMainContent() {
-    if (mainContent === 'My Nearby Gyms') {
-      return (
-        <>
-          <GoogleMap />
-        </>
-      );
-    } else if (mainContent === 'My Workout Creations') {
-      if (showCreationWorkout().length === 0) {
-        return <NoResult type={'workout'} />;
-      } else {
-        return (
-          <>
-            {showCreationWorkout().map((workout) => {
-              return <WorkoutCreation workout={workout} />;
-            })}
-          </>
-        );
-      }
-    } else if (mainContent === 'My Workout Collections') {
-      if (showCollectionWorkout().length === 0) {
-        return <NoResult type={'workout'} />;
-      } else {
-        return (
-          <>
-            {showCollectionWorkout().map((workout) => {
-              return <WorkoutCollection workout={workout} />;
-            })}
-          </>
-        );
-      }
-    } else if (mainContent === 'My Plan Creations') {
-      if (
-        plans.filter((plan) => plan.publisher === currentUser?.uid).length === 0
-      ) {
-        return <NoResult type={'plan'} />;
-      } else {
-        return (
-          <>
-            {plans
-              .filter((plan) => plan.publisher === currentUser?.uid)
-              .map((plan) => {
-                return <PlanCreation plan={plan} />;
-              })}
-          </>
-        );
-      }
-    } else if (mainContent === 'My Plan Collections') {
-      if (
-        plans.filter((plan) => plan.collectedBy.includes(currentUser?.uid))
-          .length === 0
-      ) {
-        return <NoResult type={'plan'} />;
-      } else {
-        return (
-          <>
-            {plans
-              .filter((plan) => plan.collectedBy.includes(currentUser?.uid))
-              .map((plan) => {
-                return <PlanCollection plan={plan} />;
-              })}
-          </>
-        );
-      }
-    } else if (mainContent === 'My Schedule') {
-      return (
-        <>
-          <ScheduleCalendar />
-        </>
-      );
-    }
-  }
-
-  function signOut() {
-    firebase.auth().signOut();
-  }
-
-  return workouts.length !== 0 ? (
-    <StyledBody>
-      <Header />
-      <Banner slogan={'My Profile'} />
-      <StyledProfilePageContainer>
-        <StyledPersonalInfoContainer>
-          {currentUser?.photoURL ? (
-            <StyledPersonalImage src={currentUser?.photoURL} />
-          ) : (
-            <StyledPersonalIcon />
-          )}
-          <StyledPersonalInfo>
-            <StyledPersonalName>{currentUser?.displayName}</StyledPersonalName>
-            <StyledPersonalEmail>{currentUser?.email}</StyledPersonalEmail>
-          </StyledPersonalInfo>
-          <StyledPencilIcon
-            onClick={() => {
-              setOpen(true);
-            }}
-          />
-          <EditProfilePopup open={open} closeModal={closeModal} />
-          <StyledSignOutIcon
-            onClick={() => {
-              setConfirmOpen(true);
-            }}
-          />
-          <ConfirmPopup
-            confirmOpen={confirmOpen}
-            closeConfirm={closeConfirm}
-            action={signOut}
-            type={'signOut'}
-          />
-        </StyledPersonalInfoContainer>
-        <StyledMainContent>
-          <StyledSideBarContainer>
-            {SidebarData.map((item) => {
-              return (
-                <ProfileSubMenu
-                  item={item}
-                  setMainContent={setMainContent}
-                  mainContent={mainContent}
-                />
-              );
-            })}
-          </StyledSideBarContainer>
-          <StyledProfileContentContainer>
-            <StyledProfileContentTitle>{mainContent}</StyledProfileContentTitle>
-            {mainContent === 'My Workout Collections' ||
-            mainContent === 'My Workout Creations' ? (
-              <StyledBookmark>
-                <StyledWorkoutTypeTag
-                  selected={gymWorkoutTypeSelected}
-                  onClick={() => {
-                    setGymWorkoutTypeSelected(true);
-                  }}
-                >
-                  Gym Workout
-                </StyledWorkoutTypeTag>
-                <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
-                <StyledWorkoutTypeTag
-                  selected={!gymWorkoutTypeSelected}
-                  onClick={() => {
-                    setGymWorkoutTypeSelected(false);
-                  }}
-                >
-                  Home Workout
-                </StyledWorkoutTypeTag>
-              </StyledBookmark>
-            ) : null}
-            {showMainContent()}
-          </StyledProfileContentContainer>
-        </StyledMainContent>
-      </StyledProfilePageContainer>
-    </StyledBody>
-  ) : (
-    <FullPageLoading />
-  );
-}

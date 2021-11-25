@@ -2,19 +2,15 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import WorkoutDetailsInput from '../common/WorkoutDetailsInput';
 import { AiOutlineRightCircle, AiOutlineLeftCircle } from 'react-icons/ai';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import VideoInput from '../common/VideoInput';
-import { firebase, createWorkout, editWorkout } from '../../utils/firebase';
+import { createWorkout, editWorkout } from '../../utils/firebase';
 import 'firebase/firestore';
 import 'firebase/storage';
 import {
-  noTitleError,
-  noTargetMuscleGroupError,
-  noDescriptionError,
-  noVideoError,
+  errorToast,
+  loadingToast,
+  loadingCompletedToast,
 } from '../../utils/toast';
-import { workoutManaging, workoutComplete } from '../../utils/toast';
 
 export default function WorkoutPopupContent({
   changeType,
@@ -43,16 +39,16 @@ export default function WorkoutPopupContent({
     } else {
       setSubmitDisabled(true);
       if (title === '') {
-        noTitleError();
+        errorToast('Please fill in title');
         return;
       } else if (targetMuscleGroup === '') {
-        noTargetMuscleGroupError();
+        errorToast('Please choose target muscle group');
         return;
       } else if (description === '') {
-        noDescriptionError();
+        errorToast('Please fill in description');
         return;
       } else if (changeType === 'Create' && videoFile === '') {
-        noVideoError();
+        errorToast('Please upload video');
         return;
       }
 
@@ -61,7 +57,7 @@ export default function WorkoutPopupContent({
       };
 
       if (changeType === 'Create') {
-        const workoutCreating = workoutManaging('Create');
+        const workoutCreating = loadingToast('Creating Workout...');
         await createWorkout(
           videoFile,
           metadata,
@@ -70,9 +66,9 @@ export default function WorkoutPopupContent({
           targetMuscleGroup,
           type
         );
-        workoutComplete('Create', workoutCreating);
+        loadingCompletedToast('Created Successfully', workoutCreating);
       } else {
-        const workoutEditing = workoutManaging('Edit');
+        const workoutEditing = loadingToast('Editing Workout...');
         await editWorkout(
           videoFile,
           metadata,
@@ -82,7 +78,7 @@ export default function WorkoutPopupContent({
           type,
           workoutId
         );
-        workoutComplete('Edit', workoutEditing);
+        loadingCompletedToast('Edited Successfully', workoutEditing);
       }
       close();
       setSubmitDisabled(false);
