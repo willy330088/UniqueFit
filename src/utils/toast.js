@@ -76,6 +76,22 @@ function deleteToast() {
   });
 }
 
+function profileUpdating() {
+  return toast.loading('Updating Profile...', {
+    position: toast.POSITION.TOP_CENTER,
+  });
+}
+
+function profileUpdateComplete(alert) {
+  return toast.update(alert, {
+    render: 'Updated Successfully',
+    type: 'success',
+    isLoading: false,
+    position: toast.POSITION.TOP_CENTER,
+    autoClose: 2000,
+  });
+}
+
 export {
   signInToast,
   noTitleError,
@@ -87,4 +103,6 @@ export {
   planManaging,
   planComplete,
   deleteToast,
+  profileUpdating,
+  profileUpdateComplete,
 };

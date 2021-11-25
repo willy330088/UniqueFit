@@ -12,7 +12,7 @@ import {
   socialMediaAuth,
   setSocialMediaUserData,
   nativeUserSignUp,
-  updateNativeUserName,
+  updateUserName,
   setNativeUserData,
   nativeSignIn,
 } from '../../utils/firebase';
@@ -53,7 +53,7 @@ export default function SignInPopup({ open, closeModal }) {
       try {
         const userData = await nativeUserSignUp(email, password);
         await setNativeUserData(userData.user, name);
-        await updateNativeUserName(name);
+        await updateUserName(name);
         signInComplete();
       } catch (err) {
         switch (err.code) {

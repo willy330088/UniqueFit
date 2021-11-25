@@ -19,6 +19,10 @@ const planRef = firebase.firestore().collection('plans');
 const workoutRef = firebase.firestore().collection('workouts');
 const batch = firebase.firestore().batch();
 
+const userPhotoFileRef = firebase
+  .storage()
+  .ref('user-photos/' + firebase.auth().currentUser?.uid);
+
 const facebookProvider = new firebase.auth.FacebookAuthProvider();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
@@ -45,7 +49,7 @@ function nativeUserSignUp(email, password) {
   return firebase.auth().createUserWithEmailAndPassword(email, password);
 }
 
-function updateNativeUserName(name) {
+function updateUserName(name) {
   return firebase.auth().currentUser.updateProfile({
     displayName: name,
   });
@@ -236,6 +240,34 @@ function addPlanCollection(planId, userId) {
   });
 }
 
+function uploadUserPhoto(photoFile, metadata) {
+  return userPhotoFileRef.put(photoFile, metadata);
+}
+
+function getUserPhotoURL() {
+  return userPhotoFileRef.getDownloadURL();
+}
+
+function updateUserPhotoAndName(userName, imageURL) {
+  return firebase.auth().currentUser.updateProfile({
+    displayName: userName,
+    photoURL: imageURL,
+  });
+}
+
+function updateUserInfo(userName, imageURL) {
+  if (imageURL) {
+    return userRef.doc(firebase.auth().currentUser.uid).update({
+      displayName: userName,
+      photoURL: imageURL,
+    });
+  } else {
+    return userRef.doc(firebase.auth().currentUser.uid).update({
+      displayName: userName,
+    });
+  }
+}
+
 export {
   firebase,
   facebookProvider,
@@ -243,7 +275,7 @@ export {
   socialMediaAuth,
   setSocialMediaUserData,
   nativeUserSignUp,
-  updateNativeUserName,
+  updateUserName,
   setNativeUserData,
   nativeSignIn,
   createPlan,
@@ -260,4 +292,8 @@ export {
   addPlanComment,
   removePlanCollection,
   addPlanCollection,
+  uploadUserPhoto,
+  getUserPhotoURL,
+  updateUserPhotoAndName,
+  updateUserInfo,
 };

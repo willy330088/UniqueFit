@@ -4,10 +4,110 @@ import Popup from 'reactjs-popup';
 import { useSelector } from 'react-redux';
 import { BsCameraFill } from 'react-icons/bs';
 import { HiUserCircle } from 'react-icons/hi';
-import { firebase } from '../../utils/firebase';
-import 'firebase/auth';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {
+  uploadUserPhoto,
+  getUserPhotoURL,
+  updateUserPhotoAndName,
+  updateUserInfo,
+  updateUserName,
+} from '../../utils/firebase';
+import { profileUpdating, profileUpdateComplete } from '../../utils/toast';
+
+export default function EditProfilePopup({ closeModal, open }) {
+  const currentUser = useSelector((state) => state.currentUser);
+  const [photoHover, setPhotoHover] = useState(false);
+  const [personalHover, setPersonalHover] = useState(false);
+  const inputPhotoRef = useRef();
+  const [source, setSource] = useState(currentUser?.photoURL);
+  const [userName, setUserName] = useState(currentUser?.displayName);
+  const [photoFile, setPhotoFile] = useState();
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setPhotoFile(file);
+    const url = URL.createObjectURL(file);
+    setSource(url);
+  };
+
+  function close() {
+    closeModal();
+    setSource(currentUser?.photoURL);
+  }
+
+  const handleChoose = () => {
+    inputPhotoRef.current.click();
+  };
+
+  async function onSave() {
+    const profileUpdatingToast = profileUpdating();
+    if (photoFile) {
+      const metadata = { contentType: photoFile.type };
+      await uploadUserPhoto(photoFile, metadata);
+      const userPhotoURL = await getUserPhotoURL();
+      await updateUserPhotoAndName(userName, userPhotoURL);
+      await updateUserInfo(userName, userPhotoURL);
+      setPhotoFile(null);
+      setSource(currentUser?.photoURL);
+    } else {
+      await updateUserName(userName);
+      await updateUserInfo(userName, null);
+    }
+    profileUpdateComplete(profileUpdatingToast);
+    closeModal();
+  }
+
+  return (
+    <StyledPopup open={open} closeOnDocumentClick onClose={close}>
+      <StyledPopupTitle>Edit Your Photo</StyledPopupTitle>
+      <StyledPhotoContainer>
+        {source || currentUser?.photoURL ? (
+          <StyledPhoto
+            src={source}
+            onMouseOver={() => {
+              setPhotoHover(true);
+            }}
+            onMouseLeave={() => {
+              setPhotoHover(false);
+            }}
+            onClick={handleChoose}
+          >
+            <StyledPhotoIcon hover={photoHover} />
+          </StyledPhoto>
+        ) : (
+          <StyledPersonalIconContainer
+            onClick={handleChoose}
+            onMouseOver={() => {
+              setPersonalHover(true);
+            }}
+            onMouseLeave={() => {
+              setPersonalHover(false);
+            }}
+          >
+            <StyledPersonalIcon hover={personalHover} />
+            <StyledPhotoIconPersonal hover={personalHover} />
+          </StyledPersonalIconContainer>
+        )}
+        <input
+          style={{ display: 'none' }}
+          ref={inputPhotoRef}
+          type="file"
+          onChange={handleFileChange}
+          accept="image/png, image/jpeg"
+        />
+      </StyledPhotoContainer>
+      <StyledPopupTitle>Edit Your Name</StyledPopupTitle>
+      <StyledPopupInput
+        value={userName}
+        onChange={(e) => {
+          setUserName(e.target.value);
+        }}
+      />
+      <StyledPopupBtnContainer>
+        <StyledPopupBtn onClick={onSave}>Save</StyledPopupBtn>
+      </StyledPopupBtnContainer>
+    </StyledPopup>
+  );
+}
 
 const StyledPopup = styled(Popup)`
   &-overlay {
@@ -146,149 +246,3 @@ const StyledPhotoIconPersonal = styled(BsCameraFill)`
   z-index: 100;
   cursor: pointer;
 `;
-
-export default function EditProfilePopup({ closeModal, open }) {
-  const currentUser = useSelector((state) => state.currentUser);
-  const [photoHover, setPhotoHover] = useState(false);
-  const [personalHover, setPersonalHover] = useState(false);
-  const inputPhotoRef = useRef();
-  const [source, setSource] = useState(currentUser?.photoURL);
-  const [userName, setUserName] = useState(currentUser?.displayName);
-  const [photoFile, setPhotoFile] = useState();
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setPhotoFile(file);
-    const url = URL.createObjectURL(file);
-    setSource(url);
-  };
-
-  function close() {
-    closeModal();
-    setSource(currentUser?.photoURL);
-  }
-
-  const handleChoose = () => {
-    inputPhotoRef.current.click();
-  };
-
-  function onSave() {
-    const profileUpdating = toast.loading('Updating Profile...', {
-      position: toast.POSITION.TOP_CENTER,
-    });
-    if (photoFile) {
-      const fileRef = firebase.storage().ref('user-photos/' + currentUser.uid);
-      const metadata = { contentType: photoFile.type };
-
-      fileRef.put(photoFile, metadata).then(() => {
-        fileRef.getDownloadURL().then((imageURL) => {
-          firebase
-            .auth()
-            .currentUser.updateProfile({
-              displayName: userName,
-              photoURL: imageURL,
-            })
-            .then(() => {
-              firebase
-                .firestore()
-                .collection('users')
-                .doc(currentUser.uid)
-                .update({
-                  displayName: userName,
-                  photoURL: imageURL,
-                })
-                .then(() => {
-                  setPhotoFile(null);
-                  setSource(currentUser?.photoURL);
-                  closeModal();
-                  toast.update(profileUpdating, {
-                    render: 'Updated Successfully',
-                    type: 'success',
-                    isLoading: false,
-                    position: toast.POSITION.TOP_CENTER,
-                    autoClose: 2000,
-                  });
-                });
-            });
-        });
-      });
-    } else {
-      firebase
-        .auth()
-        .currentUser.updateProfile({
-          displayName: userName,
-        })
-        .then(() => {
-          firebase
-            .firestore()
-            .collection('users')
-            .doc(currentUser.uid)
-            .update({
-              displayName: userName,
-            })
-            .then(() => {
-              closeModal();
-              toast.update(profileUpdating, {
-                render: 'Updated Successfully',
-                type: 'success',
-                isLoading: false,
-                position: toast.POSITION.TOP_CENTER,
-                autoClose: 2000,
-              });
-            });
-        });
-    }
-  }
-
-  return (
-    <StyledPopup open={open} closeOnDocumentClick onClose={close}>
-      <StyledPopupTitle>Edit Your Photo</StyledPopupTitle>
-      <StyledPhotoContainer>
-        {source || currentUser?.photoURL ? (
-          <StyledPhoto
-            src={source}
-            onMouseOver={() => {
-              setPhotoHover(true);
-            }}
-            onMouseLeave={() => {
-              setPhotoHover(false);
-            }}
-            onClick={handleChoose}
-          >
-            <StyledPhotoIcon hover={photoHover} />
-          </StyledPhoto>
-        ) : (
-          <StyledPersonalIconContainer
-            onClick={handleChoose}
-            onMouseOver={() => {
-              setPersonalHover(true);
-            }}
-            onMouseLeave={() => {
-              setPersonalHover(false);
-            }}
-          >
-            <StyledPersonalIcon hover={personalHover} />
-            <StyledPhotoIconPersonal hover={personalHover} />
-          </StyledPersonalIconContainer>
-        )}
-        <input
-          style={{ display: 'none' }}
-          ref={inputPhotoRef}
-          type="file"
-          onChange={handleFileChange}
-          accept="image/png, image/jpeg"
-        />
-      </StyledPhotoContainer>
-      <StyledPopupTitle>Edit Your Name</StyledPopupTitle>
-      <StyledPopupInput
-        value={userName}
-        onChange={(e) => {
-          setUserName(e.target.value);
-        }}
-      />
-      <StyledPopupBtnContainer>
-        <StyledPopupBtn onClick={onSave}>Save</StyledPopupBtn>
-      </StyledPopupBtnContainer>
-    </StyledPopup>
-  );
-}
