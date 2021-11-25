@@ -66,6 +66,65 @@ function nativeSignIn(email, password) {
   return firebase.auth().signInWithEmailAndPassword(email, password);
 }
 
+async function createWorkout(
+  videoFile,
+  metadata,
+  title,
+  description,
+  targetMuscleGroup,
+  type
+) {
+  const workoutDocRef = workoutRef.doc();
+  const workoutVideoFileRef = firebase
+    .storage()
+    .ref('workout-videos/' + workoutDocRef.id);
+  await workoutVideoFileRef.put(videoFile, metadata);
+  const workoutVideoURL = await workoutVideoFileRef.getDownloadURL();
+  await workoutDocRef.set({
+    title: title,
+    publisher: firebase.auth().currentUser.uid,
+    description: description,
+    targetMuscleGroup: targetMuscleGroup,
+    type: type,
+    collectedBy: [],
+    videoURL: workoutVideoURL,
+    createdAt: firebase.firestore.Timestamp.now(),
+  });
+}
+
+async function editWorkout(
+  videoFile,
+  metadata,
+  title,
+  description,
+  targetMuscleGroup,
+  type,
+  workoutId
+) {
+  const workoutDocRef = workoutRef.doc(workoutId);
+  const workoutVideoFileRef = firebase
+    .storage()
+    .ref('workout-videos/' + workoutId);
+  if (videoFile === '') {
+    await workoutDocRef.update({
+      title: title,
+      description: description,
+      targetMuscleGroup: targetMuscleGroup,
+      type: type,
+    });
+  } else {
+    await workoutVideoFileRef.put(videoFile, metadata);
+    const workoutVideoURL = await workoutVideoFileRef.getDownloadURL();
+    await workoutDocRef.update({
+      title: title,
+      description: description,
+      targetMuscleGroup: targetMuscleGroup,
+      type: type,
+      videoURL: workoutVideoURL,
+    });
+  }
+}
+
 function createPlan(
   title,
   publicity,
@@ -278,6 +337,8 @@ export {
   updateUserName,
   setNativeUserData,
   nativeSignIn,
+  createWorkout,
+  editWorkout,
   createPlan,
   editPlan,
   deleteWorkoutComment,

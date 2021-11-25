@@ -130,12 +130,12 @@ export default function PlanPopupContent({
           <StyledCreateLabel>Order Your Workouts</StyledCreateLabel>
           <DragandDrop plan={plan} setPlan={setPlan} />
           <StyledChangeWorkoutBtnContainer>
-            <StyledSubmitWorkoutBtn
+            <StyledSubmitPlanBtn
               onClick={onSubmitPlan}
               submitDisabled={submitDisabled}
             >
               {type === 'Create' ? 'Create' : 'Save'}
-            </StyledSubmitWorkoutBtn>
+            </StyledSubmitPlanBtn>
           </StyledChangeWorkoutBtnContainer>
         </>
       );
@@ -189,7 +189,7 @@ const StyledArrowLeftIcon = styled(AiOutlineLeftCircle)`
   }
 `;
 
-const StyledSubmitWorkoutBtn = styled.div`
+const StyledSubmitPlanBtn = styled.div`
   font-size: 20px;
   height: 40px;
   width: 120px;

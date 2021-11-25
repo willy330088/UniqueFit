@@ -50,6 +50,13 @@ function noWeightOrRepsError() {
   });
 }
 
+function noVideoError() {
+  toast.error('Please upload video', {
+    position: toast.POSITION.TOP_CENTER,
+    autoClose: 3000,
+  });
+}
+
 function planManaging(type) {
   const text = type === 'Create' ? 'Creating Plan...' : 'Editing Plan...';
   return toast.loading(text, {
@@ -58,6 +65,25 @@ function planManaging(type) {
 }
 
 function planComplete(type, alert) {
+  const text =
+    type === 'Create' ? 'Created Successfully' : 'Edited Successfully';
+  return toast.update(alert, {
+    render: text,
+    type: 'success',
+    isLoading: false,
+    position: toast.POSITION.TOP_CENTER,
+    autoClose: 2000,
+  });
+}
+
+function workoutManaging(type) {
+  const text = type === 'Create' ? 'Creating Workout...' : 'Editing Workout...';
+  return toast.loading(text, {
+    position: toast.POSITION.TOP_CENTER,
+  });
+}
+
+function workoutComplete(type, alert) {
   const text =
     type === 'Create' ? 'Created Successfully' : 'Edited Successfully';
   return toast.update(alert, {
@@ -100,6 +126,9 @@ export {
   noDescriptionError,
   noWorkoutsError,
   noWeightOrRepsError,
+  noVideoError,
+  workoutManaging,
+  workoutComplete,
   planManaging,
   planComplete,
   deleteToast,
