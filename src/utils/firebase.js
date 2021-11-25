@@ -21,6 +21,36 @@ const batch = firebase.firestore().batch();
 const facebookProvider = new firebase.auth.FacebookAuthProvider();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
+function getWorkoutsData(callback) {
+  workoutRef.orderBy('createdAt', 'desc').onSnapshot((collectionSnapshot) => {
+    const data = collectionSnapshot.docs.map((docSnapshot) => {
+      const id = docSnapshot.id;
+      return { ...docSnapshot.data(), id };
+    });
+    return callback(data);
+  });
+}
+
+function getPlansData(callback) {
+  planRef.orderBy('createdAt', 'desc').onSnapshot((collectionSnapshot) => {
+    const data = collectionSnapshot.docs.map((docSnapshot) => {
+      const id = docSnapshot.id;
+      return { ...docSnapshot.data(), id };
+    });
+    return callback(data);
+  });
+}
+
+function getUsersData(callback) {
+  userRef.onSnapshot((collectionSnapshot) => {
+    const data = collectionSnapshot.docs.map((docSnapshot) => {
+      const id = docSnapshot.id;
+      return { ...docSnapshot.data(), id };
+    });
+    return callback(data);
+  });
+}
+
 function socialMediaAuth(provider) {
   return firebase
     .auth()
@@ -218,7 +248,7 @@ function editPlanComment(planId, commentId, commentContent) {
   });
 }
 
-function getWorkoutComment(workoutId, setComments) {
+function getWorkoutComment(workoutId, callback) {
   workoutRef
     .doc(workoutId)
     .collection('comments')
@@ -228,7 +258,7 @@ function getWorkoutComment(workoutId, setComments) {
         const id = doc.id;
         return { ...doc.data(), id };
       });
-      setComments(data);
+      callback(data);
     });
 }
 
@@ -258,7 +288,7 @@ function addWorkoutCollection(workoutId, userId) {
   });
 }
 
-function getPlanComment(planId, setComments) {
+function getPlanComment(planId, callback) {
   planRef
     .doc(planId)
     .collection('comments')
@@ -268,7 +298,7 @@ function getPlanComment(planId, setComments) {
         const id = doc.id;
         return { ...doc.data(), id };
       });
-      setComments(data);
+      callback(data);
     });
 }
 
@@ -390,6 +420,9 @@ export {
   firebase,
   facebookProvider,
   googleProvider,
+  getWorkoutsData,
+  getPlansData,
+  getUsersData,
   socialMediaAuth,
   setSocialMediaUserData,
   nativeUserSignUp,

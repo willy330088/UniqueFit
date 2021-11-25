@@ -18,7 +18,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import ScrollToTop from './components/common/ScrollToTop';
 import { useDispatch } from 'react-redux';
-import { firebase } from './utils/firebase';
+import {
+  firebase,
+  getWorkoutsData,
+  getPlansData,
+  getUsersData,
+} from './utils/firebase';
 import 'firebase/firestore';
 import {
   getWorkouts,
@@ -54,44 +59,21 @@ function App() {
   const [currentUser, setCurrentUser] = useState();
 
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection('workouts')
-      .orderBy('createdAt', 'desc')
-      .onSnapshot((collectionSnapshot) => {
-        const data = collectionSnapshot.docs.map((docSnapshot) => {
-          const id = docSnapshot.id;
-          return { ...docSnapshot.data(), id };
-        });
-        dispatch(getWorkouts(data));
-      });
+    getWorkoutsData((data) => {
+      dispatch(getWorkouts(data));
+    });
   }, []);
 
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection('plans')
-      .orderBy('createdAt', 'desc')
-      .onSnapshot((collectionSnapshot) => {
-        const data = collectionSnapshot.docs.map((docSnapshot) => {
-          const id = docSnapshot.id;
-          return { ...docSnapshot.data(), id };
-        });
-        dispatch(getPlans(data));
-      });
+    getPlansData((data) => {
+      dispatch(getPlans(data));
+    });
   }, []);
 
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection('users')
-      .onSnapshot((collectionSnapshot) => {
-        const data = collectionSnapshot.docs.map((docSnapshot) => {
-          const id = docSnapshot.id;
-          return { ...docSnapshot.data(), id };
-        });
-        dispatch(getUsers(data));
-      });
+    getUsersData((data) => {
+      dispatch(getUsers(data));
+    });
   }, []);
 
   useEffect(() => {
