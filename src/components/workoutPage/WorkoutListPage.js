@@ -11,6 +11,98 @@ import { MdAddCircleOutline } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import FullPageLoading from '../common/FullPageLoading';
 
+export default function WorkoutListPage({ currentUser }) {
+  const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
+  const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
+  const [signInOpen, setSignInOpen] = useState(false);
+  const closeSignIn = () => setSignInOpen(false);
+  const workouts = useSelector((state) => state.workouts);
+
+  const gymWorkouts = workouts.filter(
+    (workout) => workout.type === 'Gymworkout'
+  );
+  const homeWorkouts = workouts.filter(
+    (workout) => workout.type === 'Homeworkout'
+  );
+
+  function showWorkoutList() {
+    if (filteredMuscleGroups.length === 0 && gymWorkoutTypeSelected) {
+      return gymWorkouts;
+    } else if (filteredMuscleGroups.length === 0 && !gymWorkoutTypeSelected) {
+      return homeWorkouts;
+    } else if (filteredMuscleGroups.length !== 0 && gymWorkoutTypeSelected) {
+      return gymWorkouts.filter((workout) =>
+        filteredMuscleGroups.includes(workout.targetMuscleGroup)
+      );
+    } else {
+      return homeWorkouts.filter((workout) =>
+        filteredMuscleGroups.includes(workout.targetMuscleGroup)
+      );
+    }
+  }
+
+  return currentUser !== undefined ? (
+    <StyledBody>
+      <Header />
+      <Banner slogan={'Collect Your Workouts'} />
+      <StyledWorkoutListContainer>
+        <StyledBookmark>
+          <StyledWorkoutTypeTag
+            selected={gymWorkoutTypeSelected}
+            onClick={() => {
+              setGymWorkoutTypeSelected(true);
+            }}
+          >
+            Gym Workout
+          </StyledWorkoutTypeTag>
+          <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
+          <StyledWorkoutTypeTag
+            selected={!gymWorkoutTypeSelected}
+            onClick={() => {
+              setGymWorkoutTypeSelected(false);
+            }}
+          >
+            Home Workout
+          </StyledWorkoutTypeTag>
+        </StyledBookmark>
+        <Filter
+          filteredMuscleGroups={filteredMuscleGroups}
+          setFilteredMuscleGroups={setFilteredMuscleGroups}
+        />
+        <StyledWorkoutContainer>
+          <StyledCreateWorkoutContainer
+            onClick={() => {
+              if (currentUser) {
+                setOpen(true);
+              } else {
+                setSignInOpen(true);
+              }
+            }}
+          >
+            <StyledCreateWorkoutIcon />
+            <StyledCreateWorkoutText>
+              Click To Create Workout
+            </StyledCreateWorkoutText>
+          </StyledCreateWorkoutContainer>
+          <SignInPopup open={signInOpen} closeModal={closeSignIn} />
+          <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
+            <CreateWorkoutPopup close={closeModal} />
+          </StyledPopup>
+          {showWorkoutList().map((workout) => {
+            return (
+              <WorkoutItem workout={workout} setSignInOpen={setSignInOpen} />
+            );
+          })}
+        </StyledWorkoutContainer>
+      </StyledWorkoutListContainer>
+    </StyledBody>
+  ) : (
+    <FullPageLoading />
+  );
+}
+
 const StyledBody = styled.div`
   background: #222d35;
   min-height: 100vh;
@@ -130,96 +222,3 @@ const StyledPopup = styled(Popup)`
     }
   }
 `;
-
-export default function WorkoutListPage({ currentUser }) {
-  const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
-  const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
-  const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
-  const [signInOpen, setSignInOpen] = useState(false);
-  const closeSignIn = () => setSignInOpen(false);
-  const workouts = useSelector((state) => state.workouts);
-  // const currentUser = useSelector((state) => state.currentUser);
-
-  const gymWorkouts = workouts.filter(
-    (workout) => workout.type === 'Gymworkout'
-  );
-  const homeWorkouts = workouts.filter(
-    (workout) => workout.type === 'Homeworkout'
-  );
-
-  function showWorkoutList() {
-    if (filteredMuscleGroups.length === 0 && gymWorkoutTypeSelected) {
-      return gymWorkouts;
-    } else if (filteredMuscleGroups.length === 0 && !gymWorkoutTypeSelected) {
-      return homeWorkouts;
-    } else if (filteredMuscleGroups.length !== 0 && gymWorkoutTypeSelected) {
-      return gymWorkouts.filter((workout) =>
-        filteredMuscleGroups.includes(workout.targetMuscleGroup)
-      );
-    } else {
-      return homeWorkouts.filter((workout) =>
-        filteredMuscleGroups.includes(workout.targetMuscleGroup)
-      );
-    }
-  }
-
-  return currentUser !== undefined ? (
-    <StyledBody>
-      <Header />
-      <Banner slogan={'Collect Your Workouts'} />
-      <StyledWorkoutListContainer>
-        <StyledBookmark>
-          <StyledWorkoutTypeTag
-            selected={gymWorkoutTypeSelected}
-            onClick={() => {
-              setGymWorkoutTypeSelected(true);
-            }}
-          >
-            Gym Workout
-          </StyledWorkoutTypeTag>
-          <StyledWorkoutTypeSeparator>|</StyledWorkoutTypeSeparator>
-          <StyledWorkoutTypeTag
-            selected={!gymWorkoutTypeSelected}
-            onClick={() => {
-              setGymWorkoutTypeSelected(false);
-            }}
-          >
-            Home Workout
-          </StyledWorkoutTypeTag>
-        </StyledBookmark>
-        <Filter
-          filteredMuscleGroups={filteredMuscleGroups}
-          setFilteredMuscleGroups={setFilteredMuscleGroups}
-        />
-        <StyledWorkoutContainer>
-          <StyledCreateWorkoutContainer
-            onClick={() => {
-              if (currentUser) {
-                setOpen(true);
-              } else {
-                setSignInOpen(true);
-              }
-            }}
-          >
-            <StyledCreateWorkoutIcon />
-            <StyledCreateWorkoutText>
-              Click To Create Workout
-            </StyledCreateWorkoutText>
-          </StyledCreateWorkoutContainer>
-          <SignInPopup open={signInOpen} closeModal={closeSignIn} />
-          <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
-            <CreateWorkoutPopup close={closeModal} />
-          </StyledPopup>
-          {showWorkoutList().map((workout) => {
-            return (
-              <WorkoutItem workout={workout} setSignInOpen={setSignInOpen} />
-            );
-          })}
-        </StyledWorkoutContainer>
-      </StyledWorkoutListContainer>
-    </StyledBody>
-  ) : (
-    <FullPageLoading />
-  );
-}

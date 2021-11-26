@@ -8,6 +8,71 @@ import muscleGroups from '../../utils/muscleGroup';
 import WorkoutPopup from '../common/WorkoutPopup';
 import { useSelector } from 'react-redux';
 
+export default function ProfileWorkout({ workout }) {
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
+  const users = useSelector((state) => state.users);
+  const publisher = users.filter((user) => user.id === workout.publisher)[0];
+
+  return (
+    <>
+      <StyledWorkoutItemContainer
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        <StyledPlayIcon />
+        <StyledWorkoutItemImage
+          src={
+            muscleGroups.filter((muscleGroup) => {
+              if (muscleGroup.name === workout.targetMuscleGroup)
+                return muscleGroup;
+            })[0].src
+          }
+        />
+        <StyledWorkoutItemDescription>
+          <StyledWorkoutItemTitle>{workout.title}</StyledWorkoutItemTitle>
+          <StyledWorkoutItemPublisher>
+            {publisher?.photoURL ? (
+              <StyledPublisherImage src={publisher?.photoURL} />
+            ) : (
+              <StyledPublisherIcon />
+            )}
+            {
+              <StyledPublisherName>
+                {publisher?.displayName}
+              </StyledPublisherName>
+            }
+          </StyledWorkoutItemPublisher>
+          <StyledWorkoutItemSocial>
+            <StyledContainer>
+              <StyledCollectIcon />{' '}
+              <StyledIconNum>
+                Collected ({workout.collectedBy.length})
+              </StyledIconNum>{' '}
+            </StyledContainer>
+            <StyledContainer2>
+              <StyledMessageIcon />{' '}
+              <StyledIconNum>
+                Comments ({workout.commentsCount || 0})
+              </StyledIconNum>
+            </StyledContainer2>
+          </StyledWorkoutItemSocial>
+        </StyledWorkoutItemDescription>
+      </StyledWorkoutItemContainer>
+      <WorkoutPopup workout={workout} close={closeModal} open={open} />
+    </>
+  );
+}
+
+const StyledPlayIcon = styled(ImPlay)`
+  color: white;
+  font-size: 60px;
+  position: absolute;
+  top: calc(50% - 30px);
+  display: none;
+`;
+
 const StyledWorkoutItemContainer = styled.div`
   display: flex;
   align-items: center;
@@ -37,6 +102,10 @@ const StyledWorkoutItemContainer = styled.div`
       background-color: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(2px);
     }
+  }
+
+  &:hover ${StyledPlayIcon} {
+    display: block;
   }
 
   @media (min-width: 650px) {
@@ -120,14 +189,6 @@ const StyledWorkoutItemSocial = styled.div`
   } ;
 `;
 
-const StyledPlayIcon = styled(ImPlay)`
-  color: white;
-  font-size: 60px;
-  position: absolute;
-  top: calc(50% - 30px);
-  display: ${(props) => (props.hover ? 'block' : 'none')};
-`;
-
 const StyledCollectIcon = styled(FaDumbbell)`
   font-size: 18px;
   margin-right: 5px;
@@ -152,74 +213,6 @@ const StyledContainer2 = styled.div`
   }
 `;
 
-const StyledCollectNum = styled.div`
+const StyledIconNum = styled.div`
   padding-top: 3px;
 `;
-
-const StyledCommentNum = styled.div`
-  padding-top: 3px;
-`;
-
-export default function ProfileWorkout({ workout }) {
-  const [hover, setHover] = useState(false);
-  const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
-  const users = useSelector((state) => state.users);
-  const publisher = users.filter((user) => user.id === workout.publisher)[0];
-
-  return (
-    <>
-      <StyledWorkoutItemContainer
-        onMouseOver={() => {
-          setHover(true);
-        }}
-        onMouseLeave={() => {
-          setHover(false);
-        }}
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        <StyledPlayIcon hover={hover} />
-        <StyledWorkoutItemImage
-          src={
-            muscleGroups.filter((muscleGroup) => {
-              if (muscleGroup.name === workout.targetMuscleGroup)
-                return muscleGroup;
-            })[0].src
-          }
-        />
-        <StyledWorkoutItemDescription>
-          <StyledWorkoutItemTitle>{workout.title}</StyledWorkoutItemTitle>
-          <StyledWorkoutItemPublisher>
-            {publisher?.photoURL ? (
-              <StyledPublisherImage src={publisher?.photoURL} />
-            ) : (
-              <StyledPublisherIcon />
-            )}
-            {
-              <StyledPublisherName>
-                {publisher?.displayName}
-              </StyledPublisherName>
-            }
-          </StyledWorkoutItemPublisher>
-          <StyledWorkoutItemSocial>
-            <StyledContainer>
-              <StyledCollectIcon />{' '}
-              <StyledCollectNum>
-                Collected ({workout.collectedBy.length})
-              </StyledCollectNum>{' '}
-            </StyledContainer>
-            <StyledContainer2>
-              <StyledMessageIcon />{' '}
-              <StyledCommentNum>
-                Comments ({workout.commentsCount || 0})
-              </StyledCommentNum>
-            </StyledContainer2>
-          </StyledWorkoutItemSocial>
-        </StyledWorkoutItemDescription>
-      </StyledWorkoutItemContainer>
-      <WorkoutPopup workout={workout} close={closeModal} open={open} />
-    </>
-  );
-}

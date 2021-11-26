@@ -4,6 +4,84 @@ import styled from 'styled-components';
 import { ImPlay } from 'react-icons/im';
 import { FaWeightHanging } from 'react-icons/fa';
 import { FaDumbbell } from 'react-icons/fa';
+import { StyledVerticalContainer } from '../common/GeneralStyle';
+
+export default function SpecificPlanWorkoutItem({
+  workout,
+  index,
+  workoutSetDetails,
+  muscleGroups,
+  completeNum,
+  setCompleteNum,
+  trainingMode,
+  setSignInOpen,
+}) {
+  const [checked, setChecked] = useState(false);
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
+
+  function toggleChecked() {
+    if (checked === true) {
+      setCompleteNum(completeNum - 1);
+    } else {
+      setCompleteNum(completeNum + 1);
+    }
+    setChecked(!checked);
+  }
+
+  return (
+    <StyledPlanWorkoutItemContainer>
+      <StyledVerticalContainer>
+        <StyledPlanWorkoutImage
+          src={
+            workoutSetDetails[index]
+              ? muscleGroups.filter((muscleGroup) => {
+                  if (
+                    muscleGroup.name ===
+                    workoutSetDetails[index].targetMuscleGroup
+                  )
+                    return muscleGroup;
+                })[0].src
+              : null
+          }
+        />
+        <StyledPlanWorkoutName>{workout.title}</StyledPlanWorkoutName>
+      </StyledVerticalContainer>
+      <StyledPlanWorkoutItemDetailContainer>
+        <StyledPlanWorkoutItemWeightContainer>
+          <StyledPlanWorkoutItemWeightIcon />
+          <StyledPlanWorkoutItemWeightNum>
+            {workout.weight}kg
+          </StyledPlanWorkoutItemWeightNum>
+        </StyledPlanWorkoutItemWeightContainer>
+        <StyledPlanWorkoutItemDumbbellContainer>
+          <StyledPlanWorkoutItemDumbbellIcon />
+          <StyledPlanWorkoutItemDumbbellNum>
+            {workout.reps}reps
+          </StyledPlanWorkoutItemDumbbellNum>
+        </StyledPlanWorkoutItemDumbbellContainer>
+      </StyledPlanWorkoutItemDetailContainer>
+      <StyledPlanPlayIcon
+        onClick={() => {
+          setOpen(true);
+        }}
+      />
+      <WorkoutPopup
+        workout={workoutSetDetails[index]}
+        close={closeModal}
+        open={open}
+        setSignInOpen={setSignInOpen}
+      />
+      {trainingMode ? (
+        <StyledCheckbox
+          type="checkbox"
+          checked={checked}
+          onClick={toggleChecked}
+        />
+      ) : null}
+    </StyledPlanWorkoutItemContainer>
+  );
+}
 
 const StyledPlanWorkoutItemContainer = styled.div`
   background: #e3e3e3;
@@ -19,11 +97,6 @@ const StyledPlanWorkoutItemContainer = styled.div`
     justify-content: space-between;
     align-items: center;
   }
-`;
-
-const StyledPlanWorkoutItemTitleContainer = styled.div`
-  display: flex;
-  align-items: center;
 `;
 
 const StyledPlanWorkoutName = styled.div`
@@ -44,9 +117,7 @@ const StyledPlanWorkoutImage = styled.img`
   }
 `;
 
-const StyledPlanWorkoutItemDetailContainer = styled.div`
-  display: flex;
-  align-items: center;
+const StyledPlanWorkoutItemDetailContainer = styled(StyledVerticalContainer)`
   margin-top: 10px;
 
   @media (min-width: 850px) {
@@ -109,80 +180,3 @@ const StyledCheckbox = styled.input`
   right: 20px;
   top: calc(50% - 8.5px);
 `;
-
-export default function SpecificPlanWorkoutItem({
-  workout,
-  index,
-  workoutSetDetails,
-  muscleGroups,
-  completeNum,
-  setCompleteNum,
-  trainingMode,
-  setSignInOpen,
-}) {
-  const [checked, setChecked] = useState(false);
-  const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
-
-  function toggleChecked() {
-    if (checked === true) {
-      setCompleteNum(completeNum - 1);
-    } else {
-      setCompleteNum(completeNum + 1);
-    }
-    setChecked(!checked);
-  }
-
-  return (
-    <StyledPlanWorkoutItemContainer>
-      <StyledPlanWorkoutItemTitleContainer>
-        <StyledPlanWorkoutImage
-          src={
-            workoutSetDetails[index]
-              ? muscleGroups.filter((muscleGroup) => {
-                  if (
-                    muscleGroup.name ===
-                    workoutSetDetails[index].targetMuscleGroup
-                  )
-                    return muscleGroup;
-                })[0].src
-              : null
-          }
-        />
-        <StyledPlanWorkoutName>{workout.title}</StyledPlanWorkoutName>
-      </StyledPlanWorkoutItemTitleContainer>
-      <StyledPlanWorkoutItemDetailContainer>
-        <StyledPlanWorkoutItemWeightContainer>
-          <StyledPlanWorkoutItemWeightIcon />
-          <StyledPlanWorkoutItemWeightNum>
-            {workout.weight}kg
-          </StyledPlanWorkoutItemWeightNum>
-        </StyledPlanWorkoutItemWeightContainer>
-        <StyledPlanWorkoutItemDumbbellContainer>
-          <StyledPlanWorkoutItemDumbbellIcon />
-          <StyledPlanWorkoutItemDumbbellNum>
-            {workout.reps}reps
-          </StyledPlanWorkoutItemDumbbellNum>
-        </StyledPlanWorkoutItemDumbbellContainer>
-      </StyledPlanWorkoutItemDetailContainer>
-      <StyledPlanPlayIcon
-        onClick={() => {
-          setOpen(true);
-        }}
-      />
-      <WorkoutPopup
-        workout={workoutSetDetails[index]}
-        close={closeModal}
-        open={open}
-        setSignInOpen={setSignInOpen}
-      />
-      {trainingMode ? (
-        <StyledCheckbox
-          type="checkbox"
-          checked={checked}
-          onClick={toggleChecked}
-        />
-      ) : null}
-    </StyledPlanWorkoutItemContainer>
-  );
-}

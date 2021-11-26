@@ -15,12 +15,12 @@ import {
 } from '../../utils/firebase';
 import muscleGroups from '../../utils/muscleGroup';
 import PlanComment from './PlanComment';
-// import StopWatch from '../Timer/StopWatch';
 import ProgressBar from '@ramonak/react-progress-bar';
 import SpecificPlanWorkoutItem from './SpecificPlanWorkoutItem';
 import SignInPopup from '../common/SignInPopup';
 import { useSelector } from 'react-redux';
 import FullPageLoading from '../common/FullPageLoading';
+import { StyledLeaveCommentBtn } from '../common/GeneralStyle';
 
 export default function SpecificPlanPage() {
   const { planId } = useParams();
@@ -83,12 +83,6 @@ export default function SpecificPlanPage() {
       <SignInPopup open={signInOpen} closeModal={closeSignIn} />
       <StyledSpecificPlanPageContainer>
         <StyledPlanContainer>
-          <StyledCollectIconContainer onClick={toggleCollected}>
-            <StyledPlanCollectIcon isCollected={isCollected} />
-            <StyledCollectIconText isCollected={isCollected}>
-              Collect
-            </StyledCollectIconText>
-          </StyledCollectIconContainer>
           <StyledPlanInfoContainer>
             <StyledPlanInfoImage
               src={
@@ -114,27 +108,37 @@ export default function SpecificPlanPage() {
               </StyledPlanInfoPublisherContainer>
             </StyledPlanInfoContentContainer>
           </StyledPlanInfoContainer>
-          <StyledPlanMediaContainer>
-            <StyledPlanCollectionContainer>
-              <StyledPlanCollectionIcon />
-              <StyledPlanCollectionNum>
-                {plan.collectedBy.length}
-              </StyledPlanCollectionNum>
-            </StyledPlanCollectionContainer>
-            <StyledPlanCommentContainer>
-              <StyledPlanCommentIcon />
-              <StyledPlanCommentNum>
-                {plan.commentsCount || 0}
-              </StyledPlanCommentNum>
-            </StyledPlanCommentContainer>
-          </StyledPlanMediaContainer>
-          <StyledTrainingBtn
-            onClick={() => {
-              setTrainingMode(!trainingMode);
-            }}
-          >
-            {trainingMode ? 'End Training' : 'Start Training'}
-          </StyledTrainingBtn>
+          <StyledMediaTrainingCollectContainer>
+            <StyledMediaTrainingContainer>
+              <StyledPlanMediaContainer>
+                <StyledPlanCollectionContainer>
+                  <StyledPlanCollectionIcon />
+                  <StyledPlanCollectionNum>
+                    {plan.collectedBy.length}
+                  </StyledPlanCollectionNum>
+                </StyledPlanCollectionContainer>
+                <StyledPlanCommentContainer>
+                  <StyledPlanCommentIcon />
+                  <StyledPlanCommentNum>
+                    {plan.commentsCount || 0}
+                  </StyledPlanCommentNum>
+                </StyledPlanCommentContainer>
+              </StyledPlanMediaContainer>
+              <StyledTrainingBtn
+                onClick={() => {
+                  setTrainingMode(!trainingMode);
+                }}
+              >
+                {trainingMode ? 'End Training' : 'Start Training'}
+              </StyledTrainingBtn>
+            </StyledMediaTrainingContainer>
+            <StyledCollectIconContainer onClick={toggleCollected}>
+              <StyledPlanCollectIcon isCollected={isCollected} />
+              <StyledCollectIconText isCollected={isCollected}>
+                Collect
+              </StyledCollectIconText>
+            </StyledCollectIconContainer>
+          </StyledMediaTrainingCollectContainer>
           {trainingMode ? (
             <>
               <StyledProgressText>Progress</StyledProgressText>
@@ -218,7 +222,6 @@ export default function SpecificPlanPage() {
           </StyledCommentContainer>
         </StyledPlanContainer>
       </StyledSpecificPlanPageContainer>
-      {/* <StopWatch /> */}
     </StyledBody>
   ) : (
     <FullPageLoading />
@@ -309,7 +312,6 @@ const StyledPlanInfoPublisherImage = styled.img`
 
 const StyledPlanMediaContainer = styled.div`
   display: flex;
-  margin-top: 25px;
   align-items: center;
 `;
 
@@ -375,9 +377,6 @@ const StyledPlanWorkouts = styled.div`
 const StyledPlanWorkoutsContainer = styled.div``;
 
 const StyledCollectIconContainer = styled.div`
-  position: absolute;
-  right: 40px;
-  top: 300px;
   letter-spacing: 2px;
   display: flex;
   flex-direction: column;
@@ -388,16 +387,6 @@ const StyledCollectIconContainer = styled.div`
   border-radius: 50%;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   cursor: pointer;
-
-  @media (min-width: 500px) {
-    right: 40px;
-    top: 250px;
-  }
-
-  @media (min-width: 500px) {
-    right: 40px;
-    top: 100px;
-  }
 `;
 
 const StyledCollectIconText = styled.div`
@@ -446,28 +435,6 @@ const StyledLeaveCommentBtnContainer = styled.div`
   margin-top: 10px;
 `;
 
-const StyledLeaveCommentBtn = styled.button`
-  align-items: flex-end;
-  cursor: pointer;
-  color: ${(props) => (props.commentContent === '' ? '#d1d1d1' : '#1c2d9c')};
-  font-size: 15px;
-  height: 30px;
-  width: 100px;
-  border-radius: 5px;
-  border: ${(props) =>
-    props.commentContent === '' ? 'none' : 'solid 3px #1c2d9c'};
-  background-color: ${(props) =>
-    props.commentContent === '' ? '#969696' : 'transparent'};
-  cursor: ${(props) =>
-    props.commentContent === '' ? 'not-allowed' : 'pointer'};
-
-  &:hover {
-    color: ${(props) => (props.commentContent === '' ? '#d1d1d1' : 'white')};
-    background-color: ${(props) =>
-      props.commentContent === '' ? '#969696' : '#1c2d9c'};
-  }
-`;
-
 const StyledProgressText = styled.div`
   color: #222d35;
   font-size: 25px;
@@ -502,4 +469,16 @@ const StyledPlanTextContentContext = styled.div`
   margin-top: 10px;
   color: #666666;
   font-weight: 600;
+`;
+
+const StyledMediaTrainingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const StyledMediaTrainingCollectContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 25px;
 `;

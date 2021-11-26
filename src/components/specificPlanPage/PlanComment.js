@@ -5,6 +5,7 @@ import { HiUserCircle } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import { deletePlanComment, editPlanComment } from '../../utils/firebase';
 import { successToast } from '../../utils/toast';
+import { StyledCommentEditSaveBtn } from '../common/GeneralStyle';
 
 export default function PlanComment({ comment, planId, currentUser }) {
   const [showTool, setShowTool] = useState(false);
@@ -34,7 +35,7 @@ export default function PlanComment({ comment, planId, currentUser }) {
       <StyledNameCommentWrap>
         <StyledCommentUserName>{publisher?.displayName}</StyledCommentUserName>
         {isEditing ? (
-          <>
+          <StyledCommentEditInputContainer>
             {' '}
             <StyledCommentEditInput
               value={commentContent}
@@ -48,7 +49,7 @@ export default function PlanComment({ comment, planId, currentUser }) {
             >
               Save
             </StyledCommentEditSaveBtn>
-          </>
+          </StyledCommentEditInputContainer>
         ) : (
           <StyledCommentUserContext>{comment.content}</StyledCommentUserContext>
         )}
@@ -83,52 +84,57 @@ export default function PlanComment({ comment, planId, currentUser }) {
 const StyledCommentWrap = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 20px;
-  min-height: 120px;
+  min-height: 140px;
   position: relative;
+  border-radius: 5px;
 `;
 
 const StyledCommentUserImage = styled.img`
-  width: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  height: 50px;
+  margin-left: 10px;
 `;
 
 const StyledNameCommentWrap = styled.div`
-  margin-left: 20px;
-  width: 100%;
+  margin: 20px 20px 30px 20px;
+  width: calc(100% - 70px);
 `;
 
 const StyledCommentUserName = styled.div`
   color: #1face1;
-  font-size: 25px;
+  font-size: 20px;
+  margin-bottom: 10px;
 `;
 
 const StyledCommentUserContext = styled.div`
   color: #222d35;
   font-size: 18px;
   margin-top: 10px;
-  word-break: break-all;
+  word-wrap: break-word;
+  width: 100%;
 `;
 
 const StyledCommentTimeStamp = styled.div`
   color: #969696;
   position: absolute;
-  right: 0;
+  right: 15px;
+  bottom: 10px;
 `;
 
 const StyledCommentThreeDot = styled(BsThreeDots)`
   color: #222d35;
   position: absolute;
-  right: 0;
+  right: 15px;
   top: 15px;
   font-size: 20px;
   cursor: pointer;
 `;
 
 const StyledPlanInfoPublisherIcon = styled(HiUserCircle)`
-  color: #222d35;
-  font-size: 50px;
+  color: #d6d6d6;
+  font-size: 55px;
+  margin-left: 10px;
 `;
 
 const StyledCommentToolContainer = styled.div`
@@ -136,7 +142,7 @@ const StyledCommentToolContainer = styled.div`
   height: 80px;
   background: #d1d1d1;
   position: absolute;
-  right: 0;
+  right: 15px;
   top: 30px;
   border-radius: 3px;
   display: ${(props) => (props.showTool ? 'block' : 'none')};
@@ -157,31 +163,15 @@ const StyledCommentToolBtn = styled.div`
   }
 `;
 
+const StyledCommentEditInputContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const StyledCommentEditInput = styled.textarea`
-  height: 50px;
+  height: 25px;
   width: 100%;
   outline: none;
   font-size: 18px;
-  padding: 5px;
-`;
-
-const StyledCommentEditSaveBtn = styled.button`
-  cursor: pointer;
-  color: ${(props) => (props.commentContent === '' ? '#d1d1d1' : '#1c2d9c')};
-  font-size: 15px;
-  height: 25px;
-  width: 60px;
-  border-radius: 5px;
-  border: ${(props) =>
-    props.commentContent === '' ? 'none' : 'solid 3px #1c2d9c'};
-  background-color: ${(props) =>
-    props.commentContent === '' ? '#969696' : 'transparent'};
-  cursor: ${(props) =>
-    props.commentContent === '' ? 'not-allowed' : 'pointer'};
-
-  &:hover {
-    color: ${(props) => (props.commentContent === '' ? '#d1d1d1' : 'white')};
-    background-color: ${(props) =>
-      props.commentContent === '' ? '#969696' : '#1c2d9c'};
-  }
+  padding-left: 10px;
 `;

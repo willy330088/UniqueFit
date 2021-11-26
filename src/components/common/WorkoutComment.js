@@ -5,6 +5,7 @@ import { HiUserCircle } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import { deleteWorkoutComment, editWorkoutComment } from '../../utils/firebase';
 import { successToast } from '../../utils/toast';
+import { StyledCommentEditSaveBtn } from './GeneralStyle';
 
 export default function WorkoutComment({ comment, workoutId, currentUser }) {
   const [showTool, setShowTool] = useState(false);
@@ -58,7 +59,9 @@ export default function WorkoutComment({ comment, workoutId, currentUser }) {
         {publisher.id === currentUser?.uid ? (
           <StyledCommentThreeDot
             onClick={() => {
-              setShowTool(!showTool);
+              if (!isEditing) {
+                setShowTool(!showTool);
+              }
             }}
           />
         ) : null}
@@ -99,7 +102,7 @@ const StyledCommentUserImage = styled.img`
 
 const StyledNameCommentWrap = styled.div`
   margin: 20px 20px 30px 20px;
-  width: 100%;
+  width: calc(100% - 100px);
 `;
 
 const StyledCommentUserName = styled.div`
@@ -113,15 +116,7 @@ const StyledCommentUserContext = styled.div`
   font-size: 18px;
   margin-top: 10px;
   word-wrap: break-word;
-  width: 100px;
-
-  @media (min-width: 500px) {
-    width: 250px;
-  }
-
-  @media (min-width: 700px) {
-    width: 400px;
-  } ;
+  width: 100%;
 `;
 
 const StyledCommentTimeStamp = styled.div`
@@ -179,30 +174,8 @@ const StyledCommentEditInputContainer = styled.div`
 
 const StyledCommentEditInput = styled.textarea`
   height: 25px;
-  width: 70%;
+  width: 100%;
   outline: none;
   font-size: 18px;
   padding-left: 10px;
-`;
-
-const StyledCommentEditSaveBtn = styled.div`
-  cursor: pointer;
-  color: ${(props) => (props.commentContent === '' ? '#d1d1d1' : 'white')};
-  font-size: 15px;
-  height: 20px;
-  width: 50px;
-  border-radius: 5px;
-  text-align: center;
-  line-height: 20px;
-  margin-left: 10px;
-  background-color: ${(props) =>
-    props.commentContent === '' ? '#969696' : '#1face1'};
-  cursor: ${(props) =>
-    props.commentContent === '' ? 'not-allowed' : 'pointer'};
-
-  &:hover {
-    color: ${(props) => (props.commentContent === '' ? '#d1d1d1' : 'white')};
-    background-color: ${(props) =>
-      props.commentContent === '' ? '#969696' : 'hsla(196, 76%, 60%)'};
-  }
 `;

@@ -7,6 +7,10 @@ import {
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { successToast } from '../../utils/toast';
+import {
+  StyledGeneralBtn,
+  StyledVerticalContainer,
+} from '../common/GeneralStyle';
 
 export default function ScheduleDetails({ closeModal, selectedEvent }) {
   const [completed, setCompleted] = useState(
@@ -93,9 +97,7 @@ const StyledStatusContainer = styled.div`
   margin-top: 30px;
 `;
 
-const StyledStatusInputContainer = styled.div`
-  display: flex;
-  align-items: center;
+const StyledStatusInputContainer = styled(StyledVerticalContainer)`
   justify-content: space-between;
 `;
 
@@ -105,35 +107,19 @@ const StyledBtnContainer = styled.div`
   margin: 70px 0 50px 0;
 `;
 
-const StyledCheckoutBtn = styled.button`
+const StyledCheckoutBtn = styled(StyledGeneralBtn)`
   font-size: 20px;
   height: 40px;
-  cursor: pointer;
-  color: #1face1;
-  border-radius: 5px;
-  background-color: transparent;
-  border: solid 2px #1face1;
   margin-right: 40px;
-
-  &:hover {
-    color: white;
-    background-color: #1face1;
-  }
+  line-height: 40px;
+  width: 100px;
 `;
 
-const StyledCancelBtn = styled.button`
+const StyledCancelBtn = styled(StyledGeneralBtn)`
   font-size: 20px;
   height: 40px;
-  cursor: pointer;
-  color: #1face1;
-  border-radius: 5px;
-  background-color: transparent;
-  border: solid 2px #1face1;
-
-  &:hover {
-    color: white;
-    background-color: #1face1;
-  }
+  line-height: 40px;
+  width: 100px;
 `;
 
 const StyledToggle = styled.button`

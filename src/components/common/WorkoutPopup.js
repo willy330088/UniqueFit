@@ -16,6 +16,10 @@ import LogoDumbbell from '../../images/logoDumbbell.png';
 import { useSelector } from 'react-redux';
 import Popup from 'reactjs-popup';
 import { down, blurring } from '../../utils/animation';
+import {
+  StyledHorizontalContainer,
+  StyledLeaveCommentBtn,
+} from './GeneralStyle';
 
 export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
   const [commentContent, setCommentContent] = useState('');
@@ -130,7 +134,7 @@ export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
                   Comments ({workout.commentsCount || 0})
                 </StyledCommentTitleText>
               </StyledCommentTitleContainer>
-              <StyledCommentInputContainer>
+              <StyledHorizontalContainer>
                 <StyledCommentInput
                   value={commentContent}
                   onChange={(e) => {
@@ -138,7 +142,7 @@ export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
                   }}
                   placeholder="your comment..."
                 />
-              </StyledCommentInputContainer>
+              </StyledHorizontalContainer>
               <StyledLeaveCommentBtnContainer>
                 <StyledLeaveCommentBtn
                   onClick={onSubmitComment}
@@ -446,11 +450,6 @@ const StyledCommentInput = styled.textarea`
   } ;
 `;
 
-const StyledCommentInputContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
 const StyledLeaveCommentBtnContainer = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -469,27 +468,6 @@ const StyledContentContainer = styled.div`
   @media (min-width: 700px) {
     height: 330px;
   } ;
-`;
-
-const StyledLeaveCommentBtn = styled.div`
-  cursor: pointer;
-  color: ${(props) => (props.commentContent === '' ? '#d1d1d1' : 'white')};
-  font-size: 15px;
-  height: 30px;
-  width: 100px;
-  border-radius: 5px;
-  text-align: center;
-  line-height: 30px;
-  background-color: ${(props) =>
-    props.commentContent === '' ? '#969696' : '#1face1'};
-  cursor: ${(props) =>
-    props.commentContent === '' ? 'not-allowed' : 'pointer'};
-
-  &:hover {
-    color: ${(props) => (props.commentContent === '' ? '#d1d1d1' : 'white')};
-    background-color: ${(props) =>
-      props.commentContent === '' ? '#969696' : 'hsla(196, 76%, 60%)'};
-  }
 `;
 
 const StyledScrollDown = styled.span`

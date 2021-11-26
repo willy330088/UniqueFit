@@ -13,13 +13,11 @@ import SpecificPlanPage from './components/specificPlanPage/SpecificPlanPage';
 import ProfilePage from './components/profilePage/ProfilePage';
 import NotFoundPage from './components/notFoundPage/NotFoundPage';
 import FullPageLoading from './components/common/FullPageLoading';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import styled from 'styled-components';
+import { StyledToastContainer } from './utils/toast';
 import ScrollToTop from './components/common/ScrollToTop';
 import { useDispatch } from 'react-redux';
 import {
-  firebase,
+  onUserChanged,
   getWorkoutsData,
   getPlansData,
   getUsersData,
@@ -31,28 +29,6 @@ import {
   getCurrentUser,
   getUsers,
 } from '../src/redux/actions';
-
-const StyledToastContainer = styled(ToastContainer).attrs({
-  className: 'toast-container',
-  toastClassName: 'toast',
-  bodyClassName: 'body',
-  progressClassName: 'progress',
-})`
-  width: 375px;
-  .toast {
-    background-color: black;
-  }
-  button {
-    color: white;
-  }
-  .body {
-    color: white;
-    font-size: 18px;
-  }
-  .progress {
-    color: #1face1;
-  }
-`;
 
 function App() {
   const dispatch = useDispatch();
@@ -77,13 +53,12 @@ function App() {
   }, []);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
+    onUserChanged((user) => {
       dispatch(getCurrentUser(user));
       setCurrentUser(user);
     });
   }, []);
 
-  console.log(currentUser);
   return (
     <>
       <StyledToastContainer />

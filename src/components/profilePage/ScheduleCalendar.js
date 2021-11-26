@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -10,6 +10,80 @@ import ScheduleDetails from './ScheduleDetails';
 import Calendar from '../../images/AddCalendar-2.png';
 import { useSelector } from 'react-redux';
 import ScheduleRecord from './ScheduleRecord';
+
+export default function ScheduleCalendar() {
+  const [open, setOpen] = useState(false);
+  const [selectedModal, setSelectedModal] = useState('');
+  const [selectedEvent, setSelectedEvent] = useState();
+  const plans = useSelector((state) => state.plans);
+  const currentUser = useSelector((state) => state.currentUser);
+  const eventsId = useSelector((state) => state.users).filter(
+    (user) => user.id === currentUser?.uid
+  )[0]?.events;
+
+  const events = eventsId?.map((events) => {
+    const targetPlan = plans.filter(
+      (plan) => plan.id === events.extendedProps.planId
+    )[0];
+    events.title = targetPlan?.title;
+    return events;
+  });
+
+  let initialDate = new Date().toISOString();
+
+  function openForm() {
+    setSelectedModal('ScheduleForm');
+    setOpen(true);
+  }
+
+  function handleEventClick(clickInfo) {
+    if (clickInfo.event) {
+      setSelectedModal('ScheduleDetails');
+      setSelectedEvent(clickInfo.event);
+      setOpen(true);
+    }
+  }
+
+  function closeModal() {
+    setOpen(false);
+  }
+
+  return (
+    <StyledCalendarContainer>
+      <StyledAddTrainingContainer onClick={openForm}>
+        <StyledAddTrainingIcon />
+      </StyledAddTrainingContainer>
+      <FullCalendar
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        headerToolbar={{
+          left: 'title',
+          right: 'prevYear,prev,today,next,nextYear',
+        }}
+        initialView="dayGridMonth"
+        initialDate={initialDate}
+        weekends={true}
+        events={events}
+        eventClick={handleEventClick}
+        views={{
+          dayGrid: {
+            dayMaxEventRows: 4,
+          },
+        }}
+      />
+      <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
+        {selectedModal === 'ScheduleForm' ? (
+          <ScheduleForm closeModal={closeModal} />
+        ) : selectedModal === 'ScheduleDetails' ? (
+          <ScheduleDetails
+            selectedEvent={selectedEvent}
+            closeModal={closeModal}
+          />
+        ) : null}
+      </StyledPopup>
+      <ScheduleRecord />
+    </StyledCalendarContainer>
+  );
+}
 
 const StyledCalendarContainer = styled.div`
   background: white;
@@ -148,76 +222,3 @@ const StyledPopup = styled(Popup)`
     padding: 20px 30px;
   }
 `;
-
-export default function ScheduleCalendar() {
-  const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
-  const openModal = () => setOpen(true);
-  const [selectedModal, setSelectedModal] = useState('');
-  const [selectedEvent, setSelectedEvent] = useState();
-  const plans = useSelector((state) => state.plans);
-  const currentUser = useSelector((state) => state.currentUser);
-  const eventsId = useSelector((state) => state.users).filter(
-    (user) => user.id === currentUser?.uid
-  )[0]?.events;
-
-  const events = eventsId?.map((events) => {
-    const targetPlan = plans.filter(
-      (plan) => plan.id === events.extendedProps.planId
-    )[0];
-    events.title = targetPlan?.title;
-    return events;
-  });
-
-  let initialDate = new Date().toISOString();
-
-  const openForm = () => {
-    setSelectedModal('ScheduleForm');
-    openModal();
-  };
-
-  const handleEventClick = (clickInfo) => {
-    if (clickInfo.event) {
-      setSelectedModal('ScheduleDetails');
-      setSelectedEvent(clickInfo.event);
-      openModal();
-      console.log(clickInfo.event);
-    }
-  };
-
-  return (
-    <StyledCalendarContainer>
-      <StyledAddTrainingContainer onClick={openForm}>
-        <StyledAddTrainingIcon />
-      </StyledAddTrainingContainer>
-      <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        headerToolbar={{
-          left: 'title',
-          right: 'prevYear,prev,today,next,nextYear',
-        }}
-        initialView="dayGridMonth"
-        initialDate={initialDate}
-        weekends={true}
-        events={events}
-        eventClick={handleEventClick}
-        views={{
-          dayGrid: {
-            dayMaxEventRows: 4,
-          },
-        }}
-      />
-      <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
-        {selectedModal === 'ScheduleForm' ? (
-          <ScheduleForm closeModal={closeModal} />
-        ) : selectedModal === 'ScheduleDetails' ? (
-          <ScheduleDetails
-            selectedEvent={selectedEvent}
-            closeModal={closeModal}
-          />
-        ) : null}
-      </StyledPopup>
-      <ScheduleRecord />
-    </StyledCalendarContainer>
-  );
-}

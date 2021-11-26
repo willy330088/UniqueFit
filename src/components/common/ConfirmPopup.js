@@ -6,6 +6,56 @@ import SignOut from '../../images/signout.png';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
+export default function ConfirmPopup({
+  confirmOpen,
+  closeConfirm,
+  action,
+  type,
+}) {
+  AOS.init();
+
+  function showIcon() {
+    if (type === 'delete') {
+      return <StyledConfirmDeleteIcon src={Delete} />;
+    } else {
+      return <StyledConfirmSignOutIcon src={SignOut} />;
+    }
+  }
+
+  return (
+    <StyledConfirmDeletePopup
+      open={confirmOpen}
+      closeOnDocumentClick
+      onClose={closeConfirm}
+    >
+      <StyledConfirmTextContainer>
+        {showIcon()}
+        <StyledConfirmDeleteText>
+          {type === 'delete'
+            ? 'Are you sure you want to delete?'
+            : 'Are you sure you want to sign out?'}
+        </StyledConfirmDeleteText>
+      </StyledConfirmTextContainer>
+      <StyledConfirmBtnContainer>
+        <StyledConfirmYesBtn
+          onClick={() => {
+            action();
+          }}
+        >
+          Yes
+        </StyledConfirmYesBtn>
+        <StyledConfirmNoBtn
+          onClick={() => {
+            closeConfirm();
+          }}
+        >
+          No
+        </StyledConfirmNoBtn>
+      </StyledConfirmBtnContainer>
+    </StyledConfirmDeletePopup>
+  );
+}
+
 const StyledConfirmDeletePopup = styled(Popup)`
   &-overlay {
     background: rgba(0, 0, 0, 0.6);
@@ -84,56 +134,3 @@ const StyledConfirmNoBtn = styled.div`
     background-color: hsla(148, 0%, 40%);
   }
 `;
-
-export default function ConfirmPopup({
-  confirmOpen,
-  closeConfirm,
-  action,
-  type,
-}) {
-  let confirmContent;
-  AOS.init();
-
-  if (type === 'delete') {
-    confirmContent = 'Are you sure you want to delete?';
-  } else {
-    confirmContent = 'Are you sure you want to sign out?';
-  }
-
-  function showIcon() {
-    if (type === 'delete') {
-      return <StyledConfirmDeleteIcon src={Delete} />;
-    } else {
-      return <StyledConfirmSignOutIcon src={SignOut} />;
-    }
-  }
-
-  return (
-    <StyledConfirmDeletePopup
-      open={confirmOpen}
-      closeOnDocumentClick
-      onClose={closeConfirm}
-    >
-      <StyledConfirmTextContainer>
-        {showIcon()}
-        <StyledConfirmDeleteText>{confirmContent}</StyledConfirmDeleteText>
-      </StyledConfirmTextContainer>
-      <StyledConfirmBtnContainer>
-        <StyledConfirmYesBtn
-          onClick={() => {
-            action();
-          }}
-        >
-          Yes
-        </StyledConfirmYesBtn>
-        <StyledConfirmNoBtn
-          onClick={() => {
-            closeConfirm();
-          }}
-        >
-          No
-        </StyledConfirmNoBtn>
-      </StyledConfirmBtnContainer>
-    </StyledConfirmDeletePopup>
-  );
-}

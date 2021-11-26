@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   GoogleMap,
   useLoadScript,
@@ -8,6 +8,8 @@ import {
 import MuscleIcon from '../../images/muscle.png';
 import styled from 'styled-components';
 import LogoDumbbell from '../../images/logoDumbbell.png';
+import { StyledGeneralBtn } from '../common/GeneralStyle';
+import { blurring } from '../../utils/animation';
 require('dotenv').config();
 
 const StyledInfoHeader = styled.h2`
@@ -33,23 +35,12 @@ const StyledInfoOpening = styled.h2`
   font-size: 15px;
 `;
 
-const StyledLocationBtn = styled.div`
+const StyledLocationBtn = styled(StyledGeneralBtn)`
   font-size: 20px;
   height: 40px;
   width: 120px;
-  cursor: pointer;
-  color: #1face1;
-  border-radius: 5px;
-  background-color: transparent;
-  text-align: center;
   line-height: 40px;
   margin: 30px 0;
-  border: solid 2px #1face1;
-
-  &:hover {
-    color: white;
-    background-color: #1face1;
-  }
 `;
 
 const StyledMapContainer = styled.div`
@@ -73,46 +64,37 @@ const StyledLogoContainer = styled.div`
   align-items: center;
 
   div:nth-child(1) {
-    animation: blurring 1.2s linear 0s infinite alternate;
+    animation: ${blurring} 1.2s linear 0s infinite alternate;
   }
   div:nth-child(2) {
-    animation: blurring 1.2s linear 0.15s infinite alternate;
+    animation: ${blurring} 1.2s linear 0.15s infinite alternate;
   }
   div:nth-child(3) {
-    animation: blurring 1.2s linear 0.3s infinite alternate;
+    animation: ${blurring} 1.2s linear 0.3s infinite alternate;
   }
 
   div:nth-child(4) {
-    animation: blurring 1.2s linear 0.45s infinite alternate;
+    animation: ${blurring} 1.2s linear 0.45s infinite alternate;
   }
 
   div:nth-child(5) {
-    animation: blurring 1.2s linear 0.6s infinite alternate;
+    animation: ${blurring} 1.2s linear 0.6s infinite alternate;
   }
 
   div:nth-child(6) {
-    animation: blurring 1.2s linear 0.75s infinite alternate;
+    animation: ${blurring} 1.2s linear 0.75s infinite alternate;
   }
 
   div:nth-child(7) {
-    animation: blurring 1.2s linear 0.9s infinite alternate;
+    animation: ${blurring} 1.2s linear 0.9s infinite alternate;
   }
 
   div:nth-child(8) {
-    animation: blurring 1.2s linear 1.05s infinite alternate;
+    animation: ${blurring} 1.2s linear 1.05s infinite alternate;
   }
 
   div:nth-child(9) {
-    animation: blurring 1.2s linear 1.2s infinite alternate;
-  }
-
-  @keyframes blurring {
-    0% {
-      filter: blur(0);
-    }
-    100% {
-      filter: blur(6px);
-    }
+    animation: ${blurring} 1.2s linear 1.2s infinite alternate;
   }
 `;
 

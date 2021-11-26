@@ -108,12 +108,12 @@ export default function WorkoutPopupContent({
             setSource={setSource}
           />
           <StyledChangeWorkoutBtnContainer>
-            <StyledCreateWorkoutBtn
+            <StyledSubmitWorkoutBtn
               onClick={onSubmitWorkout}
               createDisabled={submitDisabled}
             >
               {changeType === 'Create' ? 'Create' : 'Save'}
-            </StyledCreateWorkoutBtn>
+            </StyledSubmitWorkoutBtn>
           </StyledChangeWorkoutBtnContainer>
         </>
       );
@@ -139,7 +139,7 @@ export default function WorkoutPopupContent({
   );
 }
 
-const StyledCreateWorkoutBtn = styled.div`
+const StyledSubmitWorkoutBtn = styled.div`
   font-size: 20px;
   height: 40px;
   width: 120px;

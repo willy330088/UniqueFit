@@ -6,6 +6,92 @@ import Burger from './Burger';
 import { useSelector } from 'react-redux';
 import SignInPopup from './SignInPopup';
 
+export default function Header() {
+  const history = useHistory();
+  const [headerColor, setHeaderColor] = useState('false');
+  const currentUser = useSelector((state) => state.currentUser);
+  const [signInOpen, setSignInOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const activeStyle = {
+    color: '#1face1',
+    borderBottom: '#1face1 4px solid',
+  };
+  const activeMenuStyle = { color: 'white', background: '#1face1' };
+
+  function changeBackground() {
+    if (window.scrollY >= 300) {
+      setHeaderColor(true);
+    } else {
+      setHeaderColor(false);
+    }
+  }
+
+  useEffect(() => {
+    changeBackground();
+    window.addEventListener('scroll', changeBackground);
+  });
+
+  return (
+    <StyledHeader headerColor={headerColor}>
+      <Burger open={open} setOpen={setOpen} />
+      <StyledMenu open={open}>
+        <StyledMenuLink to="/workouts" activeStyle={activeMenuStyle}>
+          Workouts
+        </StyledMenuLink>
+        <StyledMenuLink to="/plans" activeStyle={activeMenuStyle}>
+          Plans
+        </StyledMenuLink>
+        {currentUser ? (
+          <StyledMenuLink to="/profile" activeStyle={activeMenuStyle}>
+            Profile
+          </StyledMenuLink>
+        ) : (
+          <StyledMenuSignUpLink
+            onClick={() => {
+              setSignInOpen(true);
+            }}
+          >
+            Sign In/Up{' '}
+          </StyledMenuSignUpLink>
+        )}
+      </StyledMenu>
+      <StyledLogo
+        src={Logo}
+        onClick={() => {
+          history.push('/home');
+        }}
+      />
+      <StyledNavBar>
+        <StyledLink to="/workouts" activeStyle={activeStyle}>
+          Workouts
+        </StyledLink>
+        <StyledLink to="/plans" activeStyle={activeStyle}>
+          Plans
+        </StyledLink>
+        {currentUser ? (
+          <StyledLink to="/profile" activeStyle={activeStyle}>
+            Profile
+          </StyledLink>
+        ) : (
+          <StyledSignUpLink
+            onClick={() => {
+              setSignInOpen(true);
+            }}
+          >
+            Sign In/Up{' '}
+          </StyledSignUpLink>
+        )}
+      </StyledNavBar>
+      <SignInPopup
+        open={signInOpen}
+        closeModal={() => {
+          setSignInOpen(false);
+        }}
+      />
+    </StyledHeader>
+  );
+}
+
 const StyledHeader = styled.div`
   display: flex;
   position: fixed;
@@ -124,88 +210,3 @@ const StyledMenuSignUpLink = styled.div`
     background: #1face1;
   }
 `;
-
-export default function Header() {
-  const [headerColor, setHeaderColor] = useState('false');
-  const currentUser = useSelector((state) => state.currentUser);
-  const [signInOpen, setSignInOpen] = useState(false);
-  const closeModal = () => setSignInOpen(false);
-
-  const changeBackground = () => {
-    if (window.scrollY >= 300) {
-      setHeaderColor(true);
-    } else {
-      setHeaderColor(false);
-    }
-  };
-
-  useEffect(() => {
-    changeBackground();
-    window.addEventListener('scroll', changeBackground);
-  });
-
-  const history = useHistory();
-  const activeStyle = {
-    color: '#1face1',
-    borderBottom: '#1face1 4px solid',
-  };
-
-  const activeMenuStyle = { color: 'white', background: '#1face1' };
-
-  const [open, setOpen] = useState(false);
-
-  return (
-    <StyledHeader headerColor={headerColor}>
-      <Burger open={open} setOpen={setOpen} />
-      <StyledMenu open={open}>
-        <StyledMenuLink to="/workouts" activeStyle={activeMenuStyle}>
-          Workouts
-        </StyledMenuLink>
-        <StyledMenuLink to="/plans" activeStyle={activeMenuStyle}>
-          Plans
-        </StyledMenuLink>
-        {currentUser ? (
-          <StyledMenuLink to="/profile" activeStyle={activeMenuStyle}>
-            Profile
-          </StyledMenuLink>
-        ) : (
-          <StyledMenuSignUpLink
-            onClick={() => {
-              setSignInOpen(true);
-            }}
-          >
-            Sign In/Up{' '}
-          </StyledMenuSignUpLink>
-        )}
-      </StyledMenu>
-      <StyledLogo
-        src={Logo}
-        onClick={() => {
-          history.push('/home');
-        }}
-      />
-      <StyledNavBar>
-        <StyledLink to="/workouts" activeStyle={activeStyle}>
-          Workouts
-        </StyledLink>
-        <StyledLink to="/plans" activeStyle={activeStyle}>
-          Plans
-        </StyledLink>
-        {currentUser ? (
-          <StyledLink to="/profile" activeStyle={activeStyle}>
-            Profile
-          </StyledLink>
-        ) : (
-          <StyledSignUpLink
-            onClick={() => {
-              setSignInOpen(true);
-            }}
-          >
-            Sign In/Up{' '}
-          </StyledSignUpLink>
-        )}
-      </StyledNavBar>
-      <SignInPopup open={signInOpen} closeModal={closeModal} />
-    </StyledHeader>
-  );
-}

@@ -21,6 +21,12 @@ const batch = firebase.firestore().batch();
 const facebookProvider = new firebase.auth.FacebookAuthProvider();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
+function onUserChanged(callback) {
+  firebase.auth().onAuthStateChanged((user) => {
+    callback(user);
+  });
+}
+
 function getWorkoutsData(callback) {
   workoutRef.orderBy('createdAt', 'desc').onSnapshot((collectionSnapshot) => {
     const data = collectionSnapshot.docs.map((docSnapshot) => {
@@ -420,6 +426,7 @@ export {
   firebase,
   facebookProvider,
   googleProvider,
+  onUserChanged,
   getWorkoutsData,
   getPlansData,
   getUsersData,

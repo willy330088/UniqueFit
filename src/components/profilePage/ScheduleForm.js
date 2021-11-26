@@ -7,6 +7,10 @@ import { addScheduleEvent } from '../../utils/firebase';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { successToast, errorToast } from '../../utils/toast';
+import {
+  StyledGeneralBtn,
+  StyledHorizontalContainer,
+} from '../common/GeneralStyle';
 
 export default function ScheduleForm({ closeModal }) {
   const currentUser = useSelector((state) => state.currentUser);
@@ -46,15 +50,15 @@ export default function ScheduleForm({ closeModal }) {
   return (
     <>
       <input type="text" autofocus="autofocus" style={{ display: 'none' }} />
-      <StyledDateContainer>
+      <StyledDateAndPlanContainer>
         <StyledLabel>Choose Training Date</StyledLabel>
         <StyledDatePicker
           selected={selectedDate}
           onChange={setSelectedDate}
           minDate={new Date()}
         />
-      </StyledDateContainer>
-      <StyledPlanContainer>
+      </StyledDateAndPlanContainer>
+      <StyledDateAndPlanContainer>
         <StyledLabel>Choose Training Plan</StyledLabel>
         <StyledPlanSelect
           onChange={(e) => {
@@ -68,12 +72,12 @@ export default function ScheduleForm({ closeModal }) {
             return <option value={plan.id}>{plan.title}</option>;
           })}
         </StyledPlanSelect>
-      </StyledPlanContainer>
-      <StyledAddTrainingContainer>
+      </StyledDateAndPlanContainer>
+      <StyledHorizontalContainer>
         <StyledAddTrainingBtn onClick={onSubmit}>
           Add Training
         </StyledAddTrainingBtn>
-      </StyledAddTrainingContainer>
+      </StyledHorizontalContainer>
     </>
   );
 }
@@ -96,11 +100,7 @@ const StyledDatePicker = styled(DatePicker)`
   border: none;
 `;
 
-const StyledDateContainer = styled.div`
-  margin-bottom: 50px;
-`;
-
-const StyledPlanContainer = styled.div`
+const StyledDateAndPlanContainer = styled.div`
   margin-bottom: 50px;
 `;
 
@@ -113,22 +113,9 @@ const StyledPlanSelect = styled.select`
   width: 100%;
 `;
 
-const StyledAddTrainingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
-const StyledAddTrainingBtn = styled.button`
+const StyledAddTrainingBtn = styled(StyledGeneralBtn)`
   font-size: 20px;
   height: 40px;
-  cursor: pointer;
-  color: #1face1;
-  border-radius: 5px;
-  background-color: transparent;
-  border: solid 2px #1face1;
-
-  &:hover {
-    color: white;
-    background-color: #1face1;
-  }
+  line-height: 40px;
+  width: 150px;
 `;

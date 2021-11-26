@@ -7,6 +7,74 @@ import muscleGroups from '../../utils/muscleGroup';
 import WorkoutPopup from '../common/WorkoutPopup';
 import { useSelector } from 'react-redux';
 import { FaDumbbell } from 'react-icons/fa';
+import { StyledVerticalContainer } from '../common/GeneralStyle';
+
+export default function WorkoutItem({ workout, setSignInOpen }) {
+  const [open, setOpen] = useState(false);
+  const users = useSelector((state) => state.users);
+  const publisher = users.filter((user) => user.id === workout.publisher)[0];
+
+  return (
+    <>
+      <StyledWorkoutItemContainer
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        <StyledPlayIcon />
+        <StyledWorkoutItemImage
+          src={
+            muscleGroups.filter((muscleGroup) => {
+              if (muscleGroup.name === workout.targetMuscleGroup)
+                return muscleGroup;
+            })[0].src
+          }
+        />
+        <StyledWorkoutItemDescription>
+          <StyledWorkoutItemTitle>{workout.title}</StyledWorkoutItemTitle>
+          <StyledVerticalContainer>
+            {publisher?.photoURL ? (
+              <StyledPublisherImage src={publisher.photoURL} />
+            ) : (
+              <StyledPublisherIcon />
+            )}
+            <StyledPublisherName>{publisher?.displayName}</StyledPublisherName>
+          </StyledVerticalContainer>
+          <StyledWorkoutItemSocial>
+            <StyledVerticalContainer>
+              <StyledCollectIcon />{' '}
+              <StyledIconNum>
+                Collected ({workout.collectedBy.length})
+              </StyledIconNum>{' '}
+            </StyledVerticalContainer>
+            <StyledContainerWithLeftMargin>
+              <StyledMessageIcon />{' '}
+              <StyledIconNum>
+                Comments ({workout.commentsCount || 0})
+              </StyledIconNum>
+            </StyledContainerWithLeftMargin>
+          </StyledWorkoutItemSocial>
+        </StyledWorkoutItemDescription>
+      </StyledWorkoutItemContainer>
+      <WorkoutPopup
+        workout={workout}
+        close={() => {
+          setOpen(false);
+        }}
+        open={open}
+        setSignInOpen={setSignInOpen}
+      />
+    </>
+  );
+}
+
+const StyledPlayIcon = styled(ImPlay)`
+  color: white;
+  font-size: 60px;
+  position: absolute;
+  top: calc(50% - 30px);
+  display: none;
+`;
 
 const StyledWorkoutItemContainer = styled.div`
   display: flex;
@@ -37,6 +105,10 @@ const StyledWorkoutItemContainer = styled.div`
       background-color: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(2px);
     }
+  }
+
+  &:hover ${StyledPlayIcon} {
+    display: block;
   }
 
   @media (min-width: 1400px) {
@@ -71,25 +143,12 @@ const StyledWorkoutItemTitle = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 200px;
+  width: 100%;
   text-align: center;
 
   @media (min-width: 500px) {
     text-align: start;
   }
-
-  @media (min-width: 700px) {
-    width: 300px;
-  }
-
-  @media (min-width: 1400px) {
-    width: 300px;
-  } ;
-`;
-
-const StyledWorkoutItemPublisher = styled.div`
-  display: flex;
-  align-items: center;
 `;
 
 const StyledWorkoutItemImage = styled.img`
@@ -129,34 +188,14 @@ const StyledWorkoutItemSocial = styled.div`
   } ;
 `;
 
-const StyledContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const StyledContainer2 = styled.div`
-  display: flex;
-  align-items: center;
-
+const StyledContainerWithLeftMargin = styled(StyledVerticalContainer)`
   @media (min-width: 500px) {
     margin-left: 10px;
   } ;
 `;
 
-const StyledCollectNum = styled.div`
+const StyledIconNum = styled.div`
   padding-top: 3px;
-`;
-
-const StyledCommentNum = styled.div`
-  padding-top: 3px;
-`;
-
-const StyledPlayIcon = styled(ImPlay)`
-  color: white;
-  font-size: 60px;
-  position: absolute;
-  top: calc(50% - 30px);
-  display: ${(props) => (props.hover ? 'block' : 'none')};
 `;
 
 const StyledCollectIcon = styled(FaDumbbell)`
@@ -168,68 +207,3 @@ const StyledMessageIcon = styled(RiMessage2Fill)`
   font-size: 15px;
   margin-right: 5px;
 `;
-
-export default function WorkoutItem({ workout, setSignInOpen }) {
-  const [hover, setHover] = useState(false);
-  const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
-  const users = useSelector((state) => state.users);
-  const publisher = users.filter((user) => user.id === workout.publisher)[0];
-
-  return (
-    <>
-      <StyledWorkoutItemContainer
-        onMouseOver={() => {
-          setHover(true);
-        }}
-        onMouseLeave={() => {
-          setHover(false);
-        }}
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        <StyledPlayIcon hover={hover} />
-        <StyledWorkoutItemImage
-          src={
-            muscleGroups.filter((muscleGroup) => {
-              if (muscleGroup.name === workout.targetMuscleGroup)
-                return muscleGroup;
-            })[0].src
-          }
-        />
-        <StyledWorkoutItemDescription>
-          <StyledWorkoutItemTitle>{workout.title}</StyledWorkoutItemTitle>
-          <StyledWorkoutItemPublisher>
-            {publisher?.photoURL ? (
-              <StyledPublisherImage src={publisher.photoURL} />
-            ) : (
-              <StyledPublisherIcon />
-            )}
-            <StyledPublisherName>{publisher?.displayName}</StyledPublisherName>
-          </StyledWorkoutItemPublisher>
-          <StyledWorkoutItemSocial>
-            <StyledContainer>
-              <StyledCollectIcon />{' '}
-              <StyledCollectNum>
-                Collected ({workout.collectedBy.length})
-              </StyledCollectNum>{' '}
-            </StyledContainer>
-            <StyledContainer2>
-              <StyledMessageIcon />{' '}
-              <StyledCommentNum>
-                Comments ({workout.commentsCount || 0})
-              </StyledCommentNum>
-            </StyledContainer2>
-          </StyledWorkoutItemSocial>
-        </StyledWorkoutItemDescription>
-      </StyledWorkoutItemContainer>
-      <WorkoutPopup
-        workout={workout}
-        close={closeModal}
-        open={open}
-        setSignInOpen={setSignInOpen}
-      />
-    </>
-  );
-}

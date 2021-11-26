@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { HiUserCircle } from 'react-icons/hi';
 import { RiMessage2Fill } from 'react-icons/ri';
@@ -9,6 +9,106 @@ import CheckoutIcon from '../../images/details.png';
 import GymBackground from '../../images/gym.jpeg';
 import { useSelector } from 'react-redux';
 
+export default function PlanItem({ plan }) {
+  const users = useSelector((state) => state.users);
+  const publisher = users.filter((user) => user.id === plan.publisher)[0];
+
+  return (
+    <StyledPlanContainer
+      onClick={() => {
+        window.open(`/plans/${plan.id}`);
+      }}
+    >
+      <StyledCheckoutPlanContainer>
+        <StyledCheckoutPlanIcon src={CheckoutIcon} />
+        <StyledCheckoutPlanText>Checkout More Details</StyledCheckoutPlanText>
+      </StyledCheckoutPlanContainer>
+      <StyledPlanInfoContainer>
+        <StyledPlanInfoImage
+          src={
+            muscleGroups.filter((muscleGroup) => {
+              if (muscleGroup.name === plan.targetMuscleGroup)
+                return muscleGroup;
+            })[0].src
+          }
+        />
+        <StyledPlanInfoContentContainer>
+          <StyledPlanInfoTitle>{plan.title}</StyledPlanInfoTitle>
+          <StyledPlanInfoPublisherContainer>
+            {publisher?.photoURL ? (
+              <StyledPlanInfoPublisherImage src={publisher.photoURL} />
+            ) : (
+              <StyledPlanInfoPublisherIcon />
+            )}
+            <StyledPlanInfoPublisherName>
+              {publisher?.displayName}
+            </StyledPlanInfoPublisherName>
+          </StyledPlanInfoPublisherContainer>
+        </StyledPlanInfoContentContainer>
+      </StyledPlanInfoContainer>
+      <StyledPlanMediaContainer>
+        <StyledPlanCollectionContainer>
+          <StyledPlanCollectionIcon />
+          <StyledPlanCollectionNum>
+            {plan.collectedBy.length}
+          </StyledPlanCollectionNum>
+        </StyledPlanCollectionContainer>
+        <StyledPlanCommentContainer>
+          <StyledPlanCommentIcon />
+          <StyledPlanCommentNum>{plan.commentsCount || 0}</StyledPlanCommentNum>
+        </StyledPlanCommentContainer>
+      </StyledPlanMediaContainer>
+      <StyledPlanMainContentContainer>
+        <StyledPlanText>
+          Estimated Training Time: {plan.estimatedTrainingTime} mins
+        </StyledPlanText>
+        <StyledPlanText>Description: {plan.description}</StyledPlanText>
+        <StyledPlanWorkouts>Workouts</StyledPlanWorkouts>
+        <StyledPlanWorkoutsContainer>
+          {plan.workoutSet.map((workout, index) => {
+            if (index < 5) {
+              return (
+                <StyledPlanWorkoutItemContainer>
+                  <StyledPlanWorkoutName>{workout.title}</StyledPlanWorkoutName>
+                  <StyledPlanWorkoutItemWeightContainer>
+                    <StyledPlanWorkoutItemWeightIcon />
+                    <StyledPlanWorkoutItemWeightNum>
+                      {workout.weight}kg
+                    </StyledPlanWorkoutItemWeightNum>
+                  </StyledPlanWorkoutItemWeightContainer>
+                  <StyledPlanWorkoutItemDumbbellContainer>
+                    <StyledPlanWorkoutItemDumbbellIcon />
+                    <StyledPlanWorkoutItemDumbbellNum>
+                      {workout.reps}reps
+                    </StyledPlanWorkoutItemDumbbellNum>
+                  </StyledPlanWorkoutItemDumbbellContainer>
+                </StyledPlanWorkoutItemContainer>
+              );
+            }
+          })}
+        </StyledPlanWorkoutsContainer>
+      </StyledPlanMainContentContainer>
+      {plan.workoutSet.length > 5 ? (
+        <StyledAndMoreText>And More</StyledAndMoreText>
+      ) : null}
+    </StyledPlanContainer>
+  );
+}
+
+const StyledCheckoutPlanContainer = styled.div`
+  position: absolute;
+  display: flex;
+  background-color: transparent;
+  align-items: center;
+  height: 100px;
+  width: 400px;
+  top: calc(50% - 50px);
+  right: calc(50% - 200px);
+  justify-content: center;
+  z-index: 100;
+  display: none;
+`;
+
 const StyledPlanContainer = styled.div`
   width: 100%;
   background-color: white;
@@ -16,7 +116,6 @@ const StyledPlanContainer = styled.div`
   position: relative;
   margin-bottom: 50px;
   height: 650px;
-  /* box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); */
   cursor: pointer;
   z-index: 1;
 
@@ -52,6 +151,10 @@ const StyledPlanContainer = styled.div`
       background-color: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(2px);
     }
+  }
+
+  &:hover ${StyledCheckoutPlanContainer} {
+    display: flex;
   }
 
   @media (min-width: 800px) {
@@ -225,20 +328,6 @@ const StyledPlanWorkoutItemDumbbellNum = styled.div`
   margin-left: 5px;
 `;
 
-const StyledCheckoutPlanContainer = styled.div`
-  position: absolute;
-  display: flex;
-  background-color: transparent;
-  align-items: center;
-  height: 100px;
-  width: 400px;
-  top: calc(50% - 50px);
-  right: calc(50% - 200px);
-  justify-content: center;
-  z-index: 100;
-  display: ${(props) => (props.hover ? 'flex' : 'none')};
-`;
-
 const StyledCheckoutPlanIcon = styled.img`
   width: 50px;
   margin-right: 20px;
@@ -255,96 +344,3 @@ const StyledAndMoreText = styled.div`
   text-align: center;
   margin-top: 10px;
 `;
-
-export default function PlanItem({ plan }) {
-  const [hover, setHover] = useState(false);
-  const users = useSelector((state) => state.users);
-  const publisher = users.filter((user) => user.id === plan.publisher)[0];
-
-  return (
-    <StyledPlanContainer
-      onClick={() => {
-        window.open(`/plans/${plan.id}`);
-      }}
-      onMouseOver={() => {
-        setHover(true);
-      }}
-      onMouseLeave={() => {
-        setHover(false);
-      }}
-    >
-      <StyledCheckoutPlanContainer hover={hover}>
-        <StyledCheckoutPlanIcon src={CheckoutIcon} />
-        <StyledCheckoutPlanText>Checkout More Details</StyledCheckoutPlanText>
-      </StyledCheckoutPlanContainer>
-      <StyledPlanInfoContainer>
-        <StyledPlanInfoImage
-          src={
-            muscleGroups.filter((muscleGroup) => {
-              if (muscleGroup.name === plan.targetMuscleGroup)
-                return muscleGroup;
-            })[0].src
-          }
-        />
-        <StyledPlanInfoContentContainer>
-          <StyledPlanInfoTitle>{plan.title}</StyledPlanInfoTitle>
-          <StyledPlanInfoPublisherContainer>
-            {publisher?.photoURL ? (
-              <StyledPlanInfoPublisherImage src={publisher.photoURL} />
-            ) : (
-              <StyledPlanInfoPublisherIcon />
-            )}
-            <StyledPlanInfoPublisherName>
-              {publisher?.displayName}
-            </StyledPlanInfoPublisherName>
-          </StyledPlanInfoPublisherContainer>
-        </StyledPlanInfoContentContainer>
-      </StyledPlanInfoContainer>
-      <StyledPlanMediaContainer>
-        <StyledPlanCollectionContainer>
-          <StyledPlanCollectionIcon />
-          <StyledPlanCollectionNum>
-            {plan.collectedBy.length}
-          </StyledPlanCollectionNum>
-        </StyledPlanCollectionContainer>
-        <StyledPlanCommentContainer>
-          <StyledPlanCommentIcon />
-          <StyledPlanCommentNum>{plan.commentsCount || 0}</StyledPlanCommentNum>
-        </StyledPlanCommentContainer>
-      </StyledPlanMediaContainer>
-      <StyledPlanMainContentContainer>
-        <StyledPlanText>
-          Estimated Training Time: {plan.estimatedTrainingTime} mins
-        </StyledPlanText>
-        <StyledPlanText>Description: {plan.description}</StyledPlanText>
-        <StyledPlanWorkouts>Workouts</StyledPlanWorkouts>
-        <StyledPlanWorkoutsContainer>
-          {plan.workoutSet.map((workout, index) => {
-            if (index < 5) {
-              return (
-                <StyledPlanWorkoutItemContainer>
-                  <StyledPlanWorkoutName>{workout.title}</StyledPlanWorkoutName>
-                  <StyledPlanWorkoutItemWeightContainer>
-                    <StyledPlanWorkoutItemWeightIcon />
-                    <StyledPlanWorkoutItemWeightNum>
-                      {workout.weight}kg
-                    </StyledPlanWorkoutItemWeightNum>
-                  </StyledPlanWorkoutItemWeightContainer>
-                  <StyledPlanWorkoutItemDumbbellContainer>
-                    <StyledPlanWorkoutItemDumbbellIcon />
-                    <StyledPlanWorkoutItemDumbbellNum>
-                      {workout.reps}reps
-                    </StyledPlanWorkoutItemDumbbellNum>
-                  </StyledPlanWorkoutItemDumbbellContainer>
-                </StyledPlanWorkoutItemContainer>
-              );
-            }
-          })}
-        </StyledPlanWorkoutsContainer>
-      </StyledPlanMainContentContainer>
-      {plan.workoutSet.length > 5 ? (
-        <StyledAndMoreText>And More</StyledAndMoreText>
-      ) : null}
-    </StyledPlanContainer>
-  );
-}
