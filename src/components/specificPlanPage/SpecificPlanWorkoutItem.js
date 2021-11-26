@@ -35,13 +35,11 @@ export default function SpecificPlanWorkoutItem({
         <StyledPlanWorkoutImage
           src={
             workoutSetDetails[index]
-              ? muscleGroups.filter((muscleGroup) => {
-                  if (
+              ? muscleGroups.filter(
+                  (muscleGroup) =>
                     muscleGroup.name ===
                     workoutSetDetails[index].targetMuscleGroup
-                  )
-                    return muscleGroup;
-                })[0].src
+                )[0].src
               : null
           }
         />

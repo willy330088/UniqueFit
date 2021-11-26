@@ -24,10 +24,9 @@ export default function WorkoutItem({ workout, setSignInOpen }) {
         <StyledPlayIcon />
         <StyledWorkoutItemImage
           src={
-            muscleGroups.filter((muscleGroup) => {
-              if (muscleGroup.name === workout.targetMuscleGroup)
-                return muscleGroup;
-            })[0].src
+            muscleGroups.filter(
+              (muscleGroup) => muscleGroup.name === workout.targetMuscleGroup
+            )[0].src
           }
         />
         <StyledWorkoutItemDescription>

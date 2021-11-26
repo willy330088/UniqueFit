@@ -114,13 +114,11 @@ export default function DragAndDrop({ plan, setPlan }) {
                             <StyledExerciseTitle>
                               <StyledMuscleGroupIcon
                                 src={
-                                  muscleGroups.filter((muscleGroup) => {
-                                    if (
+                                  muscleGroups.filter(
+                                    (muscleGroup) =>
                                       muscleGroup.name ===
                                       item.targetMuscleGroup
-                                    )
-                                      return muscleGroup;
-                                  })[0].src
+                                  )[0].src
                                 }
                               />
                               <StyledExerciseName>
@@ -177,9 +175,7 @@ export default function DragAndDrop({ plan, setPlan }) {
                               onClick={() => {
                                 setPlan({
                                   workoutSet: plan.workoutSet.filter(
-                                    (single) => {
-                                      if (single !== item) return single;
-                                    }
+                                    (single) => single !== item
                                   ),
                                 });
                               }}
@@ -240,12 +236,10 @@ export default function DragAndDrop({ plan, setPlan }) {
                           <StyledExerciseTitle>
                             <StyledMuscleGroupIcon
                               src={
-                                muscleGroups.filter((muscleGroup) => {
-                                  if (
+                                muscleGroups.filter(
+                                  (muscleGroup) =>
                                     muscleGroup.name === item.targetMuscleGroup
-                                  )
-                                    return muscleGroup;
-                                })[0].src
+                                )[0].src
                               }
                             />
                             <StyledExerciseName>
@@ -258,13 +252,11 @@ export default function DragAndDrop({ plan, setPlan }) {
                             <StyledExerciseTitle>
                               <StyledMuscleGroupIcon
                                 src={
-                                  muscleGroups.filter((muscleGroup) => {
-                                    if (
+                                  muscleGroups.filter(
+                                    (muscleGroup) =>
                                       muscleGroup.name ===
                                       item.targetMuscleGroup
-                                    )
-                                      return muscleGroup;
-                                  })[0].src
+                                  )[0].src
                                 }
                               />
                               <StyledExerciseName>

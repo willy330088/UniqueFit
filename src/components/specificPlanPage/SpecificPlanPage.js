@@ -87,10 +87,10 @@ export default function SpecificPlanPage() {
             <StyledPlanInfoImage
               src={
                 plan.targetMuscleGroup
-                  ? muscleGroups.filter((muscleGroup) => {
-                      if (muscleGroup.name === plan.targetMuscleGroup)
-                        return muscleGroup;
-                    })[0].src
+                  ? muscleGroups.filter(
+                      (muscleGroup) =>
+                        muscleGroup.name === plan.targetMuscleGroup
+                    )[0].src
                   : null
               }
             />
