@@ -8,7 +8,10 @@ import {
 import MuscleIcon from '../../images/muscle.png';
 import styled from 'styled-components';
 import LogoDumbbell from '../../images/logoDumbbell.png';
-import { StyledGeneralBtn } from '../common/GeneralStyle';
+import {
+  StyledGeneralBtn,
+  StyledVerticalContainer,
+} from '../common/GeneralStyle';
 import { blurring } from '../../utils/animation';
 require('dotenv').config();
 
@@ -59,10 +62,7 @@ const StyledLoadingContent = styled.div`
   justify-content: center;
 `;
 
-const StyledLogoContainer = styled.div`
-  display: flex;
-  align-items: center;
-
+const StyledLogoContainer = styled(StyledVerticalContainer)`
   div:nth-child(1) {
     animation: ${blurring} 1.2s linear 0s infinite alternate;
   }
@@ -219,7 +219,6 @@ export default function App() {
         zoom={16}
         center={currentLocation}
         clickableIcons={false}
-        // onLoad={onMapLoad}
       >
         <Marker
           position={currentLocation}

@@ -67,11 +67,7 @@ export default function ProfilePage() {
 
   function showMainContent() {
     if (mainContent === 'My Nearby Gyms') {
-      return (
-        <>
-          <GoogleMap />
-        </>
-      );
+      return <GoogleMap />;
     } else if (mainContent === 'My Workout Creations') {
       if (showCreationWorkout().length === 0) {
         return <NoResult type={'workout'} />;
@@ -132,11 +128,7 @@ export default function ProfilePage() {
         );
       }
     } else if (mainContent === 'My Schedule') {
-      return (
-        <>
-          <ScheduleCalendar />
-        </>
-      );
+      return <ScheduleCalendar />;
     }
   }
 

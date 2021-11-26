@@ -4,6 +4,19 @@ import ProfilePlan from './ProfilePlan';
 import { FaDumbbell } from 'react-icons/fa';
 import { removePlanCollection } from '../../utils/firebase';
 
+export default function WorkoutCreation({ plan, userId }) {
+  function removeCollected() {
+    removePlanCollection(plan.id, userId);
+  }
+
+  return (
+    <StyledPlanCreationContainer>
+      <ProfilePlan plan={plan} />
+      <StyledCollectIcon onClick={removeCollected} />
+    </StyledPlanCreationContainer>
+  );
+}
+
 const StyledPlanCreationContainer = styled.div`
   margin: 20px 0px 50px 0;
   width: 100%;
@@ -31,16 +44,3 @@ const StyledCollectIcon = styled(FaDumbbell)`
     color: white;
   }
 `;
-
-export default function WorkoutCreation({ plan, userId }) {
-  function removeCollected() {
-    removePlanCollection(plan.id, userId);
-  }
-
-  return (
-    <StyledPlanCreationContainer>
-      <ProfilePlan plan={plan} />
-      <StyledCollectIcon onClick={removeCollected} />
-    </StyledPlanCreationContainer>
-  );
-}

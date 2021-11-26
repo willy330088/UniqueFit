@@ -1,18 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { HiUserCircle } from 'react-icons/hi';
 import { ImPlay } from 'react-icons/im';
-import { FaDumbbell } from 'react-icons/fa';
-import { RiMessage2Fill } from 'react-icons/ri';
 import muscleGroups from '../../utils/muscleGroup';
 import WorkoutPopup from '../common/WorkoutPopup';
-import { useSelector } from 'react-redux';
+import WorkoutItemContent from '../common/WorkoutItemContent';
 
 export default function ProfileWorkout({ workout }) {
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
-  const users = useSelector((state) => state.users);
-  const publisher = users.filter((user) => user.id === workout.publisher)[0];
 
   return (
     <>
@@ -24,40 +19,14 @@ export default function ProfileWorkout({ workout }) {
         <StyledPlayIcon />
         <StyledWorkoutItemImage
           src={
-            muscleGroups.filter((muscleGroup) => {
-              if (muscleGroup.name === workout.targetMuscleGroup)
-                return muscleGroup;
-            })[0].src
+            muscleGroups.filter(
+              (muscleGroup) => muscleGroup.name === workout.targetMuscleGroup
+            )[0].src
           }
         />
         <StyledWorkoutItemDescription>
           <StyledWorkoutItemTitle>{workout.title}</StyledWorkoutItemTitle>
-          <StyledWorkoutItemPublisher>
-            {publisher?.photoURL ? (
-              <StyledPublisherImage src={publisher?.photoURL} />
-            ) : (
-              <StyledPublisherIcon />
-            )}
-            {
-              <StyledPublisherName>
-                {publisher?.displayName}
-              </StyledPublisherName>
-            }
-          </StyledWorkoutItemPublisher>
-          <StyledWorkoutItemSocial>
-            <StyledContainer>
-              <StyledCollectIcon />{' '}
-              <StyledIconNum>
-                Collected ({workout.collectedBy.length})
-              </StyledIconNum>{' '}
-            </StyledContainer>
-            <StyledContainer2>
-              <StyledMessageIcon />{' '}
-              <StyledIconNum>
-                Comments ({workout.commentsCount || 0})
-              </StyledIconNum>
-            </StyledContainer2>
-          </StyledWorkoutItemSocial>
+          <WorkoutItemContent workout={workout} />
         </StyledWorkoutItemDescription>
       </StyledWorkoutItemContainer>
       <WorkoutPopup workout={workout} close={closeModal} open={open} />
@@ -147,72 +116,10 @@ const StyledWorkoutItemTitle = styled.div`
   } ;
 `;
 
-const StyledWorkoutItemPublisher = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
 const StyledWorkoutItemImage = styled.img`
   width: 100px;
   display: none;
   @media (min-width: 650px) {
     display: block;
   }
-`;
-
-const StyledPublisherIcon = styled(HiUserCircle)`
-  font-size: 30px;
-  margin-right: 10px;
-  color: white;
-`;
-
-const StyledPublisherImage = styled.img`
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  margin-right: 10px;
-`;
-
-const StyledPublisherName = styled.div`
-  color: white;
-  font-size: 18px;
-`;
-
-const StyledWorkoutItemSocial = styled.div`
-  font-size: 20px;
-  margin-top: 10px;
-  color: white;
-
-  @media (min-width: 500px) {
-    display: flex;
-    align-items: baseline;
-  } ;
-`;
-
-const StyledCollectIcon = styled(FaDumbbell)`
-  font-size: 18px;
-  margin-right: 5px;
-`;
-
-const StyledMessageIcon = styled(RiMessage2Fill)`
-  font-size: 15px;
-  margin-right: 5px;
-`;
-
-const StyledContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const StyledContainer2 = styled.div`
-  display: flex;
-  align-items: center;
-
-  @media (min-width: 500px) {
-    margin-left: 10px;
-  }
-`;
-
-const StyledIconNum = styled.div`
-  padding-top: 3px;
 `;

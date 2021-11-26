@@ -3,6 +3,32 @@ import styled from 'styled-components';
 import HippoGif from '../../images/hippo.gif';
 import { useHistory } from 'react-router-dom';
 
+export default function NoResult({ type }) {
+  const history = useHistory();
+
+  return (
+    <StyledNoResultContainer>
+      <StyledNoResultGif src={HippoGif} />
+      <StyledNoResultTextContainer>
+        <StyledNoResultText>
+          {type === 'workout' ? 'No Workouts Yet...' : 'No Plans Yet...'}
+        </StyledNoResultText>
+        <StyledNoResultLink
+          onClick={() => {
+            if (type === 'workout') {
+              history.push('/workouts');
+            } else {
+              history.push('/plans');
+            }
+          }}
+        >
+          Checkout More
+        </StyledNoResultLink>
+      </StyledNoResultTextContainer>
+    </StyledNoResultContainer>
+  );
+}
+
 const StyledNoResultContainer = styled.div`
   width: 100%;
   display: flex;
@@ -53,34 +79,3 @@ const StyledNoResultLink = styled.div`
     background-color: #1face1;
   }
 `;
-
-export default function NoResult({ type }) {
-  const history = useHistory();
-  let text;
-
-  if (type === 'workout') {
-    text = 'No Workouts Yet...';
-  } else {
-    text = 'No Plans Yet...';
-  }
-
-  return (
-    <StyledNoResultContainer>
-      <StyledNoResultGif src={HippoGif} />
-      <StyledNoResultTextContainer>
-        <StyledNoResultText>{text}</StyledNoResultText>
-        <StyledNoResultLink
-          onClick={() => {
-            if (type === 'workout') {
-              history.push('/workouts');
-            } else {
-              history.push('/plans');
-            }
-          }}
-        >
-          Checkout More
-        </StyledNoResultLink>
-      </StyledNoResultTextContainer>
-    </StyledNoResultContainer>
-  );
-}
