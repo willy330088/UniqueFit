@@ -2,6 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import BannerImg from '../../images/banner-1.jpeg';
 
+export default function Banner({ slogan }) {
+  return (
+    <StyledBanner>
+      <StyledBannerTitle>{slogan}</StyledBannerTitle>
+    </StyledBanner>
+  );
+}
+
 const StyledBanner = styled.div`
   background-image: url(${BannerImg});
   background-size: cover;
@@ -27,11 +35,3 @@ const StyledBannerTitle = styled.div`
     left: 80px;
   }
 `;
-
-export default function Banner({ slogan }) {
-  return (
-    <StyledBanner>
-      <StyledBannerTitle>{slogan}</StyledBannerTitle>
-    </StyledBanner>
-  );
-}

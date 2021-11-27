@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from '../common/Header';
 import Banner from '../common/Banner';
 import CreatePlanPopup from './CreatePlanPopup';
@@ -64,6 +64,25 @@ const StyledPopup = styled(Popup)`
   }
 `;
 
+const StyledCreatePlanText = styled.div`
+  color: black;
+  font-size: 30px;
+  text-align: center;
+  z-index: 10;
+`;
+
+const StyledCreatePlanIcon = styled(MdAddCircleOutline)`
+  color: black;
+  font-size: 40px;
+  margin-right: 15px;
+  display: none;
+  z-index: 10;
+
+  @media (min-width: 600px) {
+    display: block;
+  } ;
+`;
+
 const StyledAddPlanContainer = styled.div`
   width: 100%;
   background-color: white;
@@ -71,7 +90,6 @@ const StyledAddPlanContainer = styled.div`
   position: relative;
   margin-bottom: 50px;
   height: 650px;
-  /* box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); */
   cursor: pointer;
   z-index: 1;
   display: flex;
@@ -112,6 +130,14 @@ const StyledAddPlanContainer = styled.div`
     }
   }
 
+  &:hover ${StyledCreatePlanText} {
+    color: white;
+  }
+
+  &:hover ${StyledCreatePlanIcon} {
+    color: white;
+  }
+
   @media (min-width: 800px) {
     padding: 30px 50px;
   }
@@ -126,36 +152,14 @@ const StyledAddPlanContainer = styled.div`
   } ;
 `;
 
-const StyledCreatePlanText = styled.div`
-  color: ${(props) => (props.hover ? 'white' : 'black')};
-  font-size: 30px;
-  text-align: center;
-  z-index: 10;
-`;
-
-const StyledCreatePlanIcon = styled(MdAddCircleOutline)`
-  color: ${(props) => (props.hover ? 'white' : 'black')};
-  font-size: 40px;
-  margin-right: 15px;
-  display: none;
-  z-index: 10;
-
-  @media (min-width: 600px) {
-    display: block;
-  } ;
-`;
-
 export default function PlanListPage({ currentUser }) {
   const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
   const [paging, setPaging] = useState(1);
-  const [hover, setHover] = useState(false);
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
   const [signInOpen, setSignInOpen] = useState(false);
   const closeSignIn = () => setSignInOpen(false);
   const plans = useSelector((state) => state.plans);
-  // const currentUser = useSelector((state) => state.currentUser);
-  console.log(plans);
 
   const publicPlans = plans.filter((plan) => plan.public === true);
 
@@ -180,12 +184,6 @@ export default function PlanListPage({ currentUser }) {
         />
         <StyledPlanListContainer>
           <StyledAddPlanContainer
-            onMouseOver={() => {
-              setHover(true);
-            }}
-            onMouseLeave={() => {
-              setHover(false);
-            }}
             onClick={() => {
               if (currentUser) {
                 setOpen(true);
@@ -194,10 +192,8 @@ export default function PlanListPage({ currentUser }) {
               }
             }}
           >
-            <StyledCreatePlanIcon hover={hover} />
-            <StyledCreatePlanText hover={hover}>
-              Click To Create Plan
-            </StyledCreatePlanText>
+            <StyledCreatePlanIcon />
+            <StyledCreatePlanText>Click To Create Plan</StyledCreatePlanText>
           </StyledAddPlanContainer>
           <SignInPopup open={signInOpen} closeModal={closeSignIn} />
           <StyledPopup

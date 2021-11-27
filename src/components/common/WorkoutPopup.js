@@ -19,6 +19,7 @@ import { down, blurring } from '../../utils/animation';
 import {
   StyledHorizontalContainer,
   StyledLeaveCommentBtn,
+  StyledBlurringEffectContainer,
 } from './GeneralStyle';
 
 export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
@@ -87,10 +88,10 @@ export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
           <StyledTitleContainer>
             <StyledMuscleIcon
               src={
-                muscleGroups.filter((muscleGroup) => {
-                  if (muscleGroup.name === workout.targetMuscleGroup)
-                    return muscleGroup;
-                })[0].src
+                muscleGroups.filter(
+                  (muscleGroup) =>
+                    muscleGroup.name === workout.targetMuscleGroup
+                )[0].src
               }
             />
             <StyledTitle>{workout.title}</StyledTitle>
@@ -305,6 +306,7 @@ const StyledTextContent = styled.div`
 const StyledPublisherIcon = styled(HiUserCircle)`
   font-size: 25px;
   margin-right: 10px;
+
   @media (min-width: 500px) {
     width: 30px;
   }
@@ -319,6 +321,7 @@ const StyledPublisherImage = styled.img`
   width: 25px;
   height: 25px;
   margin-right: 10px;
+
   @media (min-width: 500px) {
     width: 30px;
     height: 30px;
@@ -400,6 +403,7 @@ const StyledCommentTitleContainer = styled.div`
   display: flex;
   align-items: baseline;
   margin-bottom: 10px;
+
   @media (min-width: 500px) {
     margin-bottom: 10px;
   }
@@ -412,6 +416,7 @@ const StyledCommentTitleContainer = styled.div`
 const StyledCommentIcon = styled(RiMessage2Fill)`
   color: white;
   font-size: 18px;
+
   @media (min-width: 500px) {
     font-size: 20px;
   }
@@ -425,6 +430,7 @@ const StyledCommentTitleText = styled.div`
   color: white;
   font-size: 23px;
   margin-left: 10px;
+
   @media (min-width: 500px) {
     font-size: 25px;
   }
@@ -510,37 +516,9 @@ const StyledOverlay = styled.div`
   align-items: center;
 `;
 
-const StyledLogoContainer = styled.div`
+const StyledLogoContainer = styled(StyledBlurringEffectContainer)`
   display: flex;
   align-items: center;
-
-  div:nth-child(1) {
-    animation: ${blurring} 1.2s linear 0s infinite alternate;
-  }
-  div:nth-child(2) {
-    animation: ${blurring} 1.2s linear 0.15s infinite alternate;
-  }
-  div:nth-child(3) {
-    animation: ${blurring} 1.2s linear 0.3s infinite alternate;
-  }
-  div:nth-child(4) {
-    animation: ${blurring} 1.2s linear 0.45s infinite alternate;
-  }
-  div:nth-child(5) {
-    animation: ${blurring} 1.2s linear 0.6s infinite alternate;
-  }
-  div:nth-child(6) {
-    animation: ${blurring} 1.2s linear 0.75s infinite alternate;
-  }
-  div:nth-child(7) {
-    animation: ${blurring} 1.2s linear 0.9s infinite alternate;
-  }
-  div:nth-child(8) {
-    animation: ${blurring} 1.2s linear 1.05s infinite alternate;
-  }
-  div:nth-child(9) {
-    animation: ${blurring} 1.2s linear 1.2s infinite alternate;
-  }
 `;
 
 const StyledLogoText1 = styled.div`
@@ -557,6 +535,7 @@ const StyledLogoText2 = styled.div`
   font-size: 40px;
   color: white;
   margin: 0 5px;
+
   @media (min-width: 500px) {
     font-size: 80px;
   }

@@ -1,7 +1,25 @@
 import React from 'react';
 import styled from 'styled-components';
 import LogoDumbbell from '../../images/logoDumbbell.png';
-import { blurring } from '../../utils/animation';
+import { StyledBlurringEffectContainer } from './GeneralStyle';
+
+export default function FullPageLoading() {
+  return (
+    <StyledOverlay>
+      <StyledLogoContainer>
+        <StyledLogoText1>U</StyledLogoText1>
+        <StyledLogoText1>N</StyledLogoText1>
+        <StyledLogoText1>I</StyledLogoText1>
+        <StyledLogoText1>Q</StyledLogoText1>
+        <StyledLogoText1>U</StyledLogoText1>
+        <StyledLogoText1>E</StyledLogoText1>
+        <StyledLogoText2>F</StyledLogoText2>
+        <StyledLogoDumbbell src={LogoDumbbell} />
+        <StyledLogoText2>T</StyledLogoText2>
+      </StyledLogoContainer>
+    </StyledOverlay>
+  );
+}
 
 const StyledOverlay = styled.div`
   width: 100%;
@@ -14,43 +32,9 @@ const StyledOverlay = styled.div`
   align-items: center;
 `;
 
-const StyledLogoContainer = styled.div`
+const StyledLogoContainer = styled(StyledBlurringEffectContainer)`
   display: flex;
   align-items: center;
-
-  div:nth-child(1) {
-    animation: ${blurring} 1.2s linear 0s infinite alternate;
-  }
-  div:nth-child(2) {
-    animation: ${blurring} 1.2s linear 0.15s infinite alternate;
-  }
-  div:nth-child(3) {
-    animation: ${blurring} 1.2s linear 0.3s infinite alternate;
-  }
-
-  div:nth-child(4) {
-    animation: ${blurring} 1.2s linear 0.45s infinite alternate;
-  }
-
-  div:nth-child(5) {
-    animation: ${blurring} 1.2s linear 0.6s infinite alternate;
-  }
-
-  div:nth-child(6) {
-    animation: ${blurring} 1.2s linear 0.75s infinite alternate;
-  }
-
-  div:nth-child(7) {
-    animation: ${blurring} 1.2s linear 0.9s infinite alternate;
-  }
-
-  div:nth-child(8) {
-    animation: ${blurring} 1.2s linear 1.05s infinite alternate;
-  }
-
-  div:nth-child(9) {
-    animation: ${blurring} 1.2s linear 1.2s infinite alternate;
-  }
 `;
 
 const StyledLogoText1 = styled.div`
@@ -73,21 +57,3 @@ const StyledLogoDumbbell = styled.div`
   height: 80px;
   margin: 0 5px;
 `;
-
-export default function FullPageLoading() {
-  return (
-    <StyledOverlay>
-      <StyledLogoContainer>
-        <StyledLogoText1>U</StyledLogoText1>
-        <StyledLogoText1>N</StyledLogoText1>
-        <StyledLogoText1>I</StyledLogoText1>
-        <StyledLogoText1>Q</StyledLogoText1>
-        <StyledLogoText1>U</StyledLogoText1>
-        <StyledLogoText1>E</StyledLogoText1>
-        <StyledLogoText2>F</StyledLogoText2>
-        <StyledLogoDumbbell src={LogoDumbbell} />
-        <StyledLogoText2>T</StyledLogoText2>
-      </StyledLogoContainer>
-    </StyledOverlay>
-  );
-}

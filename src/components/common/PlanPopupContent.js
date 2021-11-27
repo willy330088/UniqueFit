@@ -10,6 +10,7 @@ import {
   loadingCompletedToast,
 } from '../../utils/toast';
 import { createPlan, editPlan } from '../../utils/firebase';
+import { StyledSubmitWorkoutAndPlanBtn } from './GeneralStyle';
 
 export default function PlanPopupContent({
   type,
@@ -125,12 +126,12 @@ export default function PlanPopupContent({
           <StyledCreateLabel>Order Your Workouts</StyledCreateLabel>
           <DragandDrop plan={plan} setPlan={setPlan} />
           <StyledChangeWorkoutBtnContainer>
-            <StyledSubmitPlanBtn
+            <StyledSubmitWorkoutAndPlanBtn
               onClick={onSubmitPlan}
               submitDisabled={submitDisabled}
             >
               {type === 'Create' ? 'Create' : 'Save'}
-            </StyledSubmitPlanBtn>
+            </StyledSubmitWorkoutAndPlanBtn>
           </StyledChangeWorkoutBtnContainer>
         </>
       );
@@ -181,34 +182,6 @@ const StyledArrowLeftIcon = styled(AiOutlineLeftCircle)`
 
   &:hover {
     color: #1face1;
-  }
-`;
-
-const StyledSubmitPlanBtn = styled.div`
-  font-size: 20px;
-  height: 40px;
-  width: 120px;
-  cursor: ${(props) => (props.submitDisabled ? 'not-allowed' : 'pointer')};
-  color: ${(props) => (props.submitDisabled ? '#d1d1d1' : '#1face1')};
-  border-radius: 5px;
-  background-color: ${(props) =>
-    props.submitDisabled ? '#969696' : 'transparent'};
-  text-align: center;
-  line-height: 40px;
-  margin: 10px 0;
-  border: ${(props) => (props.submitDisabled ? 'none' : '2px solid #1face1')};
-
-  &:hover {
-    color: ${(props) => (props.submitDisabled ? '#d1d1d1' : 'white')};
-    background-color: ${(props) =>
-      props.submitDisabled ? '#969696' : '#1face1'};
-  }
-
-  @media (min-width: 500px) {
-    font-size: 35px;
-    height: 50px;
-    width: 200px;
-    line-height: 46px;
   }
 `;
 

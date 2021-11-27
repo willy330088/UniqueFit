@@ -8,6 +8,92 @@ import { FaFilter } from 'react-icons/fa';
 import SpinHover from '../../images/spin-hover.png';
 import Spin from '../../images/spin.png';
 
+export default function Filter({
+  filteredMuscleGroups,
+  setFilteredMuscleGroups,
+}) {
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
+  const [isFront, setIsFront] = useState(true);
+  const [popupTitle, setPopupTitle] = useState('');
+
+  function removeFilter(name) {
+    setFilteredMuscleGroups(
+      filteredMuscleGroups.filter((muscle) => muscle !== name)
+    );
+  }
+
+  return (
+    <StyledFilterContainer filteredMuscleGroups={filteredMuscleGroups}>
+      <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
+        <StyledPopupTitle>
+          {popupTitle === '' ? 'Select Muscle Groups' : popupTitle}
+        </StyledPopupTitle>
+        <StyledPopupIconContainer>
+          <StyledPopupSpinIcon
+            onClick={() => {
+              setIsFront(!isFront);
+            }}
+          />
+          {isFront ? (
+            <FrontMuscle
+              width={'200px'}
+              filteredMuscleGroups={filteredMuscleGroups}
+              setFilteredMuscleGroups={setFilteredMuscleGroups}
+              setPopupTitle={setPopupTitle}
+            />
+          ) : (
+            <BackMuscle
+              width={'200px'}
+              filteredMuscleGroups={filteredMuscleGroups}
+              setFilteredMuscleGroups={setFilteredMuscleGroups}
+              setPopupTitle={setPopupTitle}
+            />
+          )}
+        </StyledPopupIconContainer>
+        <StyledPopupFilterTagContainer>
+          {filteredMuscleGroups.map((item) => {
+            return (
+              <StyledFilterTag>
+                <StyledFilterTagTitle>{item}</StyledFilterTagTitle>
+                <StyledCancelIcon
+                  onClick={() => {
+                    removeFilter(item);
+                  }}
+                />
+              </StyledFilterTag>
+            );
+          })}
+        </StyledPopupFilterTagContainer>
+      </StyledPopup>
+      <StyledFilterContentContainer
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        <StyledFilterIcon />
+        <StyledFilterContentTitle>
+          Filter by Muscle Groups
+        </StyledFilterContentTitle>
+      </StyledFilterContentContainer>
+      <StyledFilterTagContainer>
+        {filteredMuscleGroups.map((item) => {
+          return (
+            <StyledFilterTag>
+              <StyledFilterTagTitle>{item}</StyledFilterTagTitle>
+              <StyledCancelIcon
+                onClick={() => {
+                  removeFilter(item);
+                }}
+              />
+            </StyledFilterTag>
+          );
+        })}
+      </StyledFilterTagContainer>
+    </StyledFilterContainer>
+  );
+}
+
 const StyledFilterContainer = styled.div`
   width: fit-content;
   height: 50px;
@@ -26,15 +112,29 @@ const StyledFilterContainer = styled.div`
   }
 `;
 
+const StyledFilterContentTitle = styled.div`
+  color: white;
+  font-size: 25px;
+`;
+
+const StyledFilterIcon = styled(FaFilter)`
+  color: white;
+  font-size: 22px;
+  margin-right: 10px;
+`;
+
 const StyledFilterContentContainer = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-`;
 
-const StyledFilterContentTitle = styled.div`
-  color: ${(props) => (props.hover ? 'hsla(196, 76%, 70%)' : 'white')};
-  font-size: 25px;
+  &:hover ${StyledFilterContentTitle} {
+    color: hsla(196, 76%, 70%);
+  }
+
+  &:hover ${StyledFilterIcon} {
+    color: hsla(196, 76%, 70%);
+  }
 `;
 
 const StyledFilterTagContainer = styled.div`
@@ -83,12 +183,6 @@ const StyledCancelIcon = styled(ImCancelCircle)`
   }
 `;
 
-const StyledFilterIcon = styled(FaFilter)`
-  color: ${(props) => (props.hover ? 'hsla(196, 76%, 70%)' : 'white')};
-  font-size: 22px;
-  margin-right: 10px;
-`;
-
 const StyledPopupTitle = styled.div`
   color: #1face1;
   font-size: 40px;
@@ -133,100 +227,3 @@ const StyledPopupSpinIcon = styled.div`
     background-image: url(${SpinHover});
   }
 `;
-
-export default function Filter({
-  filteredMuscleGroups,
-  setFilteredMuscleGroups,
-}) {
-  const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
-  const [isFront, setIsFront] = useState(true);
-  const [popupTitle, setPopupTitle] = useState('');
-  const [hover, setHover] = useState(false);
-
-  function removeFilter(name) {
-    setFilteredMuscleGroups(
-      filteredMuscleGroups.filter((muscle) => {
-        if (muscle !== name) return muscle;
-      })
-    );
-  }
-
-  return (
-    <StyledFilterContainer filteredMuscleGroups={filteredMuscleGroups}>
-      <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
-        <StyledPopupTitle>
-          {popupTitle === '' ? 'Select Muscle Groups' : popupTitle}
-        </StyledPopupTitle>
-        <StyledPopupIconContainer>
-          <StyledPopupSpinIcon
-            onClick={() => {
-              setIsFront(!isFront);
-            }}
-          />
-          {isFront ? (
-            <FrontMuscle
-              width={'200px'}
-              filteredMuscleGroups={filteredMuscleGroups}
-              setFilteredMuscleGroups={setFilteredMuscleGroups}
-              clickDisabled={false}
-              setPopupTitle={setPopupTitle}
-            />
-          ) : (
-            <BackMuscle
-              width={'200px'}
-              filteredMuscleGroups={filteredMuscleGroups}
-              setFilteredMuscleGroups={setFilteredMuscleGroups}
-              clickDisabled={false}
-              setPopupTitle={setPopupTitle}
-            />
-          )}
-        </StyledPopupIconContainer>
-        <StyledPopupFilterTagContainer>
-          {filteredMuscleGroups.map((item) => {
-            return (
-              <StyledFilterTag>
-                <StyledFilterTagTitle>{item}</StyledFilterTagTitle>
-                <StyledCancelIcon
-                  onClick={() => {
-                    removeFilter(item);
-                  }}
-                />
-              </StyledFilterTag>
-            );
-          })}
-        </StyledPopupFilterTagContainer>
-      </StyledPopup>
-      <StyledFilterContentContainer
-        onClick={() => {
-          setOpen(true);
-        }}
-        onMouseOver={() => {
-          setHover(true);
-        }}
-        onMouseLeave={() => {
-          setHover(false);
-        }}
-      >
-        <StyledFilterIcon hover={hover} />
-        <StyledFilterContentTitle hover={hover}>
-          Filter by Muscle Groups
-        </StyledFilterContentTitle>
-      </StyledFilterContentContainer>
-      <StyledFilterTagContainer>
-        {filteredMuscleGroups.map((item) => {
-          return (
-            <StyledFilterTag>
-              <StyledFilterTagTitle>{item}</StyledFilterTagTitle>
-              <StyledCancelIcon
-                onClick={() => {
-                  removeFilter(item);
-                }}
-              />
-            </StyledFilterTag>
-          );
-        })}
-      </StyledFilterTagContainer>
-    </StyledFilterContainer>
-  );
-}

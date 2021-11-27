@@ -3,6 +3,55 @@ import styled from 'styled-components';
 import muscleGroupImage from '../../utils/muscleGroup';
 import { GiCheckMark } from 'react-icons/gi';
 
+export default function PlanDetailsInput({
+  title,
+  description,
+  setTitle,
+  setDescription,
+  setTargetMuscleGroup,
+  targetMuscleGroup,
+}) {
+  return (
+    <StyledPlanDetails>
+      <StyledCreateLabel reminder={'(Ex: Shoulder Press)'}>
+        Title of the Workout
+      </StyledCreateLabel>
+      <StyledInput
+        onChange={(e) => {
+          setTitle(e.target.value);
+        }}
+        value={title}
+      />
+      <StyledCreateLabel reminder={'(Choose 1 main muscle group)'}>
+        {targetMuscleGroup === '' ? 'Target Muscle Group' : targetMuscleGroup}
+      </StyledCreateLabel>
+      <StyledTargetMuscleGroups>
+        {muscleGroupImage.map((muscle) => {
+          return (
+            <StyledMuscleGroupContainer
+              onClick={() => {
+                setTargetMuscleGroup(muscle.name);
+              }}
+              selected={targetMuscleGroup === muscle.name}
+              key={muscle.name}
+            >
+              <StyledCheckedIcon selected={targetMuscleGroup === muscle.name} />
+              <StyledMuscleGroupImage src={muscle.src} />
+            </StyledMuscleGroupContainer>
+          );
+        })}
+      </StyledTargetMuscleGroups>
+      <StyledCreateLabel>Description</StyledCreateLabel>
+      <StyledDescriptionInput
+        onChange={(e) => {
+          setDescription(e.target.value);
+        }}
+        value={description}
+      />
+    </StyledPlanDetails>
+  );
+}
+
 const StyledPlanDetails = styled.div`
   width: 100%;
 `;
@@ -126,53 +175,3 @@ const StyledDescriptionInput = styled.textarea`
     height: 130px;
   }
 `;
-
-export default function PlanDetailsInput({
-  title,
-  description,
-  setTitle,
-  setDescription,
-  setTargetMuscleGroup,
-  targetMuscleGroup,
-}) {
-  return (
-    <StyledPlanDetails>
-      <StyledCreateLabel reminder={'(Ex: Shoulder Press)'}>
-        Title of the Workout
-      </StyledCreateLabel>
-      <StyledInput
-        onChange={(e) => {
-          setTitle(e.target.value);
-        }}
-        value={title}
-        // maxLength={15}
-      />
-      <StyledCreateLabel reminder={'(Choose 1 main muscle group)'}>
-        {targetMuscleGroup === '' ? 'Target Muscle Group' : targetMuscleGroup}
-      </StyledCreateLabel>
-      <StyledTargetMuscleGroups>
-        {muscleGroupImage.map((muscle) => {
-          return (
-            <StyledMuscleGroupContainer
-              onClick={() => {
-                setTargetMuscleGroup(muscle.name);
-              }}
-              selected={targetMuscleGroup === muscle.name}
-              key={muscle.name}
-            >
-              <StyledCheckedIcon selected={targetMuscleGroup === muscle.name} />
-              <StyledMuscleGroupImage src={muscle.src} />
-            </StyledMuscleGroupContainer>
-          );
-        })}
-      </StyledTargetMuscleGroups>
-      <StyledCreateLabel>Description</StyledCreateLabel>
-      <StyledDescriptionInput
-        onChange={(e) => {
-          setDescription(e.target.value);
-        }}
-        value={description}
-      />
-    </StyledPlanDetails>
-  );
-}

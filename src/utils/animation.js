@@ -40,3 +40,19 @@ export const blurring = keyframes`
     filter: blur(6px);
   }
 `;
+
+export const scrollDown = keyframes`
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  60% {
+    box-shadow: 0 0 0 60px rgba(255, 255, 255, 0.1);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+`;

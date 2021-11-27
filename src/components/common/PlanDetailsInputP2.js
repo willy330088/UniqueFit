@@ -2,6 +2,33 @@ import React from 'react';
 import styled from 'styled-components';
 import { MdPublic, MdPublicOff } from 'react-icons/md';
 
+export default function PlanDetailsInput({
+  description,
+  setDescription,
+  publicity,
+  setPublicity,
+}) {
+  return (
+    <StyledPlanDetails>
+      <StyledCreateLabel>Description</StyledCreateLabel>
+      <StyledDescriptionInput
+        onChange={(e) => {
+          setDescription(e.target.value);
+        }}
+        value={description}
+      />
+      <StyledCreateLabel>Public</StyledCreateLabel>
+      <StyledToggleSet>
+        {publicity ? <StyledPublicOnIcon /> : <StyledPublicOffIcon />}
+        <StyledToggle
+          public={publicity}
+          onClick={() => setPublicity(!publicity)}
+        />
+      </StyledToggleSet>
+    </StyledPlanDetails>
+  );
+}
+
 const StyledPlanDetails = styled.div`
   width: 100%;
 `;
@@ -16,7 +43,7 @@ const StyledCreateLabel = styled.div`
 
   @media (min-width: 500px) {
     font-size: 30px;
-  } 
+  }
 `;
 
 const StyledDescriptionInput = styled.textarea`
@@ -30,7 +57,7 @@ const StyledDescriptionInput = styled.textarea`
 
   @media (min-width: 650px) {
     height: 130px;
-  } 
+  }
 `;
 
 const StyledToggle = styled.button`
@@ -95,32 +122,8 @@ const StyledPublicOffIcon = styled(MdPublicOff)`
   color: white;
   font-size: 30px;
   margin-right: 20px;
+
   @media (min-width: 500px) {
     font-size: 40px;
   }
 `;
-
-export default function PlanDetailsInput({
-  description,
-  setDescription,
-  publicity,
-  setPublicity,
-}) {
-
-  return (
-    <StyledPlanDetails>
-      <StyledCreateLabel>Description</StyledCreateLabel>
-      <StyledDescriptionInput
-        onChange={(e) => {
-          setDescription(e.target.value);
-        }}
-        value={description}
-      />
-      <StyledCreateLabel>Public</StyledCreateLabel>
-      <StyledToggleSet>
-        {publicity? <StyledPublicOnIcon/> : <StyledPublicOffIcon/> }
-        <StyledToggle public={publicity} onClick={() => setPublicity(!publicity)} />
-      </StyledToggleSet>
-    </StyledPlanDetails>
-  );
-}

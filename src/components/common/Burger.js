@@ -1,6 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 
+export default function Burger({ open, setOpen }) {
+  return (
+    <StyledBurger open={open} onClick={() => setOpen(!open)}>
+      <div />
+      <div />
+      <div />
+    </StyledBurger>
+  );
+}
+
 const StyledBurger = styled.button`
   position: absolute;
   top: 25px;
@@ -47,13 +57,3 @@ const StyledBurger = styled.button`
     display: none;
   }
 `;
-
-export default function Burger({ open, setOpen }) {
-  return (
-    <StyledBurger open={open} onClick={() => setOpen(!open)}>
-      <div />
-      <div />
-      <div />
-    </StyledBurger>
-  );
-}

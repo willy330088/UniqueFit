@@ -11,6 +11,7 @@ import {
   updateUserName,
 } from '../../utils/firebase';
 import { loadingToast, loadingCompletedToast } from '../../utils/toast';
+import { StyledGeneralBtn } from '../common/GeneralStyle';
 
 export default function EditProfilePopup({ closeModal, open }) {
   const currentUser = useSelector((state) => state.currentUser);
@@ -21,21 +22,21 @@ export default function EditProfilePopup({ closeModal, open }) {
   const [userName, setUserName] = useState(currentUser?.displayName);
   const [photoFile, setPhotoFile] = useState();
 
-  const handleFileChange = (e) => {
+  function handleFileChange(e) {
     const file = e.target.files[0];
     setPhotoFile(file);
     const url = URL.createObjectURL(file);
     setSource(url);
-  };
+  }
 
   function close() {
     closeModal();
     setSource(currentUser?.photoURL);
   }
 
-  const handleChoose = () => {
+  function handleChoose() {
     inputPhotoRef.current.click();
-  };
+  }
 
   async function onSave() {
     const profileUpdatingToast = loadingToast('Updating Profile...');
@@ -200,23 +201,12 @@ const StyledPopupInput = styled.input`
   }
 `;
 
-const StyledPopupBtn = styled.div`
+const StyledPopupBtn = styled(StyledGeneralBtn)`
   font-size: 25px;
   height: 40px;
   width: 120px;
-  cursor: pointer;
-  color: #1face1;
-  border-radius: 5px;
-  background-color: transparent;
-  text-align: center;
   line-height: 40px;
   margin: 10px 0;
-  border: 2px solid #1face1;
-
-  &:hover {
-    color: white;
-    background-color: #1face1;
-  }
 `;
 
 const StyledPopupBtnContainer = styled.div`

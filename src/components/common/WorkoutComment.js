@@ -5,7 +5,10 @@ import { HiUserCircle } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import { deleteWorkoutComment, editWorkoutComment } from '../../utils/firebase';
 import { successToast } from '../../utils/toast';
-import { StyledCommentEditSaveBtn } from './GeneralStyle';
+import {
+  StyledCommentEditSaveBtn,
+  StyledVerticalContainer,
+} from './GeneralStyle';
 
 export default function WorkoutComment({ comment, workoutId, currentUser }) {
   const [showTool, setShowTool] = useState(false);
@@ -35,7 +38,7 @@ export default function WorkoutComment({ comment, workoutId, currentUser }) {
       <StyledNameCommentWrap>
         <StyledCommentUserName>{publisher.displayName}</StyledCommentUserName>
         {isEditing ? (
-          <StyledCommentEditInputContainer>
+          <StyledVerticalContainer>
             {' '}
             <StyledCommentEditInput
               value={commentContent}
@@ -49,7 +52,7 @@ export default function WorkoutComment({ comment, workoutId, currentUser }) {
             >
               Save
             </StyledCommentEditSaveBtn>
-          </StyledCommentEditInputContainer>
+          </StyledVerticalContainer>
         ) : (
           <StyledCommentUserContext>{comment.content}</StyledCommentUserContext>
         )}
@@ -83,9 +86,7 @@ export default function WorkoutComment({ comment, workoutId, currentUser }) {
   );
 }
 
-const StyledCommentWrap = styled.div`
-  display: flex;
-  align-items: center;
+const StyledCommentWrap = styled(StyledVerticalContainer)`
   margin-top: 20px;
   min-height: 140px;
   position: relative;
@@ -165,11 +166,6 @@ const StyledCommentToolBtn = styled.div`
     background: #5cc1e6;
     color: white;
   }
-`;
-
-const StyledCommentEditInputContainer = styled.div`
-  display: flex;
-  align-items: center;
 `;
 
 const StyledCommentEditInput = styled.textarea`

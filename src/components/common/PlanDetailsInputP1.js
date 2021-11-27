@@ -3,6 +3,59 @@ import styled from 'styled-components';
 import muscleGroupImage from '../../utils/muscleGroup';
 import { GiCheckMark } from 'react-icons/gi';
 
+export default function PlanDetailsInput({
+  title,
+  setTitle,
+  targetMuscleGroup,
+  setTargetMuscleGroup,
+  estimatedTrainingTime,
+  setEstimatedTrainingTime,
+}) {
+  return (
+    <StyledPlanDetails>
+      <StyledCreateLabel>Title of the Plan</StyledCreateLabel>
+      <StyledInput
+        onChange={(e) => {
+          setTitle(e.target.value);
+        }}
+        value={title}
+      />
+      <StyledCreateLabel reminder={'(Choose 1 main muscle group)'}>
+        {targetMuscleGroup === '' ? 'Target Muscle Group' : targetMuscleGroup}
+      </StyledCreateLabel>
+      <StyledTargetMuscleGroups>
+        {muscleGroupImage.map((muscle) => {
+          return (
+            <StyledMuscleGroupContainer
+              onClick={() => {
+                setTargetMuscleGroup(muscle.name);
+              }}
+              selected={targetMuscleGroup === muscle.name}
+              key={muscle.name}
+            >
+              <StyledCheckedIcon selected={targetMuscleGroup === muscle.name} />
+              <StyledMuscleGroupImage src={muscle.src} />
+            </StyledMuscleGroupContainer>
+          );
+        })}
+      </StyledTargetMuscleGroups>
+      <StyledCreateLabel>Estimated Training Time</StyledCreateLabel>
+      <StyledTimeInputContainer>
+        <StyledTimeInput
+          placeholder="0"
+          type="number"
+          min="0"
+          onChange={(e) => {
+            setEstimatedTrainingTime(e.target.value);
+          }}
+          value={estimatedTrainingTime}
+        />
+        <StyledLabel>mins</StyledLabel>
+      </StyledTimeInputContainer>
+    </StyledPlanDetails>
+  );
+}
+
 const StyledPlanDetails = styled.div`
   width: 100%;
 `;
@@ -142,56 +195,3 @@ const StyledLabel = styled.div`
     margin-left: 20px;
   }
 `;
-
-export default function PlanDetailsInput({
-  title,
-  setTitle,
-  targetMuscleGroup,
-  setTargetMuscleGroup,
-  estimatedTrainingTime,
-  setEstimatedTrainingTime,
-}) {
-  return (
-    <StyledPlanDetails>
-      <StyledCreateLabel>Title of the Plan</StyledCreateLabel>
-      <StyledInput
-        onChange={(e) => {
-          setTitle(e.target.value);
-        }}
-        value={title}
-      />
-      <StyledCreateLabel reminder={'(Choose 1 main muscle group)'}>
-        {targetMuscleGroup === '' ? 'Target Muscle Group' : targetMuscleGroup}
-      </StyledCreateLabel>
-      <StyledTargetMuscleGroups>
-        {muscleGroupImage.map((muscle) => {
-          return (
-            <StyledMuscleGroupContainer
-              onClick={() => {
-                setTargetMuscleGroup(muscle.name);
-              }}
-              selected={targetMuscleGroup === muscle.name}
-              key={muscle.name}
-            >
-              <StyledCheckedIcon selected={targetMuscleGroup === muscle.name} />
-              <StyledMuscleGroupImage src={muscle.src} />
-            </StyledMuscleGroupContainer>
-          );
-        })}
-      </StyledTargetMuscleGroups>
-      <StyledCreateLabel>Estimated Training Time</StyledCreateLabel>
-      <StyledTimeInputContainer>
-        <StyledTimeInput
-          placeholder="0"
-          type="number"
-          min="0"
-          onChange={(e) => {
-            setEstimatedTrainingTime(e.target.value);
-          }}
-          value={estimatedTrainingTime}
-        />
-        <StyledLabel>mins</StyledLabel>
-      </StyledTimeInputContainer>
-    </StyledPlanDetails>
-  );
-}

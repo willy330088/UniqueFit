@@ -4,6 +4,71 @@ import styled from 'styled-components';
 import Homepage from '../../images/Homepage.jpeg';
 import Fitness from '../../images/fitness.jpeg';
 import FullPageLoading from '../common/FullPageLoading';
+import { scrollDown } from '../../utils/animation';
+
+export default function HomePage({ currentUser }) {
+  return currentUser !== undefined ? (
+    <>
+      <Header />
+      <StyledBanner src={Homepage} />
+      <StyledMainTextContainer>
+        <StyledMainText>
+          BUILD YOUR <StyledMainTextWord>UNIQUE</StyledMainTextWord> FITNESS
+        </StyledMainText>
+        <StyledScrollToDownIcon
+          onClick={() => {
+            window.scrollTo({ top: 1500, left: 0, behavior: 'smooth' });
+          }}
+        ></StyledScrollToDownIcon>
+        <StyledScrollToDownText>GUIDE</StyledScrollToDownText>
+      </StyledMainTextContainer>
+      <StyledMainContainer>
+        <StyledMainImageContainer />
+        <StyledMainWordContainer>
+          <StyledStepContainer>
+            <StyledStepTextContainer>
+              <StyledStepTextTitle>
+                1. Collect / Create Your Workouts
+              </StyledStepTextTitle>
+              <StyledStepTextContent>
+                Take a look at all the fantastic workouts uploaded from the
+                UniqueFit community and collect those you like for further plan
+                creations. If you're willing to share, welcome to create your
+                own workouts!
+              </StyledStepTextContent>
+            </StyledStepTextContainer>
+          </StyledStepContainer>
+          <StyledStepContainer>
+            <StyledStepTextContainer>
+              <StyledStepTextTitle>
+                2. Collect / Create Your Plans
+              </StyledStepTextTitle>
+              <StyledStepTextContent>
+                With your workout collections, order and create your own plans
+                to build strength and stay fit! Collect other amazing plans to
+                enrich your workout routines!
+              </StyledStepTextContent>
+            </StyledStepTextContainer>
+          </StyledStepContainer>
+          <StyledStepContainer>
+            <StyledStepTextContainer>
+              <StyledStepTextTitle>
+                3. Manage Your Unique Fitness
+              </StyledStepTextTitle>
+              <StyledStepTextContent>
+                Edit and manage your collections and creations for improvements.
+                Be sure to schedule your training and get informations of nearby
+                gyms!
+              </StyledStepTextContent>
+            </StyledStepTextContainer>
+          </StyledStepContainer>
+        </StyledMainWordContainer>
+      </StyledMainContainer>
+    </>
+  ) : (
+    <FullPageLoading />
+  );
+}
 
 const StyledBanner = styled.img`
   object-fit: cover;
@@ -96,24 +161,8 @@ const StyledScrollToDownIcon = styled.span`
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3);
     border-radius: 100%;
     opacity: 0;
-    animation: sdb03 3s infinite;
+    animation: ${scrollDown} 3s infinite;
     box-sizing: border-box;
-  }
-
-  @keyframes sdb03 {
-    0% {
-      opacity: 0;
-    }
-    30% {
-      opacity: 1;
-    }
-    60% {
-      box-shadow: 0 0 0 60px rgba(255, 255, 255, 0.1);
-      opacity: 0;
-    }
-    100% {
-      opacity: 0;
-    }
   }
 `;
 
@@ -194,67 +243,3 @@ const StyledStepTextContent = styled.div`
     font-size: 20px;
   }
 `;
-
-export default function HomePage({ currentUser }) {
-  return currentUser !== undefined ? (
-    <>
-      <Header />
-      <StyledBanner src={Homepage} />
-      <StyledMainTextContainer>
-        <StyledMainText>
-          BUILD YOUR <StyledMainTextWord>UNIQUE</StyledMainTextWord> FITNESS
-        </StyledMainText>
-        <StyledScrollToDownIcon
-          onClick={() => {
-            window.scrollTo({ top: 1500, left: 0, behavior: 'smooth' });
-          }}
-        ></StyledScrollToDownIcon>
-        <StyledScrollToDownText>GUIDE</StyledScrollToDownText>
-      </StyledMainTextContainer>
-      <StyledMainContainer>
-        <StyledMainImageContainer />
-        <StyledMainWordContainer>
-          <StyledStepContainer>
-            <StyledStepTextContainer>
-              <StyledStepTextTitle>
-                1. Collect / Create Your Workouts
-              </StyledStepTextTitle>
-              <StyledStepTextContent>
-                Take a look at all the fantastic workouts uploaded from the
-                UniqueFit community and collect those you like for further plan
-                creations. If you're willing to share, welcome to create your
-                own workouts!
-              </StyledStepTextContent>
-            </StyledStepTextContainer>
-          </StyledStepContainer>
-          <StyledStepContainer>
-            <StyledStepTextContainer>
-              <StyledStepTextTitle>
-                2. Collect / Create Your Plans
-              </StyledStepTextTitle>
-              <StyledStepTextContent>
-                With your workout collections, order and create your own plans
-                to build strength and stay fit! Collect other amazing plans to
-                enrich your workout routines!
-              </StyledStepTextContent>
-            </StyledStepTextContainer>
-          </StyledStepContainer>
-          <StyledStepContainer>
-            <StyledStepTextContainer>
-              <StyledStepTextTitle>
-                3. Manage Your Unique Fitness
-              </StyledStepTextTitle>
-              <StyledStepTextContent>
-                Edit and manage your collections and creations for improvements.
-                Be sure to schedule your training and get informations of nearby
-                gyms!
-              </StyledStepTextContent>
-            </StyledStepTextContainer>
-          </StyledStepContainer>
-        </StyledMainWordContainer>
-      </StyledMainContainer>
-    </>
-  ) : (
-    <FullPageLoading />
-  );
-}

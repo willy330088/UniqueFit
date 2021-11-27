@@ -7,6 +7,49 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import SignInPopup from '../common/SignInPopup';
 
+export default function LandingPage() {
+  AOS.init();
+  const history = useHistory();
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
+
+  return (
+    <StyledLandingPageContainer>
+      <StyledLogoContainer data-aos="fade-down" data-aos-duration="3000">
+        <StyledLogoText>UNIQUE</StyledLogoText>
+        <StyledLogoDumbbell src={LogoDumbbell} />
+      </StyledLogoContainer>
+      <StyledSlogan data-aos="fade-up" data-aos-duration="3000">
+        COMMIT TO BE FIT <br />
+        <br /> TOO UNIQUE TO QUIT
+      </StyledSlogan>
+      <StyledBtnContainer>
+        <StyledLoginBtn
+          data-aos="fade-in"
+          data-aos-duration="1000"
+          data-aos-delay="2000"
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          Join Now
+        </StyledLoginBtn>
+        <StyledGuestBtn
+          data-aos="fade-in"
+          data-aos-duration="1000"
+          data-aos-delay="2000"
+          onClick={() => {
+            history.push('/home');
+          }}
+        >
+          Guest
+        </StyledGuestBtn>
+      </StyledBtnContainer>
+      <SignInPopup open={open} closeModal={closeModal} />
+    </StyledLandingPageContainer>
+  );
+}
+
 const StyledLogoDumbbell = styled.img`
   position: absolute;
   width: 33px;
@@ -124,46 +167,3 @@ const StyledGuestBtn = styled.button`
     background-color: #1face1;
   }
 `;
-
-export default function LandingPage() {
-  AOS.init();
-  const history = useHistory();
-  const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
-
-  return (
-    <StyledLandingPageContainer>
-      <StyledLogoContainer data-aos="fade-down" data-aos-duration="3000">
-        <StyledLogoText>UNIQUE</StyledLogoText>
-        <StyledLogoDumbbell src={LogoDumbbell} />
-      </StyledLogoContainer>
-      <StyledSlogan data-aos="fade-up" data-aos-duration="3000">
-        COMMIT TO BE FIT <br />
-        <br /> TOO UNIQUE TO QUIT
-      </StyledSlogan>
-      <StyledBtnContainer>
-        <StyledLoginBtn
-          data-aos="fade-in"
-          data-aos-duration="1000"
-          data-aos-delay="2000"
-          onClick={() => {
-            setOpen(true);
-          }}
-        >
-          Join Now
-        </StyledLoginBtn>
-        <StyledGuestBtn
-          data-aos="fade-in"
-          data-aos-duration="1000"
-          data-aos-delay="2000"
-          onClick={() => {
-            history.push('/home');
-          }}
-        >
-          Guest
-        </StyledGuestBtn>
-      </StyledBtnContainer>
-      <SignInPopup open={open} closeModal={closeModal} />
-    </StyledLandingPageContainer>
-  );
-}

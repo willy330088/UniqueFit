@@ -7,6 +7,7 @@ import { FaDumbbell } from 'react-icons/fa';
 import muscleGroups from '../../utils/muscleGroup';
 import CheckoutIcon from '../../images/details.png';
 import { useSelector } from 'react-redux';
+import { StyledVerticalContainer } from './GeneralStyle';
 
 export default function PlanItem({ plan, hover }) {
   const users = useSelector((state) => state.users);
@@ -18,7 +19,7 @@ export default function PlanItem({ plan, hover }) {
         <StyledCheckoutPlanIcon src={CheckoutIcon} />
         <StyledCheckoutPlanText>Checkout More Details</StyledCheckoutPlanText>
       </StyledCheckoutPlanContainer>
-      <StyledPlanInfoContainer>
+      <StyledVerticalContainer>
         <StyledPlanInfoImage
           src={
             muscleGroups.filter(
@@ -39,14 +40,14 @@ export default function PlanItem({ plan, hover }) {
             </StyledPlanInfoPublisherName>
           </StyledPlanInfoPublisherContainer>
         </StyledPlanInfoContentContainer>
-      </StyledPlanInfoContainer>
+      </StyledVerticalContainer>
       <StyledPlanMediaContainer>
-        <StyledPlanCollectionContainer>
+        <StyledVerticalContainer>
           <StyledPlanCollectionIcon />
           <StyledPlanCollectionNum>
             {plan.collectedBy.length}
           </StyledPlanCollectionNum>
-        </StyledPlanCollectionContainer>
+        </StyledVerticalContainer>
         <StyledPlanCommentContainer>
           <StyledPlanCommentIcon />
           <StyledPlanCommentNum>{plan.commentsCount || 0}</StyledPlanCommentNum>
@@ -64,18 +65,18 @@ export default function PlanItem({ plan, hover }) {
               return (
                 <StyledPlanWorkoutItemContainer>
                   <StyledPlanWorkoutName>{workout.title}</StyledPlanWorkoutName>
-                  <StyledPlanWorkoutItemWeightContainer>
+                  <StyledPlanWorkoutItemIconContainer>
                     <StyledPlanWorkoutItemWeightIcon />
                     <StyledPlanWorkoutItemWeightNum>
                       {workout.weight}kg
                     </StyledPlanWorkoutItemWeightNum>
-                  </StyledPlanWorkoutItemWeightContainer>
-                  <StyledPlanWorkoutItemDumbbellContainer>
+                  </StyledPlanWorkoutItemIconContainer>
+                  <StyledPlanWorkoutItemIconContainer>
                     <StyledPlanWorkoutItemDumbbellIcon />
                     <StyledPlanWorkoutItemDumbbellNum>
                       {workout.reps}reps
                     </StyledPlanWorkoutItemDumbbellNum>
-                  </StyledPlanWorkoutItemDumbbellContainer>
+                  </StyledPlanWorkoutItemIconContainer>
                 </StyledPlanWorkoutItemContainer>
               );
             }
@@ -102,11 +103,6 @@ const StyledCheckoutPlanContainer = styled.div`
   z-index: 100;
   display: ${(props) => (props.hover ? 'flex' : 'none')};
   cursor: pointer;
-`;
-
-const StyledPlanInfoContainer = styled.div`
-  display: flex;
-  align-items: center;
 `;
 
 const StyledPlanInfoImage = styled.img`
@@ -153,11 +149,6 @@ const StyledPlanMediaContainer = styled.div`
   align-items: center;
 `;
 
-const StyledPlanCollectionContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
 const StyledPlanCollectionIcon = styled(FaDumbbell)`
   color: #222d35;
   font-size: 27px;
@@ -170,10 +161,8 @@ const StyledPlanCollectionNum = styled.div`
   padding-top: 3px;
 `;
 
-const StyledPlanCommentContainer = styled.div`
-  display: flex;
+const StyledPlanCommentContainer = styled(StyledVerticalContainer)`
   margin-left: 20px;
-  align-items: center;
 `;
 
 const StyledPlanCommentIcon = styled(RiMessage2Fill)`
@@ -229,12 +218,7 @@ const StyledPlanWorkoutName = styled.div`
   width: 200px;
 `;
 
-const StyledPlanWorkoutItemWeightContainer = styled.div`
-  width: 70px;
-  display: flex;
-`;
-
-const StyledPlanWorkoutItemDumbbellContainer = styled.div`
+const StyledPlanWorkoutItemIconContainer = styled.div`
   width: 70px;
   display: flex;
 `;

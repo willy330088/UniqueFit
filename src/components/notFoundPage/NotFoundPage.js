@@ -4,6 +4,22 @@ import { useHistory } from 'react-router-dom';
 import NotFoundPageBackground from '../../images/notFoundPageBackground.jpeg';
 import { StyledGeneralBtn } from '../common/GeneralStyle';
 
+export default function NotFoundPage() {
+  const history = useHistory();
+  return (
+    <StyledBackground>
+      <StyledText>The page you were looking for doesn't exist...</StyledText>
+      <StyledRedirectBtn
+        onClick={() => {
+          history.push('./home');
+        }}
+      >
+        Go Back
+      </StyledRedirectBtn>
+    </StyledBackground>
+  );
+}
+
 const StyledBackground = styled.div`
   width: 100vw;
   height: 100vh;
@@ -45,19 +61,3 @@ const StyledRedirectBtn = styled(StyledGeneralBtn)`
     line-height: 60px;
   }
 `;
-
-export default function NotFoundPage() {
-  const history = useHistory();
-  return (
-    <StyledBackground>
-      <StyledText>The page you were looking for doesn't exist...</StyledText>
-      <StyledRedirectBtn
-        onClick={() => {
-          history.push('./home');
-        }}
-      >
-        Go Back
-      </StyledRedirectBtn>
-    </StyledBackground>
-  );
-}
