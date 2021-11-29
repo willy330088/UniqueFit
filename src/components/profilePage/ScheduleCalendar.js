@@ -17,19 +17,18 @@ export default function ScheduleCalendar() {
   const [selectedEvent, setSelectedEvent] = useState();
   const plans = useSelector((state) => state.plans);
   const currentUser = useSelector((state) => state.currentUser);
-  const eventsId = useSelector((state) => state.users).filter(
+  const userEvents = useSelector((state) => state.users).filter(
     (user) => user.id === currentUser?.uid
   )[0]?.events;
+  const initialDate = new Date().toISOString();
 
-  const events = eventsId?.map((events) => {
+  const events = userEvents?.map((event) => {
     const targetPlan = plans.filter(
-      (plan) => plan.id === events.extendedProps.planId
+      (plan) => plan.id === event.extendedProps.planId
     )[0];
-    events.title = targetPlan?.title;
-    return events;
+    event.title = targetPlan?.title;
+    return event;
   });
-
-  let initialDate = new Date().toISOString();
 
   function openForm() {
     setSelectedModal('ScheduleForm');

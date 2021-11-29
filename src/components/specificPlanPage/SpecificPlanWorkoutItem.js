@@ -18,7 +18,10 @@ export default function SpecificPlanWorkoutItem({
 }) {
   const [checked, setChecked] = useState(false);
   const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
+
+  function closeModal() {
+    setOpen(false);
+  }
 
   function toggleChecked() {
     if (checked === true) {

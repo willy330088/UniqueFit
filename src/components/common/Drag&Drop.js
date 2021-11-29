@@ -57,7 +57,6 @@ export default function DragAndDrop({ plan, setPlan }) {
 
   function onDragEnd(result) {
     const { source, destination } = result;
-    console.log(result);
 
     if (!destination) {
       return;
@@ -82,8 +81,6 @@ export default function DragAndDrop({ plan, setPlan }) {
       });
     }
   }
-
-  console.log(plan.workoutSet);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>

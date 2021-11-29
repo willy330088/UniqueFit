@@ -12,7 +12,6 @@ import {
   StyledGeneralBtn,
   StyledBlurringEffectContainer,
 } from '../common/GeneralStyle';
-import { blurring } from '../../utils/animation';
 require('dotenv').config();
 
 export default function App() {

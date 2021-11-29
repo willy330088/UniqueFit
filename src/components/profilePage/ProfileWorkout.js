@@ -7,7 +7,10 @@ import WorkoutItemContent from '../common/WorkoutItemContent';
 
 export default function ProfileWorkout({ workout }) {
   const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
+
+  function closeModal() {
+    setOpen(false);
+  }
 
   return (
     <>

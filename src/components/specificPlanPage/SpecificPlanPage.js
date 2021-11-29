@@ -31,11 +31,10 @@ export default function SpecificPlanPage() {
   const [trainingMode, setTrainingMode] = useState(false);
   const plans = useSelector((state) => state.plans);
   const workouts = useSelector((state) => state.workouts);
-  let plan = plans.filter((plan) => plan.id === planId)[0];
+  const plan = plans.filter((plan) => plan.id === planId)[0];
   const users = useSelector((state) => state.users);
   const publisher = users.filter((user) => user.id === plan.publisher)[0];
   const [signInOpen, setSignInOpen] = useState(false);
-  const closeSignIn = () => setSignInOpen(false);
   const workoutSet = plan?.workoutSet;
   const workoutSetDetails = plan?.workoutSet.map((workoutSet) => {
     return workouts.filter((workout) => workout.id === workoutSet.workoutId)[0];
@@ -48,6 +47,10 @@ export default function SpecificPlanPage() {
 
   if (plans.length !== 0 && !plan) {
     return <Redirect to="/pageNotFound" />;
+  }
+
+  function closeSignIn() {
+    setSignInOpen(false);
   }
 
   function toggleCollected() {

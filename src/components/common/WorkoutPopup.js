@@ -15,7 +15,7 @@ import { Waypoint } from 'react-waypoint';
 import LogoDumbbell from '../../images/logoDumbbell.png';
 import { useSelector } from 'react-redux';
 import Popup from 'reactjs-popup';
-import { down, blurring } from '../../utils/animation';
+import { down } from '../../utils/animation';
 import {
   StyledHorizontalContainer,
   StyledLeaveCommentBtn,

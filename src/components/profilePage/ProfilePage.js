@@ -75,7 +75,7 @@ export default function ProfilePage() {
         return (
           <>
             {showCreationWorkout().map((workout) => {
-              return <WorkoutCreation workout={workout} />;
+              return <WorkoutCreation workout={workout} key={workout.id} />;
             })}
           </>
         );
@@ -88,7 +88,11 @@ export default function ProfilePage() {
           <>
             {showCollectionWorkout().map((workout) => {
               return (
-                <WorkoutCollection workout={workout} userId={currentUser.uid} />
+                <WorkoutCollection
+                  workout={workout}
+                  userId={currentUser.uid}
+                  key={workout.id}
+                />
               );
             })}
           </>
@@ -105,7 +109,7 @@ export default function ProfilePage() {
             {plans
               .filter((plan) => plan.publisher === currentUser?.uid)
               .map((plan) => {
-                return <PlanCreation plan={plan} />;
+                return <PlanCreation plan={plan} key={plan.id} />;
               })}
           </>
         );
@@ -122,7 +126,13 @@ export default function ProfilePage() {
             {plans
               .filter((plan) => plan.collectedBy.includes(currentUser?.uid))
               .map((plan) => {
-                return <PlanCollection plan={plan} userId={currentUser.uid} />;
+                return (
+                  <PlanCollection
+                    plan={plan}
+                    userId={currentUser.uid}
+                    key={plan.id}
+                  />
+                );
               })}
           </>
         );
@@ -167,9 +177,10 @@ export default function ProfilePage() {
         </StyledPersonalInfoContainer>
         <StyledMainContent>
           <StyledSideBarContainer>
-            {SidebarData.map((item) => {
+            {SidebarData.map((item, index) => {
               return (
                 <ProfileSubMenu
+                  key={index}
                   item={item}
                   setMainContent={setMainContent}
                   mainContent={mainContent}

@@ -17,10 +17,10 @@ export default function EditProfilePopup({ closeModal, open }) {
   const currentUser = useSelector((state) => state.currentUser);
   const [photoHover, setPhotoHover] = useState(false);
   const [personalHover, setPersonalHover] = useState(false);
-  const inputPhotoRef = useRef();
   const [source, setSource] = useState(currentUser?.photoURL);
   const [userName, setUserName] = useState(currentUser?.displayName);
   const [photoFile, setPhotoFile] = useState();
+  const inputPhotoRef = useRef();
 
   function handleFileChange(e) {
     const file = e.target.files[0];

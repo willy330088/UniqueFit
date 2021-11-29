@@ -5,6 +5,7 @@ import PlanItemContent from '../common/PlanItemContent';
 
 export default function PlanItem({ plan }) {
   const [hover, setHover] = useState(false);
+
   return (
     <StyledPlanContainer
       onClick={() => {

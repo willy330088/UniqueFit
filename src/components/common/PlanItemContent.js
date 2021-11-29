@@ -63,7 +63,7 @@ export default function PlanItem({ plan, hover }) {
           {plan.workoutSet.map((workout, index) => {
             if (index < 5) {
               return (
-                <StyledPlanWorkoutItemContainer>
+                <StyledPlanWorkoutItemContainer key={index}>
                   <StyledPlanWorkoutName>{workout.title}</StyledPlanWorkoutName>
                   <StyledPlanWorkoutItemIconContainer>
                     <StyledPlanWorkoutItemWeightIcon />

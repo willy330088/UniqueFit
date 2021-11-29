@@ -12,10 +12,16 @@ import { loadingToast, loadingCompletedToast } from '../../utils/toast';
 
 export default function WorkoutCreation({ workout }) {
   const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const closeConfirm = () => setConfirmOpen(false);
   const plans = useSelector((state) => state.plans);
+
+  function closeModal() {
+    setOpen(false);
+  }
+
+  function closeConfirm() {
+    setConfirmOpen(false);
+  }
 
   async function deleteWorkoutCreation() {
     const workoutDeleting = loadingToast('Deleting Workout...');

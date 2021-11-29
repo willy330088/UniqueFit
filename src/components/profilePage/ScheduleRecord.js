@@ -17,15 +17,16 @@ export default function ScheduleRecord() {
   const sortedEvents = events
     ?.slice()
     .sort((a, b) => new Date(b.start) - new Date(a.start));
-  const recentCompletedEvents = sortedEvents
-    ?.filter(
-      (event) =>
-        new Date() - new Date(event.start) > 0 &&
-        2592000000 > new Date() - new Date(event.start)
-    )
-    .filter((event) => event.extendedProps.completed === true);
+  const recentCompletedEvents =
+    sortedEvents
+      ?.filter(
+        (event) =>
+          new Date() - new Date(event.start) > 0 &&
+          2592000000 > new Date() - new Date(event.start)
+      )
+      .filter((event) => event.extendedProps.completed === true) || [];
 
-  const plansDetails = recentCompletedEvents?.map((event) => {
+  const plansDetails = recentCompletedEvents.map((event) => {
     const plan = plans.filter(
       (plan) => plan.id === event.extendedProps.planId
     )[0];
@@ -35,7 +36,6 @@ export default function ScheduleRecord() {
     return plan;
   });
 
-  console.log(trainedMuscleGroups);
   console.log(recentCompletedEvents);
 
   return (
@@ -45,25 +45,26 @@ export default function ScheduleRecord() {
       </StyledScheduleRecordTitle>
       <StyledScheduleCompleteContainer>
         <StyledScheduleCompleteListContainer>
-          {recentCompletedEvents?.map((event, index) => {
-            return (
-              <StyledScheduleCompleteListItem>
-                <StyledScheduleCompleteListTime>
-                  {event.start}
-                </StyledScheduleCompleteListTime>
-                <StyledScheduleCompleteListTitle>
-                  {plansDetails[index]?.title}
-                </StyledScheduleCompleteListTitle>
-              </StyledScheduleCompleteListItem>
-            );
-          })}
           {recentCompletedEvents.length === 0 ? (
             <StyledScheduleCompleteListItem>
               <StyledScheduleCompleteListTitle>
                 No Completed Training!
               </StyledScheduleCompleteListTitle>
             </StyledScheduleCompleteListItem>
-          ) : null}
+          ) : (
+            recentCompletedEvents.map((event, index) => {
+              return (
+                <StyledScheduleCompleteListItem key={event.id}>
+                  <StyledScheduleCompleteListTime>
+                    {event.start}
+                  </StyledScheduleCompleteListTime>
+                  <StyledScheduleCompleteListTitle>
+                    {plansDetails[index]?.title}
+                  </StyledScheduleCompleteListTitle>
+                </StyledScheduleCompleteListItem>
+              );
+            })
+          )}
         </StyledScheduleCompleteListContainer>
         <StyledScheduleMuscleContainer>
           <StyledPopupSpinIcon

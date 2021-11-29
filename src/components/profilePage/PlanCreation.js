@@ -13,10 +13,16 @@ import ConfirmPopup from '../common/ConfirmPopup';
 export default function PlanCreation({ plan }) {
   const [paging, setPaging] = useState(1);
   const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const closeConfirm = () => setConfirmOpen(false);
   const users = useSelector((state) => state.users);
+
+  function closeModal() {
+    setOpen(false);
+  }
+
+  function closeConfirm() {
+    setConfirmOpen(false);
+  }
 
   async function deletePlanCreation() {
     await deletePlan(plan.id, users);

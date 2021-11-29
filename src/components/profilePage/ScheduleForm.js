@@ -69,7 +69,11 @@ export default function ScheduleForm({ closeModal }) {
             Choose A Collected Plan
           </option>
           {plans.map((plan) => {
-            return <option value={plan.id}>{plan.title}</option>;
+            return (
+              <option value={plan.id} key={plan.id}>
+                {plan.title}
+              </option>
+            );
           })}
         </StyledPlanSelect>
       </StyledDateAndPlanContainer>

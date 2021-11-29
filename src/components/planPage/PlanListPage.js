@@ -153,15 +153,21 @@ const StyledAddPlanContainer = styled.div`
 `;
 
 export default function PlanListPage({ currentUser }) {
+  const plans = useSelector((state) => state.plans);
   const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
   const [paging, setPaging] = useState(1);
   const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
   const [signInOpen, setSignInOpen] = useState(false);
-  const closeSignIn = () => setSignInOpen(false);
-  const plans = useSelector((state) => state.plans);
 
   const publicPlans = plans.filter((plan) => plan.public === true);
+
+  function closeModal() {
+    setOpen(false);
+  }
+
+  function closeSignIn() {
+    setSignInOpen(false);
+  }
 
   function showPlanList() {
     if (filteredMuscleGroups.length === 0) {
@@ -209,7 +215,7 @@ export default function PlanListPage({ currentUser }) {
             />
           </StyledPopup>
           {showPlanList().map((plan) => {
-            return <PlanItem plan={plan} />;
+            return <PlanItem plan={plan} key={plan.id} />;
           })}
         </StyledPlanListContainer>
       </StyledPlanListPageContainer>

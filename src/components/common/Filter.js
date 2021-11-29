@@ -13,9 +13,12 @@ export default function Filter({
   setFilteredMuscleGroups,
 }) {
   const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
   const [isFront, setIsFront] = useState(true);
   const [popupTitle, setPopupTitle] = useState('');
+
+  function closeModal() {
+    setOpen(false);
+  }
 
   function removeFilter(name) {
     setFilteredMuscleGroups(
@@ -54,7 +57,7 @@ export default function Filter({
         <StyledPopupFilterTagContainer>
           {filteredMuscleGroups.map((item) => {
             return (
-              <StyledFilterTag>
+              <StyledFilterTag key={item}>
                 <StyledFilterTagTitle>{item}</StyledFilterTagTitle>
                 <StyledCancelIcon
                   onClick={() => {
@@ -79,7 +82,7 @@ export default function Filter({
       <StyledFilterTagContainer>
         {filteredMuscleGroups.map((item) => {
           return (
-            <StyledFilterTag>
+            <StyledFilterTag key={item}>
               <StyledFilterTagTitle>{item}</StyledFilterTagTitle>
               <StyledCancelIcon
                 onClick={() => {

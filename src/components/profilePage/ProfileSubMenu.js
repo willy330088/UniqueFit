@@ -54,7 +54,7 @@ export default function ProfileSubMenu({ item, setMainContent, mainContent }) {
       {item.subNav
         ? item.subNav.map((item, index) => {
             return (
-              <StyledDropdownLinkContainer subnav={subnav}>
+              <StyledDropdownLinkContainer subnav={subnav} key={index}>
                 <StyledDropdownLink
                   onClick={() => {
                     setMainContent(item.title);

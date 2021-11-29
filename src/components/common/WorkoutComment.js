@@ -11,10 +11,10 @@ import {
 } from './GeneralStyle';
 
 export default function WorkoutComment({ comment, workoutId, currentUser }) {
+  const users = useSelector((state) => state.users);
   const [showTool, setShowTool] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [commentContent, setCommentContent] = useState(comment.content);
-  const users = useSelector((state) => state.users);
   const publisher = users.filter((user) => user.id === comment.publisher)[0];
 
   async function onSaveComment() {

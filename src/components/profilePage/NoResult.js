@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import HippoGif from '../../images/hippo.gif';
 import { useHistory } from 'react-router-dom';
+import { StyledGeneralBtn } from '../common/GeneralStyle';
 
 export default function NoResult({ type }) {
   const history = useHistory();
@@ -61,21 +62,10 @@ const StyledNoResultText = styled.div`
   margin: 10px 0 30px 0;
 `;
 
-const StyledNoResultLink = styled.div`
+const StyledNoResultLink = styled(StyledGeneralBtn)`
   font-size: 25px;
   height: 40px;
   width: fit-content;
-  cursor: pointer;
-  color: #1face1;
-  border-radius: 5px;
-  background-color: transparent;
-  text-align: center;
   line-height: 40px;
   padding: 0 10px;
-  border: solid 2px #1face1;
-
-  &:hover {
-    color: white;
-    background-color: #1face1;
-  }
 `;
