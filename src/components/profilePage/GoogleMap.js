@@ -12,6 +12,7 @@ import {
   StyledGeneralBtn,
   StyledBlurringEffectContainer,
 } from '../common/GeneralStyle';
+import { errorToast } from '../../utils/toast';
 require('dotenv').config();
 
 export default function App() {
@@ -51,7 +52,7 @@ export default function App() {
         fetchNearbyGym(position.coords.latitude, position.coords.longitude);
       },
       () => {
-        alert('Please allow location tracking!');
+        errorToast('Please allow location tracking!');
         setIsNavigating(false);
       }
     );

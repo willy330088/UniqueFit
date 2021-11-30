@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { GiCheckMark } from 'react-icons/gi';
-import muscleGroupImage from '../../utils/muscleGroup';
+import muscleGroups from '../../utils/muscleGroup';
 
 export default function PlanDetailsInput({
   title,
@@ -24,7 +24,7 @@ export default function PlanDetailsInput({
         {targetMuscleGroup === '' ? 'Target Muscle Group' : targetMuscleGroup}
       </StyledCreateLabel>
       <StyledTargetMuscleGroups>
-        {muscleGroupImage.map((muscle) => {
+        {muscleGroups.map((muscle) => {
           return (
             <StyledMuscleGroupContainer
               onClick={() => {

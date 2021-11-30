@@ -17,7 +17,6 @@ firebase.initializeApp(firebaseConfig);
 const userRef = firebase.firestore().collection('users');
 const planRef = firebase.firestore().collection('plans');
 const workoutRef = firebase.firestore().collection('workouts');
-const batch = firebase.firestore().batch();
 const facebookProvider = new firebase.auth.FacebookAuthProvider();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
@@ -216,6 +215,7 @@ function editPlan(
 
 function deleteWorkoutComment(workoutId, commentId) {
   const workoutIdRef = workoutRef.doc(workoutId);
+  const batch = firebase.firestore().batch();
   batch.update(workoutIdRef, {
     commentsCount: firebase.firestore.FieldValue.increment(-1),
   });
@@ -238,6 +238,7 @@ function editWorkoutComment(workoutId, commentId, commentContent) {
 
 function deletePlanComment(planId, commentId) {
   const planIdRef = planRef.doc(planId);
+  const batch = firebase.firestore().batch();
   batch.update(planIdRef, {
     commentsCount: firebase.firestore.FieldValue.increment(-1),
   });
@@ -270,6 +271,7 @@ function getWorkoutComment(workoutId, callback) {
 
 function addWorkoutComment(workoutId, commentContent) {
   const workoutIdRef = workoutRef.doc(workoutId);
+  const batch = firebase.firestore().batch();
   batch.update(workoutIdRef, {
     commentsCount: firebase.firestore.FieldValue.increment(1),
   });
@@ -310,6 +312,7 @@ function getPlanComment(planId, callback) {
 
 function addPlanComment(planId, commentContent) {
   const planIdRef = planRef.doc(planId);
+  const batch = firebase.firestore().batch();
   batch.update(planIdRef, {
     commentsCount: firebase.firestore.FieldValue.increment(1),
   });
@@ -361,6 +364,7 @@ function updateUserInfo(userName, imageURL) {
 }
 
 async function deletePlan(planId, users) {
+  const batch = firebase.firestore().batch();
   await planRef.doc(planId).delete();
   users.forEach((user) => {
     const scheduleEvents = user.events;
@@ -380,6 +384,7 @@ async function deletePlan(planId, users) {
 }
 
 async function deleteWorkout(workoutId, plans) {
+  const batch = firebase.firestore().batch();
   await workoutRef.doc(workoutId).delete();
   await firebase
     .storage()
