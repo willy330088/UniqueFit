@@ -1,16 +1,17 @@
-import { useState, useEffect } from 'react';
-import DatePicker from 'react-datepicker';
-import moment from 'moment';
-import { v4 as uuid } from 'uuid';
-import 'react-datepicker/dist/react-datepicker.css';
-import { addScheduleEvent } from '../../utils/firebase';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { successToast, errorToast } from '../../utils/toast';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import moment from 'moment';
+import { v4 as uuid } from 'uuid';
+
 import {
   StyledGeneralBtn,
   StyledHorizontalContainer,
 } from '../common/GeneralStyle';
+import { addScheduleEvent } from '../../utils/firebase';
+import { successToast, errorToast } from '../../utils/toast';
 
 export default function ScheduleForm({ closeModal }) {
   const currentUser = useSelector((state) => state.currentUser);

@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import NotFoundPageBackground from '../../images/notFoundPageBackground.jpeg';
+
 import { StyledGeneralBtn } from '../common/GeneralStyle';
+import NotFoundPageBackground from '../../images/not-found-page-background.jpeg';
 
 export default function NotFoundPage() {
   const history = useHistory();

@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import ProfilePlan from './ProfilePlan';
 import { FaDumbbell } from 'react-icons/fa';
+
+import ProfilePlan from './ProfilePlan';
 import { removePlanCollection } from '../../utils/firebase';
 
 export default function WorkoutCreation({ plan, userId }) {

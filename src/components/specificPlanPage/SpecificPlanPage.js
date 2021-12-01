@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Redirect } from 'react-router-dom';
-import Header from '../common/Header';
-import Banner from '../common/Banner';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { useParams, Redirect } from 'react-router-dom';
+import ProgressBar from '@ramonak/react-progress-bar';
 import { HiUserCircle } from 'react-icons/hi';
 import { FaDumbbell } from 'react-icons/fa';
 import { RiMessage2Fill, RiArticleLine } from 'react-icons/ri';
 import { BiTimeFive } from 'react-icons/bi';
+
+import Header from '../common/Header';
+import Banner from '../common/Banner';
+import PlanComment from './PlanComment';
+import SpecificPlanWorkoutItem from './SpecificPlanWorkoutItem';
+import SignInPopup from '../common/SignInPopup';
+import FullPageLoading from '../common/FullPageLoading';
+import { StyledLeaveCommentBtn } from '../common/GeneralStyle';
 import {
   getPlanComment,
   addPlanComment,
@@ -14,13 +22,6 @@ import {
   addPlanCollection,
 } from '../../utils/firebase';
 import muscleGroups from '../../utils/muscleGroup';
-import PlanComment from './PlanComment';
-import ProgressBar from '@ramonak/react-progress-bar';
-import SpecificPlanWorkoutItem from './SpecificPlanWorkoutItem';
-import SignInPopup from '../common/SignInPopup';
-import { useSelector } from 'react-redux';
-import FullPageLoading from '../common/FullPageLoading';
-import { StyledLeaveCommentBtn } from '../common/GeneralStyle';
 
 export default function SpecificPlanPage() {
   const { planId } = useParams();

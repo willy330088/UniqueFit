@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import WorkoutPopup from '../common/WorkoutPopup';
 import styled from 'styled-components';
 import { ImPlay } from 'react-icons/im';
 import { FaWeightHanging } from 'react-icons/fa';
 import { FaDumbbell } from 'react-icons/fa';
+
+import WorkoutPopup from '../common/WorkoutPopup';
 import { StyledVerticalContainer } from '../common/GeneralStyle';
 
 export default function SpecificPlanWorkoutItem({

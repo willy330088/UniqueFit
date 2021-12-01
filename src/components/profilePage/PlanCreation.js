@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import ProfilePlan from './ProfilePlan';
-import EditPlanPopup from './EditPlanPopup';
+import { useSelector } from 'react-redux';
 import { BsFillPencilFill } from 'react-icons/bs';
 import { FaTrashAlt } from 'react-icons/fa';
 import Popup from 'reactjs-popup';
+
+import ProfilePlan from './ProfilePlan';
+import EditPlanPopup from './EditPlanPopup';
+import ConfirmPopup from '../common/ConfirmPopup';
 import { deletePlan } from '../../utils/firebase';
 import { successToast } from '../../utils/toast';
-import { useSelector } from 'react-redux';
-import ConfirmPopup from '../common/ConfirmPopup';
 
 export default function PlanCreation({ plan }) {
   const [paging, setPaging] = useState(1);

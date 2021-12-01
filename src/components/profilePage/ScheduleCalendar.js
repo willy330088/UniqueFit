@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import styled from 'styled-components';
 import Popup from 'reactjs-popup';
+
 import ScheduleForm from './ScheduleForm';
 import ScheduleDetails from './ScheduleDetails';
-import Calendar from '../../images/AddCalendar-2.png';
-import { useSelector } from 'react-redux';
 import ScheduleRecord from './ScheduleRecord';
+import Calendar from '../../images/add-calendar-icon.png';
 
 export default function ScheduleCalendar() {
   const [open, setOpen] = useState(false);

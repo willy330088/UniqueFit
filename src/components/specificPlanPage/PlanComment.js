@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 import { BsThreeDots } from 'react-icons/bs';
 import { HiUserCircle } from 'react-icons/hi';
-import { useSelector } from 'react-redux';
+
+import { StyledCommentEditSaveBtn } from '../common/GeneralStyle';
 import { deletePlanComment, editPlanComment } from '../../utils/firebase';
 import { successToast } from '../../utils/toast';
-import { StyledCommentEditSaveBtn } from '../common/GeneralStyle';
 
 export default function PlanComment({ comment, planId, currentUser }) {
   const [showTool, setShowTool] = useState(false);

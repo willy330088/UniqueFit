@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import WorkoutPopupContent from '../common/WorkoutPopupContent';
 
 export default function CreateWorkoutPage({ workout, close }) {

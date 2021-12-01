@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import NearbyGymsMap from './NearbyGymsMap';
+import { BsFillPencilFill } from 'react-icons/bs';
+import { HiUserCircle } from 'react-icons/hi';
+import { RiLogoutBoxRLine } from 'react-icons/ri';
+
 import Header from '../common/Header';
 import Banner from '../common/Banner';
-import GoogleMap from './GoogleMap';
 import WorkoutCreation from './WorkoutCreation';
 import PlanCreation from './PlanCreation';
 import WorkoutCollection from './WorkoutCollection';
 import PlanCollection from './PlanCollection';
 import ScheduleCalendar from './ScheduleCalendar';
-import styled from 'styled-components';
-import { signOut } from '../../utils/firebase';
-import { BsFillPencilFill } from 'react-icons/bs';
-import ProfileSubMenu from './ProfileSubMenu';
-import SidebarData from '../../utils/profileSidebarData';
-import { HiUserCircle } from 'react-icons/hi';
-import { RiLogoutBoxRLine } from 'react-icons/ri';
-import { useSelector } from 'react-redux';
 import NoResult from './NoResult';
 import ConfirmPopup from '../common/ConfirmPopup';
 import EditProfilePopup from './EditProfilePopup';
 import FullPageLoading from '../common/FullPageLoading';
+import ProfileSubMenu from './ProfileSubMenu';
+import { signOut } from '../../utils/firebase';
+import SidebarData from '../../utils/profileSidebarData';
 
 export default function ProfilePage() {
   const workouts = useSelector((state) => state.workouts);
@@ -67,7 +68,7 @@ export default function ProfilePage() {
 
   function showMainContent() {
     if (mainContent === 'My Nearby Gyms') {
-      return <GoogleMap />;
+      return <NearbyGymsMap />;
     } else if (mainContent === 'My Workout Creations') {
       if (showCreationWorkout().length === 0) {
         return <NoResult type={'workout'} />;

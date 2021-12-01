@@ -1,9 +1,11 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import Popup from 'reactjs-popup';
-import { useSelector } from 'react-redux';
 import { BsCameraFill } from 'react-icons/bs';
 import { HiUserCircle } from 'react-icons/hi';
+import { useSelector } from 'react-redux';
+
+import { StyledGeneralBtn } from '../common/GeneralStyle';
 import {
   uploadUserPhoto,
   updateUserPhotoAndName,
@@ -11,7 +13,6 @@ import {
   updateUserName,
 } from '../../utils/firebase';
 import { loadingToast, loadingCompletedToast } from '../../utils/toast';
-import { StyledGeneralBtn } from '../common/GeneralStyle';
 
 export default function EditProfilePopup({ closeModal, open }) {
   const currentUser = useSelector((state) => state.currentUser);

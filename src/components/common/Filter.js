@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import FrontMuscle from './FrontMuscle';
-import BackMuscle from './BackMuscle';
-import Popup from 'reactjs-popup';
 import { ImCancelCircle } from 'react-icons/im';
 import { FaFilter } from 'react-icons/fa';
-import SpinHover from '../../images/spin-hover.png';
-import Spin from '../../images/spin.png';
+import Popup from 'reactjs-popup';
+
+import FrontMuscle from './FrontMuscle';
+import BackMuscle from './BackMuscle';
+import SpinHover from '../../images/spin-icon-hover.png';
+import Spin from '../../images/spin-icon.png';
 
 export default function Filter({
   filteredMuscleGroups,

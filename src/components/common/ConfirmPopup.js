@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import Popup from 'reactjs-popup';
-import Delete from '../../images/delete.png';
-import SignOut from '../../images/signout.png';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import Popup from 'reactjs-popup';
+
+import DeleteIcon from '../../images/delete-icon.png';
+import SignOutIcon from '../../images/signout-icon.png';
 
 export default function ConfirmPopup({
   confirmOpen,
@@ -16,9 +17,9 @@ export default function ConfirmPopup({
 
   function showIcon() {
     if (type === 'delete') {
-      return <StyledConfirmDeleteIcon src={Delete} />;
+      return <StyledConfirmDeleteIcon src={DeleteIcon} />;
     } else {
-      return <StyledConfirmSignOutIcon src={SignOut} />;
+      return <StyledConfirmSignOutIcon src={SignOutIcon} />;
     }
   }
 

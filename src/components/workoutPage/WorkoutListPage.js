@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import Popup from 'reactjs-popup';
+import { MdAddCircleOutline } from 'react-icons/md';
+
+import CreateWorkoutPopup from './CreateWorkoutPopup';
+import WorkoutItem from './WorkoutItem';
 import Header from '../common/Header';
 import Banner from '../common/Banner';
-import CreateWorkoutPopup from './CreateWorkoutPopup';
-import styled from 'styled-components';
-import Popup from 'reactjs-popup';
-import WorkoutItem from './WorkoutItem';
-import SignInPopup from '../common/SignInPopup';
 import Filter from '../common/Filter';
-import { MdAddCircleOutline } from 'react-icons/md';
-import { useSelector } from 'react-redux';
+import SignInPopup from '../common/SignInPopup';
 import FullPageLoading from '../common/FullPageLoading';
 
 export default function WorkoutListPage({ currentUser }) {

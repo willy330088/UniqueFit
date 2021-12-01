@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import muscleGroups from '../../utils/muscleGroup';
 import { GiCheckMark } from 'react-icons/gi';
+
+import muscleGroups from '../../utils/muscleGroup';
 
 export default function PlanDetailsInput({
   title,

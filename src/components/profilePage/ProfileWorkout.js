@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ImPlay } from 'react-icons/im';
-import muscleGroups from '../../utils/muscleGroup';
+
 import WorkoutPopup from '../common/WorkoutPopup';
 import WorkoutItemContent from '../common/WorkoutItemContent';
+import muscleGroups from '../../utils/muscleGroup';
 
 export default function ProfileWorkout({ workout }) {
   const [open, setOpen] = useState(false);

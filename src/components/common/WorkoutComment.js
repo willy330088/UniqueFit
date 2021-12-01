@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 import { BsThreeDots } from 'react-icons/bs';
 import { HiUserCircle } from 'react-icons/hi';
-import { useSelector } from 'react-redux';
-import { deleteWorkoutComment, editWorkoutComment } from '../../utils/firebase';
-import { successToast } from '../../utils/toast';
+
 import {
   StyledCommentEditSaveBtn,
   StyledVerticalContainer,
 } from './GeneralStyle';
+import { deleteWorkoutComment, editWorkoutComment } from '../../utils/firebase';
+import { successToast } from '../../utils/toast';
 
 export default function WorkoutComment({ comment, workoutId, currentUser }) {
   const users = useSelector((state) => state.users);

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import GymBackground from '../../images/gym.jpeg';
+
+import PlanBackground from '../../images/plan-background.jpeg';
 import PlanItemContent from '../common/PlanItemContent';
 
 export default function PlanItem({ plan }) {
@@ -35,7 +36,7 @@ const StyledPlanContainer = styled.div`
 
   &:before {
     content: '';
-    background-image: url(${GymBackground});
+    background-image: url(${PlanBackground});
     background-position-x: 7%;
     background-repeat: no-repeat;
     background-size: cover;

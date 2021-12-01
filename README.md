@@ -31,12 +31,18 @@ Test account is also availible below
   - hosting
   - cloud function
 
-#### Miscellaneous
+#### Main Packages
 
 - React Beautiful DnD
 - React Google Map API
 - FullCalendar
+
+#### Website Graphics
+
 - SVG / Adobe Illustrator
+
+#### Miscellaneous
+
 - React Datepicker
 - React Toastify
 - AOS Animation

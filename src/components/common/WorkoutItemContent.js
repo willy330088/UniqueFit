@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 import { HiUserCircle } from 'react-icons/hi';
 import { FaDumbbell } from 'react-icons/fa';
 import { RiMessage2Fill } from 'react-icons/ri';
-import { useSelector } from 'react-redux';
+
 import { StyledVerticalContainer } from './GeneralStyle';
 
 export default function WorkoutItemContent({ workout }) {

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import LandingPageBackground from '../../images/landingPageBackground.jpeg';
-import LogoDumbbell from '../../images/logoDumbbell.png';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+
 import SignInPopup from '../common/SignInPopup';
+import LandingPageBackground from '../../images/landing-page-background.jpeg';
+import LogoDumbbell from '../../images/logo-dumbbell.png';
 
 export default function LandingPage() {
   AOS.init();

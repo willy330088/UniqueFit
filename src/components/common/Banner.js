@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import BannerImg from '../../images/banner-1.jpeg';
+
+import BannerImg from '../../images/banner.jpeg';
 
 export default function Banner({ slogan }) {
   return (

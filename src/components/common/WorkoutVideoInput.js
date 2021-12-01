@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
-import Upload from '../../images/upload.png';
-import { errorToast } from '../../utils/toast';
+
 import { StyledHorizontalContainer, StyledGeneralBtn } from './GeneralStyle';
+import { errorToast } from '../../utils/toast';
+import UploadIcon from '../../images/upload-icon.png';
 
 export default function VideoInput({
   source,
@@ -55,7 +56,7 @@ export default function VideoInput({
         </>
       ) : (
         <StyledUploadArea onClick={handleChoose}>
-          <StyledUploadIcon src={Upload} />
+          <StyledUploadIcon src={UploadIcon} />
         </StyledUploadArea>
       )}
       <StyledCreateLabel>Type</StyledCreateLabel>

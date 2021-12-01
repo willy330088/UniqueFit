@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import {
-  removeScheduleEvent,
-  toggleScheduleEventCompleted,
-} from '../../utils/firebase';
-import moment from 'moment';
 import { useSelector } from 'react-redux';
-import { successToast } from '../../utils/toast';
+import moment from 'moment';
+
 import {
   StyledGeneralBtn,
   StyledVerticalContainer,
 } from '../common/GeneralStyle';
+import {
+  removeScheduleEvent,
+  toggleScheduleEventCompleted,
+} from '../../utils/firebase';
+import { successToast } from '../../utils/toast';
 
 export default function ScheduleDetails({ closeModal, selectedEvent }) {
   const [completed, setCompleted] = useState(

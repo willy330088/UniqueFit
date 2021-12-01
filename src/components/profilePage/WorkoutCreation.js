@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import ProfileWorkout from './ProfileWorkout';
+import { useSelector } from 'react-redux';
+import Popup from 'reactjs-popup';
 import { BsFillPencilFill } from 'react-icons/bs';
 import { FaTrashAlt } from 'react-icons/fa';
-import Popup from 'reactjs-popup';
+
 import EditWorkoutPopup from './EditWorkoutPopup';
-import { deleteWorkout } from '../../utils/firebase';
-import { useSelector } from 'react-redux';
+import ProfileWorkout from './ProfileWorkout';
 import ConfirmPopup from '../common/ConfirmPopup';
 import { loadingToast, loadingCompletedToast } from '../../utils/toast';
+import { deleteWorkout } from '../../utils/firebase';
 
 export default function WorkoutCreation({ workout }) {
   const [open, setOpen] = useState(false);

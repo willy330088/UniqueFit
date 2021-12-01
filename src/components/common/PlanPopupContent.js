@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import DragandDrop from './Drag&Drop';
 import styled from 'styled-components';
 import { AiOutlineRightCircle, AiOutlineLeftCircle } from 'react-icons/ai';
+
+import DragandDrop from './PlanOrderInput';
 import PlanDetailsInputP1 from './PlanDetailsInputP1';
 import PlanDetailsInputP2 from './PlanDetailsInputP2';
+import { StyledSubmitWorkoutAndPlanBtn } from './GeneralStyle';
 import {
   errorToast,
   loadingToast,
   loadingCompletedToast,
 } from '../../utils/toast';
 import { createPlan, editPlan } from '../../utils/firebase';
-import { StyledSubmitWorkoutAndPlanBtn } from './GeneralStyle';
 
 export default function PlanPopupContent({
   type,

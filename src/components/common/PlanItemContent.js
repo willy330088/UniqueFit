@@ -1,13 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 import { HiUserCircle } from 'react-icons/hi';
 import { RiMessage2Fill } from 'react-icons/ri';
 import { FaWeightHanging } from 'react-icons/fa';
 import { FaDumbbell } from 'react-icons/fa';
-import muscleGroups from '../../utils/muscleGroup';
-import CheckoutIcon from '../../images/details.png';
-import { useSelector } from 'react-redux';
+
 import { StyledVerticalContainer } from './GeneralStyle';
+import muscleGroups from '../../utils/muscleGroup';
+import CheckoutIcon from '../../images/detail-icon.png';
 
 export default function PlanItem({ plan, hover }) {
   const users = useSelector((state) => state.users);

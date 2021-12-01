@@ -1,16 +1,90 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { MdAddCircleOutline } from 'react-icons/md';
+import Popup from 'reactjs-popup';
+
 import Header from '../common/Header';
 import Banner from '../common/Banner';
 import CreatePlanPopup from './CreatePlanPopup';
-import styled from 'styled-components';
-import Popup from 'reactjs-popup';
 import SignInPopup from '../common/SignInPopup';
 import PlanItem from './PlanItem';
 import Filter from '../common/Filter';
-import GymBackground from '../../images/gym.jpeg';
-import { MdAddCircleOutline } from 'react-icons/md';
-import { useSelector } from 'react-redux';
 import FullPageLoading from '../common/FullPageLoading';
+import PlanBackground from '../../images/plan-background.jpeg';
+
+export default function PlanListPage({ currentUser }) {
+  const plans = useSelector((state) => state.plans);
+  const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
+  const [paging, setPaging] = useState(1);
+  const [open, setOpen] = useState(false);
+  const [signInOpen, setSignInOpen] = useState(false);
+
+  const publicPlans = plans.filter((plan) => plan.public === true);
+
+  function closeModal() {
+    setOpen(false);
+  }
+
+  function closeSignIn() {
+    setSignInOpen(false);
+  }
+
+  function showPlanList() {
+    if (filteredMuscleGroups.length === 0) {
+      return publicPlans;
+    } else {
+      return publicPlans.filter((plan) =>
+        filteredMuscleGroups.includes(plan.targetMuscleGroup)
+      );
+    }
+  }
+
+  return currentUser !== undefined ? (
+    <StyledBody>
+      <Header />
+      <Banner slogan={'Collect Your Plans'} />
+      <StyledPlanListPageContainer>
+        <Filter
+          filteredMuscleGroups={filteredMuscleGroups}
+          setFilteredMuscleGroups={setFilteredMuscleGroups}
+        />
+        <StyledPlanListContainer>
+          <StyledAddPlanContainer
+            onClick={() => {
+              if (currentUser) {
+                setOpen(true);
+              } else {
+                setSignInOpen(true);
+              }
+            }}
+          >
+            <StyledCreatePlanIcon />
+            <StyledCreatePlanText>Click To Create Plan</StyledCreatePlanText>
+          </StyledAddPlanContainer>
+          <SignInPopup open={signInOpen} closeModal={closeSignIn} />
+          <StyledPopup
+            open={open}
+            closeOnDocumentClick
+            onClose={closeModal}
+            paging={paging}
+          >
+            <CreatePlanPopup
+              paging={paging}
+              setPaging={setPaging}
+              close={closeModal}
+            />
+          </StyledPopup>
+          {showPlanList().map((plan) => {
+            return <PlanItem plan={plan} key={plan.id} />;
+          })}
+        </StyledPlanListContainer>
+      </StyledPlanListPageContainer>
+    </StyledBody>
+  ) : (
+    <FullPageLoading />
+  );
+}
 
 const StyledBody = styled.div`
   background: #222d35;
@@ -98,7 +172,7 @@ const StyledAddPlanContainer = styled.div`
 
   &:before {
     content: '';
-    background-image: url(${GymBackground});
+    background-image: url(${PlanBackground});
     background-position-x: 7%;
     background-repeat: no-repeat;
     background-size: cover;
@@ -151,76 +225,3 @@ const StyledAddPlanContainer = styled.div`
     width: 45%;
   } ;
 `;
-
-export default function PlanListPage({ currentUser }) {
-  const plans = useSelector((state) => state.plans);
-  const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
-  const [paging, setPaging] = useState(1);
-  const [open, setOpen] = useState(false);
-  const [signInOpen, setSignInOpen] = useState(false);
-
-  const publicPlans = plans.filter((plan) => plan.public === true);
-
-  function closeModal() {
-    setOpen(false);
-  }
-
-  function closeSignIn() {
-    setSignInOpen(false);
-  }
-
-  function showPlanList() {
-    if (filteredMuscleGroups.length === 0) {
-      return publicPlans;
-    } else {
-      return publicPlans.filter((plan) =>
-        filteredMuscleGroups.includes(plan.targetMuscleGroup)
-      );
-    }
-  }
-
-  return currentUser !== undefined ? (
-    <StyledBody>
-      <Header />
-      <Banner slogan={'Collect Your Plans'} />
-      <StyledPlanListPageContainer>
-        <Filter
-          filteredMuscleGroups={filteredMuscleGroups}
-          setFilteredMuscleGroups={setFilteredMuscleGroups}
-        />
-        <StyledPlanListContainer>
-          <StyledAddPlanContainer
-            onClick={() => {
-              if (currentUser) {
-                setOpen(true);
-              } else {
-                setSignInOpen(true);
-              }
-            }}
-          >
-            <StyledCreatePlanIcon />
-            <StyledCreatePlanText>Click To Create Plan</StyledCreatePlanText>
-          </StyledAddPlanContainer>
-          <SignInPopup open={signInOpen} closeModal={closeSignIn} />
-          <StyledPopup
-            open={open}
-            closeOnDocumentClick
-            onClose={closeModal}
-            paging={paging}
-          >
-            <CreatePlanPopup
-              paging={paging}
-              setPaging={setPaging}
-              close={closeModal}
-            />
-          </StyledPopup>
-          {showPlanList().map((plan) => {
-            return <PlanItem plan={plan} key={plan.id} />;
-          })}
-        </StyledPlanListContainer>
-      </StyledPlanListPageContainer>
-    </StyledBody>
-  ) : (
-    <FullPageLoading />
-  );
-}

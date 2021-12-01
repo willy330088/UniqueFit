@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { v4 as uuid } from 'uuid';
 import { useSelector } from 'react-redux';
+import { v4 as uuid } from 'uuid';
+
 import PlanPopupContent from '../common/PlanPopupContent';
 
 export default function EditPlanPopup({

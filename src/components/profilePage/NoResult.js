@@ -1,15 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
-import HippoGif from '../../images/hippo.gif';
 import { useHistory } from 'react-router-dom';
+
 import { StyledGeneralBtn } from '../common/GeneralStyle';
+import NoResultGif from '../../images/no-result.gif';
 
 export default function NoResult({ type }) {
   const history = useHistory();
 
   return (
     <StyledNoResultContainer>
-      <StyledNoResultGif src={HippoGif} />
+      <StyledNoResultGif src={NoResultGif} />
       <StyledNoResultTextContainer>
         <StyledNoResultText>
           {type === 'workout' ? 'No Workouts Yet...' : 'No Plans Yet...'}

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
+
 import ProfileFrontMuscle from './ProfileFrontMuscle';
 import ProfileBackMuscle from './ProfileBackMuscle';
-import SpinHover from '../../images/spin-hover.png';
+import SpinHover from '../../images/spin-icon-hover.png';
 
 export default function ScheduleRecord() {
   const currentUser = useSelector((state) => state.currentUser);

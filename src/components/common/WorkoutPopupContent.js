@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import WorkoutDetailsInput from '../common/WorkoutDetailsInput';
 import { AiOutlineRightCircle, AiOutlineLeftCircle } from 'react-icons/ai';
-import VideoInput from '../common/VideoInput';
+
+import WorkoutDetailsInput from '../common/WorkoutDetailsInput';
+import WorkoutVideoInput from './WorkoutVideoInput';
+import { StyledSubmitWorkoutAndPlanBtn } from './GeneralStyle';
 import { createWorkout, editWorkout } from '../../utils/firebase';
-import 'firebase/firestore';
-import 'firebase/storage';
 import {
   errorToast,
   loadingToast,
   loadingCompletedToast,
 } from '../../utils/toast';
-import { StyledSubmitWorkoutAndPlanBtn } from './GeneralStyle';
 
 export default function WorkoutPopupContent({
   changeType,
@@ -101,7 +100,7 @@ export default function WorkoutPopupContent({
     } else {
       return (
         <>
-          <VideoInput
+          <WorkoutVideoInput
             setType={setType}
             type={type}
             setVideoFile={setVideoFile}

@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import LogoDumbbell from '../../images/logoDumbbell.png';
+
 import { StyledBlurringEffectContainer } from './GeneralStyle';
+import LogoDumbbell from '../../images/logo-dumbbell.png';
 
 export default function FullPageLoading() {
   return (

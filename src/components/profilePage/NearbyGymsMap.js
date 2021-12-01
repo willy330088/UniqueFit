@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import {
   GoogleMap,
   useLoadScript,
   Marker,
   InfoWindow,
 } from '@react-google-maps/api';
-import MuscleIcon from '../../images/muscle.png';
-import styled from 'styled-components';
-import LogoDumbbell from '../../images/logoDumbbell.png';
+
 import {
   StyledGeneralBtn,
   StyledBlurringEffectContainer,
 } from '../common/GeneralStyle';
 import { errorToast } from '../../utils/toast';
+import MuscleIcon from '../../images/muscle-icon.png';
+import LogoDumbbell from '../../images/logo-dumbbell.png';
 require('dotenv').config();
 
-export default function App() {
+export default function NearbyGymsMap() {
   const libraries = ['places'];
   const mapContainerStyle = {
     height: '600px',

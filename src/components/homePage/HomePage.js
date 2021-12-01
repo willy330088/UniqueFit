@@ -1,16 +1,17 @@
 import React from 'react';
-import Header from '../common/Header';
 import styled from 'styled-components';
-import Homepage from '../../images/Homepage.jpeg';
-import Fitness from '../../images/fitness.jpeg';
+
+import Header from '../common/Header';
 import FullPageLoading from '../common/FullPageLoading';
 import { scrollDown } from '../../utils/animation';
+import HomepageBackground from '../../images/home-page-background.jpeg';
+import GuideBackground from '../../images/guide-background.jpeg';
 
 export default function HomePage({ currentUser }) {
   return currentUser !== undefined ? (
     <>
       <Header />
-      <StyledBanner src={Homepage} />
+      <StyledBanner src={HomepageBackground} />
       <StyledMainTextContainer>
         <StyledMainText>
           BUILD YOUR <StyledMainTextWord>UNIQUE</StyledMainTextWord> FITNESS
@@ -182,7 +183,7 @@ const StyledMainImageContainer = styled.div`
 
   &:before {
     content: '';
-    background-image: url(${Fitness});
+    background-image: url(${GuideBackground});
     background-position-x: 50%;
     background-repeat: no-repeat;
     background-size: cover;

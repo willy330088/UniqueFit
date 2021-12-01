@@ -1,11 +1,12 @@
-import { v4 as uuid } from 'uuid';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { GoListUnordered } from 'react-icons/go';
 import { FaTrashAlt } from 'react-icons/fa';
+import { v4 as uuid } from 'uuid';
+
 import muscleGroups from '../../utils/muscleGroup';
-import { useSelector } from 'react-redux';
 
 export default function DragAndDrop({ plan, setPlan }) {
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);

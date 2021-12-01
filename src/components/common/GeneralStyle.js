@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { blurring } from '../../utils/animation';
 
 const StyledHorizontalContainer = styled.div`

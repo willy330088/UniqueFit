@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { NavLink, useHistory } from 'react-router-dom';
-import Logo from '../../images/logo.png';
-import Burger from './Burger';
 import { useSelector } from 'react-redux';
+import { NavLink, useHistory } from 'react-router-dom';
+
+import Burger from './Burger';
 import SignInPopup from './SignInPopup';
+import Logo from '../../images/logo.png';
 
 export default function Header() {
   const history = useHistory();

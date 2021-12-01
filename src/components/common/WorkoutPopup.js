@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import muscleGroups from '../../utils/muscleGroup';
+import { useSelector } from 'react-redux';
 import { HiUserCircle } from 'react-icons/hi';
 import { FaDumbbell } from 'react-icons/fa';
 import { RiMessage2Fill } from 'react-icons/ri';
+import { Waypoint } from 'react-waypoint';
+import Popup from 'reactjs-popup';
+
+import WorkoutComment from './WorkoutComment';
+import {
+  StyledHorizontalContainer,
+  StyledLeaveCommentBtn,
+  StyledBlurringEffectContainer,
+} from './GeneralStyle';
 import {
   getWorkoutComment,
   addWorkoutComment,
   removeWorkoutCollection,
   addWorkoutCollection,
 } from '../../utils/firebase';
-import WorkoutComment from './WorkoutComment';
-import { Waypoint } from 'react-waypoint';
-import LogoDumbbell from '../../images/logoDumbbell.png';
-import { useSelector } from 'react-redux';
-import Popup from 'reactjs-popup';
 import { down } from '../../utils/animation';
-import {
-  StyledHorizontalContainer,
-  StyledLeaveCommentBtn,
-  StyledBlurringEffectContainer,
-} from './GeneralStyle';
+import muscleGroups from '../../utils/muscleGroup';
+import LogoDumbbell from '../../images/logo-dumbbell.png';
 
 export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
   const [commentContent, setCommentContent] = useState('');

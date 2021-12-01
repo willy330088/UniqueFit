@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useHistory, useLocation } from 'react-router-dom';
-import Popup from 'reactjs-popup';
 import { FcGoogle } from 'react-icons/fc';
 import { BsFacebook } from 'react-icons/bs';
+import Popup from 'reactjs-popup';
+
 import {
   facebookProvider,
   googleProvider,
@@ -15,8 +16,8 @@ import {
   nativeSignIn,
 } from '../../utils/firebase';
 import { successToast } from '../../utils/toast';
-import Fit from '../../images/fit.jpeg';
 import { anvil } from '../../utils/animation';
+import SigninBackground from '../../images/signin-background.jpeg';
 
 export default function SignInPopup({ open, closeModal }) {
   const history = useHistory();
@@ -90,7 +91,7 @@ export default function SignInPopup({ open, closeModal }) {
 
   return (
     <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
-      <StyledPopupImage src={Fit} />
+      <StyledPopupImage src={SigninBackground} />
       <StyledContainer>
         {isSigningIn ? (
           <>
