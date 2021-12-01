@@ -10,7 +10,13 @@
 ## Demo Link
 
 [UNIQUEFIT website >>](https://uniquefit-william.web.app)
-Please login for full experiences
+
+Please login with your email or social media account for full experiences
+
+Test account is also availible below
+
+- User: uniquefit@uniquefit.com
+- Password: uniquefit123
 
 ## Technologies
 
@@ -30,6 +36,7 @@ Please login for full experiences
 - React Beautiful DnD
 - React Google Map API
 - FullCalendar
+- SVG / Adobe Illustrator
 - React Datepicker
 - React Toastify
 - AOS Animation
@@ -65,4 +72,9 @@ Please login for full experiences
 - Optimize training record with self-decided reviewing days
 - More uploads within the community
 
-## Contact
+## Contact Me
+
+If you got any problem or suggestion with UniqueFit, please feel free to contact with me via email.
+
+- Author: William Lin
+- Email: williamlin330088@gmail.com
