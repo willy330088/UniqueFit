@@ -47,6 +47,8 @@ Test account is also availible below
 
 ## User Flow Chart
 
+![userflow](src/images/userflow.png)
+
 ## Features
 
 - Filter workouts and plans with muscle group graphics
