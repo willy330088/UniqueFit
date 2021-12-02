@@ -93,7 +93,11 @@ export default function WorkoutListPage({ currentUser }) {
           </StyledPopup>
           {showWorkoutList().map((workout) => {
             return (
-              <WorkoutItem workout={workout} setSignInOpen={setSignInOpen} />
+              <WorkoutItem
+                workout={workout}
+                setSignInOpen={setSignInOpen}
+                key={workout.id}
+              />
             );
           })}
         </StyledWorkoutContainer>
@@ -119,6 +123,8 @@ const StyledWorkoutContainer = styled.div`
 
 const StyledWorkoutListContainer = styled.div`
   padding: 50px 16% 100px;
+  max-width: 1920px;
+  margin: auto;
 `;
 
 const StyledBookmark = styled.div`

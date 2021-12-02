@@ -41,14 +41,12 @@ export default function Filter({
           />
           {isFront ? (
             <FrontMuscle
-              width={'200px'}
               filteredMuscleGroups={filteredMuscleGroups}
               setFilteredMuscleGroups={setFilteredMuscleGroups}
               setPopupTitle={setPopupTitle}
             />
           ) : (
             <BackMuscle
-              width={'200px'}
               filteredMuscleGroups={filteredMuscleGroups}
               setFilteredMuscleGroups={setFilteredMuscleGroups}
               setPopupTitle={setPopupTitle}
@@ -161,36 +159,53 @@ const StyledPopupFilterTagContainer = styled.div`
 
 const StyledFilterTag = styled.div`
   background-color: #1face1;
-  height: 30px;
+  height: 20px;
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: space-around;
   padding: 0 10px;
-  margin-right: 20px;
+  margin-right: 10px;
   margin-bottom: 10px;
+
+  @media (min-width: 600px) {
+    margin-right: 20px;
+    height: 30px;
+  }
 `;
 
 const StyledFilterTagTitle = styled.div`
   color: white;
-  font-size: 20px;
+  font-size: 15px;
   margin-right: 10px;
+
+  @media (min-width: 600px) {
+    font-size: 20px;
+  }
 `;
 
 const StyledCancelIcon = styled(ImCancelCircle)`
   color: white;
-  font-size: 20px;
+  font-size: 15px;
   cursor: pointer;
 
   &:hover {
     color: black;
   }
+
+  @media (min-width: 600px) {
+    font-size: 20px;
+  }
 `;
 
 const StyledPopupTitle = styled.div`
   color: #1face1;
-  font-size: 40px;
+  font-size: 25px;
   text-align: center;
+
+  @media (min-width: 600px) {
+    font-size: 40px;
+  }
 `;
 
 const StyledPopup = styled(Popup)`
@@ -201,11 +216,16 @@ const StyledPopup = styled(Popup)`
   &-content {
     margin: auto;
     background: #222d35;
-    width: 550px;
-    height: 580px;
-    padding: 30px 60px;
+    width: 350px;
+    height: 400px;
+    padding: 20px 20px;
     position: relative;
     border-radius: 5px;
+    @media (min-width: 600px) {
+      width: 550px;
+      height: 580px;
+      padding: 30px 60px;
+    }
   }
 `;
 
@@ -217,11 +237,11 @@ const StyledPopupIconContainer = styled.div`
 
 const StyledPopupSpinIcon = styled.div`
   position: absolute;
-  bottom: 150px;
-  left: 100px;
+  bottom: 125px;
+  left: 60px;
   cursor: pointer;
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   background-image: url(${Spin});
   background-repeat: no-repeat;
   background-size: contain;
@@ -229,5 +249,12 @@ const StyledPopupSpinIcon = styled.div`
 
   &:hover {
     background-image: url(${SpinHover});
+  }
+
+  @media (min-width: 600px) {
+    width: 60px;
+    height: 60px;
+    bottom: 150px;
+    left: 100px;
   }
 `;

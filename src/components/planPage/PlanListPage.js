@@ -118,22 +118,24 @@ const StyledPopup = styled(Popup)`
     margin: auto;
     background: #222d35;
     height: 600px;
-    width: ${(props) => (props.paging === 3 ? '1100px' : '350px')};
-    padding: ${(props) => (props.paging === 3 ? '50px 50px' : '20px 30px')};
+    width: 350px;
+    padding: 20px 30px;
     position: relative;
     border-radius: 5px;
     transition: ease-in-out 0.5s;
 
     @media (min-width: 500px) {
-      width: ${(props) => (props.paging === 3 ? '1100px' : '650px')};
-      padding: ${(props) => (props.paging === 3 ? '50px 50px' : '20px 30px')};
+      width: 650px;
       border-radius: 10px;
       height: 700px;
     }
 
     @media (min-width: 650px) {
+      padding: 30px 70px;
+    }
+
+    @media (min-width: 1100px) {
       width: ${(props) => (props.paging === 3 ? '1100px' : '650px')};
-      padding: ${(props) => (props.paging === 3 ? '30px 70px' : '30px 70px')};
     }
   }
 `;
