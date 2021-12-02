@@ -1,70 +1,89 @@
-# Getting Started with Create React App
+<div align='center' ><img width="400px" src="src/images/logo-dark.png"/></div>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Introduction
 
-## Available Scripts
+UniqueFit is a fitness-related social platform for users to have unprecedented fitness experience.
 
-In the project directory, you can run:
+- Share or collect your favorite workouts from the community and customize your unique training workout plans
+- Schedule and track your training routines with well-organized calendar
+- Search for nearby gyms information before training
 
-### `npm start`
+## Demo Link
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+> ### [UNIQUEFIT website >>](https://uniquefit-william.web.app)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Please login with your email or social media account for full experiences
 
-### `npm test`
+Test account is also availible below
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- User: uniquefit@uniquefit.com
+- Password: uniquefit123
 
-### `npm run build`
+## Technologies
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### Front-End
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- ReactJS / Redux / React Redux / React Router
+- Styled-Components
+- Firebase
+  - authentication
+  - storage
+  - firestore
+  - hosting
+  - cloud function
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### Main Packages
 
-### `npm run eject`
+- React Beautiful DnD
+- React Google Map API
+- FullCalendar
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+#### Website Graphics
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- SVG / Adobe Illustrator
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+#### Miscellaneous
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- React Datepicker
+- React Toastify
+- AOS Animation
+- ReactJS Popup
+- React Progress Bar
+- uuid
+- moment
 
-## Learn More
+## User Flow Chart
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+![userflow](src/images/userflow.png)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Features
 
-### Code Splitting
+- #### Filter workouts and plans with muscle group graphics
+  ![filter](media/filter.gif)
+- #### Customize your training plans freely with your favorite workouts
+  ![createplan](media/createplan.gif)
+- #### Share your fantastic workouts with UniqueFit community
+  ![createworkout](media/createworkout.gif)
+- #### Checkout workouts published by others and collect whatever you like
+  ![checkoutworkout](media/checkoutworkout.gif)
+- #### Checkout various plans and train with it
+  ![checkoutplan](media/checkoutplan.gif)
+- #### Schedule your training routines with up to date records
+  ![calendar](media/calendar.gif)
+- #### Find out your nearby gym easily as you wish
+  ![map](media/map.gif)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Future Features
 
-### Analyzing the Bundle Size
+- Integrate workout plans with timer for more customized training experience
+- Add user following system to interact more with favorite publishers
+- Combine training calendar with nearby gyms map to offer more advanced training schedule planning
+- Optimize training track with self-decided reviewing days
+- More uploads within the community
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Contact Me
 
-### Making a Progressive Web App
+If you got any problem or suggestion with UniqueFit, please feel free to contact with me via email.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Author: William Lin
+- Email: williamlin330088@gmail.com
