@@ -123,12 +123,10 @@ export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
                 {workout.collectedBy.length}
               </StyledCollectionNum>
             </StyledCollectionContainer>
-            <StyledTextContent>
-              Target Muscle Group : {workout.targetMuscleGroup}
-            </StyledTextContent>
-            <StyledTextContent>
-              Description : {workout.description}
-            </StyledTextContent>
+            <StyledTextTitle>Target Muscle Group</StyledTextTitle>
+            <StyledTextContent>{workout.targetMuscleGroup}</StyledTextContent>
+            <StyledTextTitle>Description</StyledTextTitle>
+            <StyledTextContent>{workout.description}</StyledTextContent>
             <StyledCommentContainer>
               <StyledCommentTitleContainer>
                 <StyledCommentIcon />{' '}
@@ -290,10 +288,24 @@ const StyledPulisherContainer = styled.div`
   } ;
 `;
 
-const StyledTextContent = styled.div`
+const StyledTextTitle = styled.div`
   color: white;
   font-size: 18px;
+
+  @media (min-width: 500px) {
+    font-size: 20px;
+  }
+
+  @media (min-width: 700px) {
+    font-size: 30px;
+  } ;
+`;
+
+const StyledTextContent = styled.div`
+  font-size: 18px;
   margin: 0 0 20px 0px;
+  color: #b5b5b5;
+  font-weight: 600;
 
   @media (min-width: 500px) {
     font-size: 20px;

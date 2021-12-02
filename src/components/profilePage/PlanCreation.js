@@ -9,13 +9,15 @@ import ProfilePlan from './ProfilePlan';
 import EditPlanPopup from './EditPlanPopup';
 import ConfirmPopup from '../common/ConfirmPopup';
 import { deletePlan } from '../../utils/firebase';
-import { successToast } from '../../utils/toast';
+import { successToast, errorToast } from '../../utils/toast';
+import useWindowWidth from '../../utils/getWindowWidth';
 
 export default function PlanCreation({ plan }) {
   const [paging, setPaging] = useState(1);
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const users = useSelector((state) => state.users);
+  const { width } = useWindowWidth();
 
   function closeModal() {
     setOpen(false);
@@ -31,15 +33,19 @@ export default function PlanCreation({ plan }) {
     closeConfirm();
   }
 
+  function onEditPlan() {
+    if (width < 1100) {
+      errorToast('Please edit plan on desktop');
+    } else {
+      setOpen(true);
+    }
+  }
+
   return (
     <StyledPlanCreationContainer>
       <ProfilePlan plan={plan} />
       <StyledToolContainer>
-        <StyledPencilIcon
-          onClick={() => {
-            setOpen(true);
-          }}
-        />
+        <StyledPencilIcon onClick={onEditPlan} />
         <StyledPopup
           open={open}
           closeOnDocumentClick

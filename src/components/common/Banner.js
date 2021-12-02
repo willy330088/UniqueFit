@@ -6,7 +6,9 @@ import BannerImg from '../../images/banner.jpeg';
 export default function Banner({ slogan }) {
   return (
     <StyledBanner>
-      <StyledBannerTitle>{slogan}</StyledBannerTitle>
+      <StyledBannerTitle data-aos="fade-right" data-aos-duration="3000">
+        {slogan}
+      </StyledBannerTitle>
     </StyledBanner>
   );
 }

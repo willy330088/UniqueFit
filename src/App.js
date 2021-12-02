@@ -5,6 +5,10 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
 import LandingPage from './components/landingPage/LandingPage';
 import HomePage from './components/homePage/HomePage';
 import WorkoutListPage from './components/workoutPage/WorkoutListPage';
@@ -13,9 +17,8 @@ import SpecificPlanPage from './components/specificPlanPage/SpecificPlanPage';
 import ProfilePage from './components/profilePage/ProfilePage';
 import NotFoundPage from './components/notFoundPage/NotFoundPage';
 import FullPageLoading from './components/common/FullPageLoading';
-import { StyledToastContainer } from './utils/toast';
 import ScrollToTop from './components/common/ScrollToTop';
-import { useDispatch } from 'react-redux';
+import { StyledToastContainer } from './utils/toast';
 import {
   onUserChanged,
   getWorkoutsData,
@@ -31,6 +34,7 @@ import {
 } from '../src/redux/actions';
 
 function App() {
+  AOS.init();
   const dispatch = useDispatch();
   const [currentUser, setCurrentUser] = useState();
 
