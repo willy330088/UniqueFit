@@ -12,6 +12,7 @@ import {
   loadingCompletedToast,
 } from '../../utils/toast';
 import { createPlan, editPlan } from '../../utils/firebase';
+import useWindowWidth from '../../utils/getWindowWidth';
 
 export default function PlanPopupContent({
   type,
@@ -33,6 +34,7 @@ export default function PlanPopupContent({
   originalPlan,
 }) {
   const [submitDisabled, setSubmitDisabled] = useState(false);
+  const { width } = useWindowWidth();
 
   async function onSubmitPlan() {
     if (submitDisabled) {
@@ -125,15 +127,23 @@ export default function PlanPopupContent({
       return (
         <>
           <StyledCreateLabel>Order Your Workouts</StyledCreateLabel>
-          <DragandDrop plan={plan} setPlan={setPlan} />
-          <StyledChangeWorkoutBtnContainer>
-            <StyledSubmitWorkoutAndPlanBtn
-              onClick={onSubmitPlan}
-              submitDisabled={submitDisabled}
-            >
-              {type === 'Create' ? 'Create' : 'Save'}
-            </StyledSubmitWorkoutAndPlanBtn>
-          </StyledChangeWorkoutBtnContainer>
+          {width >= 1100 ? (
+            <>
+              <DragandDrop plan={plan} setPlan={setPlan} />
+              <StyledChangeWorkoutBtnContainer>
+                <StyledSubmitWorkoutAndPlanBtn
+                  onClick={onSubmitPlan}
+                  submitDisabled={submitDisabled}
+                >
+                  {type === 'Create' ? 'Create' : 'Save'}
+                </StyledSubmitWorkoutAndPlanBtn>
+              </StyledChangeWorkoutBtnContainer>
+            </>
+          ) : (
+            <StyledReminder>
+              Please create / edit plans on desktop
+            </StyledReminder>
+          )}
         </>
       );
     }
@@ -202,4 +212,16 @@ const StyledCreateLabel = styled.div`
   border-bottom: 3px solid #1face1;
   margin-bottom: 20px;
   width: 100%;
+`;
+
+const StyledReminder = styled.div`
+  color: #1face1;
+  font-size: 30px;
+  text-align: center;
+  width: 100%;
+  margin-top: 200px;
+
+  @media (min-width: 500px) {
+    margin-top: 250px;
+  }
 `;

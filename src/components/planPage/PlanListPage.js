@@ -11,6 +11,8 @@ import SignInPopup from '../common/SignInPopup';
 import PlanItem from './PlanItem';
 import Filter from '../common/Filter';
 import FullPageLoading from '../common/FullPageLoading';
+import useWindowWidth from '../../utils/getWindowWidth';
+import { errorToast } from '../../utils/toast';
 import PlanBackground from '../../images/plan-background.jpeg';
 
 export default function PlanListPage({ currentUser }) {
@@ -19,6 +21,7 @@ export default function PlanListPage({ currentUser }) {
   const [paging, setPaging] = useState(1);
   const [open, setOpen] = useState(false);
   const [signInOpen, setSignInOpen] = useState(false);
+  const { width } = useWindowWidth();
 
   const publicPlans = plans.filter((plan) => plan.public === true);
 
@@ -40,6 +43,18 @@ export default function PlanListPage({ currentUser }) {
     }
   }
 
+  function onAddPlan() {
+    if (width < 1100) {
+      errorToast('Please create plan on desktop');
+    } else {
+      if (currentUser) {
+        setOpen(true);
+      } else {
+        setSignInOpen(true);
+      }
+    }
+  }
+
   return currentUser !== undefined ? (
     <StyledBody>
       <Header />
@@ -50,15 +65,7 @@ export default function PlanListPage({ currentUser }) {
           setFilteredMuscleGroups={setFilteredMuscleGroups}
         />
         <StyledPlanListContainer>
-          <StyledAddPlanContainer
-            onClick={() => {
-              if (currentUser) {
-                setOpen(true);
-              } else {
-                setSignInOpen(true);
-              }
-            }}
-          >
+          <StyledAddPlanContainer onClick={onAddPlan}>
             <StyledCreatePlanIcon />
             <StyledCreatePlanText>Click To Create Plan</StyledCreatePlanText>
           </StyledAddPlanContainer>
