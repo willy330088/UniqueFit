@@ -6,26 +6,33 @@ import ProfileFrontMuscle from './ProfileFrontMuscle';
 import ProfileBackMuscle from './ProfileBackMuscle';
 import SpinHover from '../../images/spin-icon-hover.png';
 
+export function getRecentEvents(events) {
+  return events
+    .slice()
+    .sort((a, b) => new Date(b.start) - new Date(a.start))
+    .filter(
+      (event) =>
+        new Date() - new Date(event.start) > 0 &&
+        2592000000 > new Date() - new Date(event.start)
+    );
+}
+
 export default function ScheduleRecord() {
   const currentUser = useSelector((state) => state.currentUser);
   const plans = useSelector((state) => state.plans);
-  const events = useSelector((state) => state.users).filter(
-    (user) => user.id === currentUser?.uid
-  )[0]?.events;
+  const users = useSelector((state) => state.users);
   const trainedMuscleGroups = [];
   const [isFront, setIsFront] = useState(true);
+  let recentCompletedEvents = [];
 
-  const sortedEvents = events
-    ?.slice()
-    .sort((a, b) => new Date(b.start) - new Date(a.start));
-  const recentCompletedEvents =
-    sortedEvents
-      ?.filter(
-        (event) =>
-          new Date() - new Date(event.start) > 0 &&
-          2592000000 > new Date() - new Date(event.start)
-      )
-      .filter((event) => event.extendedProps.completed === true) || [];
+  if (currentUser) {
+    const events = users.filter((user) => user.id === currentUser.uid)[0]
+      .events;
+
+    recentCompletedEvents = getRecentEvents(events).filter(
+      (event) => event.extendedProps.completed === true
+    );
+  }
 
   const plansDetails = recentCompletedEvents.map((event) => {
     const plan = plans.filter(
@@ -36,8 +43,6 @@ export default function ScheduleRecord() {
     }
     return plan;
   });
-
-  console.log(recentCompletedEvents);
 
   return (
     <StyledScheduleRecordContainer>
