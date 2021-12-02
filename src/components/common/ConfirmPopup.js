@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import Popup from 'reactjs-popup';
 
+import { anvil } from '../../utils/animation';
 import DeleteIcon from '../../images/delete-icon.png';
 import SignOutIcon from '../../images/signout-icon.png';
 
@@ -13,8 +12,6 @@ export default function ConfirmPopup({
   action,
   type,
 }) {
-  AOS.init();
-
   function showIcon() {
     if (type === 'delete') {
       return <StyledConfirmDeleteIcon src={DeleteIcon} />;
@@ -70,6 +67,7 @@ const StyledConfirmDeletePopup = styled(Popup)`
     position: relative;
     border-radius: 5px;
     position: relative;
+    animation: ${anvil} 0.6s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
   }
 `;
 

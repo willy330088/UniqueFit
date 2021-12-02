@@ -11,6 +11,7 @@ import SignInPopup from '../common/SignInPopup';
 import PlanItem from './PlanItem';
 import Filter from '../common/Filter';
 import FullPageLoading from '../common/FullPageLoading';
+import { anvil } from '../../utils/animation';
 import useWindowWidth from '../../utils/getWindowWidth';
 import { errorToast } from '../../utils/toast';
 import PlanBackground from '../../images/plan-background.jpeg';
@@ -130,6 +131,7 @@ const StyledPopup = styled(Popup)`
     position: relative;
     border-radius: 5px;
     transition: ease-in-out 0.5s;
+    animation: ${anvil} 0.6s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
 
     @media (min-width: 500px) {
       width: 650px;

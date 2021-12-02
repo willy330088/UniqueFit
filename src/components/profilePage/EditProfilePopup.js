@@ -12,6 +12,7 @@ import {
   updateUserInfo,
   updateUserName,
 } from '../../utils/firebase';
+import { anvil } from '../../utils/animation';
 import { loadingToast, loadingCompletedToast } from '../../utils/toast';
 
 export default function EditProfilePopup({ closeModal, open }) {
@@ -124,6 +125,7 @@ const StyledPopup = styled(Popup)`
     height: 450px;
     border-radius: 10px;
     padding: 20px 50px;
+    animation: ${anvil} 0.6s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
   }
 `;
 

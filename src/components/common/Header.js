@@ -30,7 +30,8 @@ export default function Header() {
   useEffect(() => {
     changeBackground();
     window.addEventListener('scroll', changeBackground);
-  });
+    return () => window.removeEventListener('scroll', changeBackground);
+  }, []);
 
   return (
     <StyledHeader headerColor={headerColor}>

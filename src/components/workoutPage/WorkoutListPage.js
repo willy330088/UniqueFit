@@ -11,6 +11,7 @@ import Banner from '../common/Banner';
 import Filter from '../common/Filter';
 import SignInPopup from '../common/SignInPopup';
 import FullPageLoading from '../common/FullPageLoading';
+import { anvil } from '../../utils/animation';
 
 export default function WorkoutListPage({ currentUser }) {
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
@@ -217,6 +218,7 @@ const StyledPopup = styled(Popup)`
     padding: 20px 30px;
     position: relative;
     border-radius: 5px;
+    animation: ${anvil} 0.6s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
 
     @media (min-width: 500px) {
       width: 650px;

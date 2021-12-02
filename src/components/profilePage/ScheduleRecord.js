@@ -90,7 +90,7 @@ const StyledScheduleRecordContainer = styled.div`
   padding: 20px 40px;
   border-radius: 10px;
   @media (min-width: 800px) {
-    height: 600px;
+    max-height: 600px;
   }
 `;
 
@@ -108,6 +108,7 @@ const StyledScheduleCompleteContainer = styled.div`
   width: 100%;
   align-items: center;
   flex-direction: column;
+  margin-bottom: 20px;
 
   @media (min-width: 800px) {
     flex-direction: row;
@@ -117,9 +118,10 @@ const StyledScheduleCompleteContainer = styled.div`
 const StyledScheduleCompleteListContainer = styled.div`
   width: 100%;
   overflow-y: scroll;
-  height: 500px;
+  max-height: 500px;
   padding: 15px;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
+  align-self: flex-start;
 
   @media (min-width: 800px) {
     width: 40%;

@@ -113,8 +113,8 @@ const StyledPath = styled.path`
 `;
 
 const StyledSVG = styled.svg`
-  width: 300px;
-  height: 300px;
+  width: 200px;
+  height: 200px;
 
   @media (min-width: 800px) {
     width: 400px;

@@ -10,6 +10,7 @@ import EditPlanPopup from './EditPlanPopup';
 import ConfirmPopup from '../common/ConfirmPopup';
 import { deletePlan } from '../../utils/firebase';
 import { successToast, errorToast } from '../../utils/toast';
+import { anvil } from '../../utils/animation';
 import useWindowWidth from '../../utils/getWindowWidth';
 
 export default function PlanCreation({ plan }) {
@@ -126,6 +127,7 @@ const StyledPopup = styled(Popup)`
     position: relative;
     border-radius: 5px;
     transition: ease-in-out 0.5s;
+    animation: ${anvil} 0.6s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
 
     @media (min-width: 500px) {
       width: 650px;

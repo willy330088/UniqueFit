@@ -10,6 +10,7 @@ import ProfileWorkout from './ProfileWorkout';
 import ConfirmPopup from '../common/ConfirmPopup';
 import { loadingToast, loadingCompletedToast } from '../../utils/toast';
 import { deleteWorkout } from '../../utils/firebase';
+import { anvil } from '../../utils/animation';
 
 export default function WorkoutCreation({ workout }) {
   const [open, setOpen] = useState(false);
@@ -103,6 +104,7 @@ const StyledPopup = styled(Popup)`
     padding: 20px 30px;
     position: relative;
     border-radius: 5px;
+    animation: ${anvil} 0.6s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
 
     @media (min-width: 500px) {
       width: 650px;

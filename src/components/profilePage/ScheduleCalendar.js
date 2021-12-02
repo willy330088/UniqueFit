@@ -10,6 +10,7 @@ import Popup from 'reactjs-popup';
 import ScheduleForm from './ScheduleForm';
 import ScheduleDetails from './ScheduleDetails';
 import ScheduleRecord from './ScheduleRecord';
+import { anvil } from '../../utils/animation';
 import Calendar from '../../images/add-calendar-icon.png';
 
 export default function ScheduleCalendar() {
@@ -220,5 +221,6 @@ const StyledPopup = styled(Popup)`
     position: relative;
     border-radius: 5px;
     padding: 20px 30px;
+    animation: ${anvil} 0.6s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
   }
 `;
