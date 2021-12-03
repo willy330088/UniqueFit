@@ -21,8 +21,8 @@ export default function ScheduleRecord() {
   const currentUser = useSelector((state) => state.currentUser);
   const plans = useSelector((state) => state.plans);
   const users = useSelector((state) => state.users);
-  const trainedMuscleGroups = [];
   const [isFront, setIsFront] = useState(true);
+  const trainedMuscleGroups = [];
   let recentCompletedEvents = [];
 
   if (currentUser) {

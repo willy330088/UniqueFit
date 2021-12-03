@@ -25,17 +25,18 @@ import muscleGroups from '../../utils/muscleGroup';
 
 export default function SpecificPlanPage() {
   const { planId } = useParams();
-  const [commentContent, setCommentContent] = useState('');
-  const [comments, setComments] = useState([]);
   const currentUser = useSelector((state) => state.currentUser);
-  const [completeNum, setCompleteNum] = useState(0);
-  const [trainingMode, setTrainingMode] = useState(false);
   const plans = useSelector((state) => state.plans);
   const workouts = useSelector((state) => state.workouts);
-  const plan = plans.filter((plan) => plan.id === planId)[0];
   const users = useSelector((state) => state.users);
-  const publisher = users.filter((user) => user.id === plan.publisher)[0];
+  const [commentContent, setCommentContent] = useState('');
+  const [comments, setComments] = useState([]);
+  const [completeNum, setCompleteNum] = useState(0);
+  const [trainingMode, setTrainingMode] = useState(false);
   const [signInOpen, setSignInOpen] = useState(false);
+
+  const plan = plans.filter((plan) => plan.id === planId)[0];
+  const publisher = users.filter((user) => user.id === plan.publisher)[0];
   const workoutSet = plan?.workoutSet;
   const workoutSetDetails = plan?.workoutSet.map((workoutSet) => {
     return workouts.filter((workout) => workout.id === workoutSet.workoutId)[0];
@@ -137,8 +138,8 @@ export default function SpecificPlanPage() {
               </StyledTrainingBtn>
             </StyledMediaTrainingContainer>
             <StyledCollectIconContainer onClick={toggleCollected}>
-              <StyledPlanCollectIcon isCollected={isCollected} />
-              <StyledCollectIconText isCollected={isCollected}>
+              <StyledPlanCollectIcon iscollected={isCollected} />
+              <StyledCollectIconText iscollected={isCollected}>
                 Collect
               </StyledCollectIconText>
             </StyledCollectIconContainer>
@@ -180,6 +181,7 @@ export default function SpecificPlanPage() {
             {workoutSet.map((workout, index) => {
               return (
                 <SpecificPlanWorkoutItem
+                  key={index}
                   workout={workout}
                   index={index}
                   workoutSetDetails={workoutSetDetails}
@@ -395,12 +397,12 @@ const StyledCollectIconContainer = styled.div`
 
 const StyledCollectIconText = styled.div`
   font-size: 15px;
-  color: ${(props) => (props.isCollected ? '#1face1' : '#808080')};
+  color: ${(props) => (props.iscollected ? '#1face1' : '#808080')};
   cursor: pointer;
 `;
 
 const StyledPlanCollectIcon = styled(FaDumbbell)`
-  color: ${(props) => (props.isCollected ? '#1face1' : '#808080')};
+  color: ${(props) => (props.iscollected ? '#1face1' : '#808080')};
   font-size: 50px;
   cursor: pointer;
 
