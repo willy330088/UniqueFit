@@ -39,22 +39,35 @@ const StyledLogoContainer = styled(StyledBlurringEffectContainer)`
 `;
 
 const StyledLogoText1 = styled.div`
-  font-size: 100px;
+  font-size: 50px;
   color: #1face1;
   margin: 0 5px;
+
+  @media (min-width: 600px) {
+    font-size: 100px;
+  }
 `;
 
 const StyledLogoText2 = styled.div`
-  font-size: 100px;
+  font-size: 50px;
   color: white;
   margin: 0 5px;
+
+  @media (min-width: 600px) {
+    font-size: 100px;
+  }
 `;
 
 const StyledLogoDumbbell = styled.div`
   background-image: url(${LogoDumbbell});
   background-repeat: no-repeat;
   background-size: cover;
-  width: 40px;
-  height: 80px;
+  width: 20px;
+  height: 40px;
   margin: 0 5px;
+
+  @media (min-width: 600px) {
+    width: 40px;
+    height: 80px;
+  }
 `;

@@ -4,7 +4,7 @@
 
 UniqueFit is a fitness-related social platform for users to have unprecedented fitness experience.
 
-- Share or collect your favorite workouts from the community and customize your unique training workout plans
+- Share or collect your favorite workouts with videos from the community and customize your unique training workout plans
 - Schedule and track your training routines with well-organized calendar
 - Search for nearby gyms information before training
 

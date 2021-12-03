@@ -24,12 +24,12 @@ import muscleGroups from '../../utils/muscleGroup';
 import LogoDumbbell from '../../images/logo-dumbbell.png';
 
 export default function WorkoutPopup({ workout, close, setSignInOpen, open }) {
+  const currentUser = useSelector((state) => state.currentUser);
+  const users = useSelector((state) => state.users);
   const [commentContent, setCommentContent] = useState('');
   const [comments, setComments] = useState([]);
   const [scrollDown, setScrollDown] = useState(true);
   const [videoReady, setVideoReady] = useState(false);
-  const currentUser = useSelector((state) => state.currentUser);
-  const users = useSelector((state) => state.users);
   const publisher = users.filter((user) => user.id === workout.publisher)[0];
   const isCollected = workout.collectedBy?.includes(currentUser?.uid);
 

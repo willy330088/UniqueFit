@@ -99,31 +99,31 @@ const StyledSubmitWorkoutAndPlanBtn = styled.div`
 
 const StyledBlurringEffectContainer = styled.div`
   div:nth-child(1) {
-    animation: ${blurring} 1.2s linear 0s infinite alternate;
+    animation: ${blurring} 0.5s linear 0s infinite alternate;
   }
   div:nth-child(2) {
-    animation: ${blurring} 1.2s linear 0.15s infinite alternate;
+    animation: ${blurring} 0.5s linear 0.15s infinite alternate;
   }
   div:nth-child(3) {
-    animation: ${blurring} 1.2s linear 0.3s infinite alternate;
+    animation: ${blurring} 0.5s linear 0.3s infinite alternate;
   }
   div:nth-child(4) {
-    animation: ${blurring} 1.2s linear 0.45s infinite alternate;
+    animation: ${blurring} 0.5s linear 0.45s infinite alternate;
   }
   div:nth-child(5) {
-    animation: ${blurring} 1.2s linear 0.6s infinite alternate;
+    animation: ${blurring} 0.5s linear 0.6s infinite alternate;
   }
   div:nth-child(6) {
-    animation: ${blurring} 1.2s linear 0.75s infinite alternate;
+    animation: ${blurring} 0.5s linear 0.75s infinite alternate;
   }
   div:nth-child(7) {
-    animation: ${blurring} 1.2s linear 0.9s infinite alternate;
+    animation: ${blurring} 0.5s linear 0.9s infinite alternate;
   }
   div:nth-child(8) {
-    animation: ${blurring} 1.2s linear 1.05s infinite alternate;
+    animation: ${blurring} 0.5s linear 1.05s infinite alternate;
   }
   div:nth-child(9) {
-    animation: ${blurring} 1.2s linear 1.2s infinite alternate;
+    animation: ${blurring} 0.5s linear 1.2s infinite alternate;
   }
 `;
 
