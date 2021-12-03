@@ -460,6 +460,7 @@ const StyledCommentInput = styled.textarea`
   outline: none;
   width: 100%;
   padding: 10px;
+  resize: none;
 
   @media (min-width: 500px) {
     height: 50px;

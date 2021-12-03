@@ -54,6 +54,7 @@ const StyledDescriptionInput = styled.textarea`
   margin-bottom: 20px;
   padding: 20px 20px;
   border-radius: 5px;
+  resize: none;
 
   @media (min-width: 650px) {
     height: 130px;

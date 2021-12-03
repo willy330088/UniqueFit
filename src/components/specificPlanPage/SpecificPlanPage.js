@@ -425,6 +425,7 @@ const StyledCommentInput = styled.textarea`
   outline: none;
   width: 100%;
   padding: 15px;
+  resize: none;
 `;
 
 const StyledCommentInputContainer = styled.div`
