@@ -473,6 +473,7 @@ const StyledPlanTextContentContext = styled.div`
   margin-top: 10px;
   color: #666666;
   font-weight: 600;
+  word-break: keep-all;
 `;
 
 const StyledMediaTrainingContainer = styled.div`
