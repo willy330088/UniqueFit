@@ -26,7 +26,7 @@ export default function PlanListPage({ currentUser }) {
 
   const publicPlans = plans.filter((plan) => plan.public === true);
   const collectedWorkouts = workouts.filter((workout) =>
-    workout.collectedBy.includes(currentUser.uid)
+    workout.collectedBy.includes(currentUser?.uid)
   );
 
   function closeModal() {
@@ -48,16 +48,16 @@ export default function PlanListPage({ currentUser }) {
   }
 
   function onAddPlan() {
-    if (collectedWorkouts.length === 0) {
-      errorToast('Please collect workouts before creating plans');
-    } else if (width < 1100) {
-      errorToast('Please create plans on desktop');
-    } else {
-      if (currentUser) {
-        setOpen(true);
+    if (currentUser) {
+      if (collectedWorkouts.length === 0) {
+        errorToast('Please collect workouts before creating plans');
+      } else if (width < 1100) {
+        errorToast('Please create plans on desktop');
       } else {
-        setSignInOpen(true);
+        setOpen(true);
       }
+    } else {
+      setSignInOpen(true);
     }
   }
 
