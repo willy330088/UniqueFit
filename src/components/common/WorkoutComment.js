@@ -100,6 +100,7 @@ const StyledCommentUserImage = styled.img`
   height: 40px;
   border-radius: 50%;
   margin-left: 10px;
+  object-fit: cover;
 `;
 
 const StyledNameCommentWrap = styled.div`

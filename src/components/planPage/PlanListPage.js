@@ -17,6 +17,7 @@ import PlanBackground from '../../images/plan-background.jpeg';
 
 export default function PlanListPage({ currentUser }) {
   const plans = useSelector((state) => state.plans);
+  const workouts = useSelector((state) => state.workouts);
   const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
   const [paging, setPaging] = useState(1);
   const [open, setOpen] = useState(false);
@@ -24,6 +25,9 @@ export default function PlanListPage({ currentUser }) {
   const { width } = useWindowWidth();
 
   const publicPlans = plans.filter((plan) => plan.public === true);
+  const collectedWorkouts = workouts.filter((workout) =>
+    workout.collectedBy.includes(currentUser.uid)
+  );
 
   function closeModal() {
     setOpen(false);
@@ -44,8 +48,10 @@ export default function PlanListPage({ currentUser }) {
   }
 
   function onAddPlan() {
-    if (width < 1100) {
-      errorToast('Please create plan on desktop');
+    if (collectedWorkouts.length === 0) {
+      errorToast('Please collect workouts before creating plans');
+    } else if (width < 1100) {
+      errorToast('Please create plans on desktop');
     } else {
       if (currentUser) {
         setOpen(true);

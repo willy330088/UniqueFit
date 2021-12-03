@@ -7,14 +7,16 @@ import ProfileBackMuscle from './ProfileBackMuscle';
 import SpinHover from '../../images/spin-icon-hover.png';
 
 export function getRecentEvents(events) {
-  return events
-    .slice()
-    .sort((a, b) => new Date(b.start) - new Date(a.start))
-    .filter(
-      (event) =>
-        new Date() - new Date(event.start) > 0 &&
-        2592000000 > new Date() - new Date(event.start)
-    );
+  return (
+    events
+      ?.slice()
+      .sort((a, b) => new Date(b.start) - new Date(a.start))
+      .filter(
+        (event) =>
+          new Date() - new Date(event.start) > 0 &&
+          2592000000 > new Date() - new Date(event.start)
+      ) || []
+  );
 }
 
 export default function ScheduleRecord() {

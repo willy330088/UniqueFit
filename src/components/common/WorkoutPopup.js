@@ -334,6 +334,7 @@ const StyledPublisherImage = styled.img`
   width: 25px;
   height: 25px;
   margin-right: 10px;
+  object-fit: cover;
 
   @media (min-width: 500px) {
     width: 30px;
