@@ -310,6 +310,7 @@ const StyledPlanInfoPublisherImage = styled.img`
   border-radius: 50%;
   margin-right: 10px;
   height: 35px;
+  object-fit: cover;
 `;
 
 const StyledPlanMediaContainer = styled.div`
@@ -424,6 +425,7 @@ const StyledCommentInput = styled.textarea`
   outline: none;
   width: 100%;
   padding: 15px;
+  resize: none;
 `;
 
 const StyledCommentInputContainer = styled.div`

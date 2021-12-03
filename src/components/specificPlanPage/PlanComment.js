@@ -95,6 +95,7 @@ const StyledCommentUserImage = styled.img`
   height: 40px;
   border-radius: 50%;
   margin-left: 10px;
+  object-fit: cover;
 `;
 
 const StyledNameCommentWrap = styled.div`
@@ -134,8 +135,8 @@ const StyledCommentThreeDot = styled(BsThreeDots)`
 
 const StyledPlanInfoPublisherIcon = styled(HiUserCircle)`
   color: #d6d6d6;
-  font-size: 55px;
-  margin-left: 10px;
+  font-size: 50px;
+  margin-left: 5px;
 `;
 
 const StyledCommentToolContainer = styled.div`
@@ -175,4 +176,5 @@ const StyledCommentEditInput = styled.textarea`
   outline: none;
   font-size: 18px;
   padding-left: 10px;
+  resize: none;
 `;

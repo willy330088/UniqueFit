@@ -334,6 +334,7 @@ const StyledPublisherImage = styled.img`
   width: 25px;
   height: 25px;
   margin-right: 10px;
+  object-fit: cover;
 
   @media (min-width: 500px) {
     width: 30px;
@@ -459,6 +460,7 @@ const StyledCommentInput = styled.textarea`
   outline: none;
   width: 100%;
   padding: 10px;
+  resize: none;
 
   @media (min-width: 500px) {
     height: 50px;

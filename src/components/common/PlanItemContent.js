@@ -142,6 +142,7 @@ const StyledPlanInfoPublisherImage = styled.img`
   border-radius: 50%;
   margin-right: 5px;
   height: 25px;
+  object-fit: cover;
 `;
 
 const StyledPlanMediaContainer = styled.div`

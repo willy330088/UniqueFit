@@ -208,16 +208,18 @@ const StyledMainWordContainer = styled.div`
 
 const StyledStepContainer = styled.div`
   width: 100%;
-  height: 300px;
+  min-height: 300px;
   display: flex;
   margin-bottom: 3%;
   align-items: center;
 
-  @media (min-width: 600px) {
-    height: 250px;
+  @media (min-width: 800px) {
+    min-height: 250px;
+    height: 30%;
   }
 
-  @media (min-width: 800px) {
+  @media (min-width: 1200px) {
+    min-height: 150px;
     height: 30%;
   }
 `;
