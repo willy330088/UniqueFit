@@ -50,8 +50,8 @@ export default function DragAndDrop({ plan, setPlan }) {
       targetMuscleGroup: item.targetMuscleGroup,
       id: uuid(),
       workoutId: item.id,
-      weight: undefined,
-      reps: undefined,
+      weight: '',
+      reps: '',
     });
     return destClone;
   }
@@ -125,17 +125,19 @@ export default function DragAndDrop({ plan, setPlan }) {
                             </StyledExerciseTitle>
                             <StyledWeightSet>
                               <StyledWeightInput
-                                placeholder={'0'}
-                                type="number"
-                                min="0"
-                                max="99"
+                                placeholder={'1'}
                                 value={item.weight}
                                 onChange={(e) => {
                                   setPlan({
                                     workoutSet: plan.workoutSet.filter(
                                       (single) => {
                                         if (single === item) {
-                                          single.weight = e.target.value;
+                                          if (e.target.value === '') {
+                                            single.weight = e.target.value;
+                                          } else if (Number(e.target.value))
+                                            single.weight = Number(
+                                              e.target.value
+                                            );
                                           return single;
                                         } else {
                                           return single;
@@ -147,17 +149,19 @@ export default function DragAndDrop({ plan, setPlan }) {
                               />
                               <StyledWeightLabel>kg</StyledWeightLabel>
                               <StyledWeightInput
-                                placeholder={'0'}
-                                type="number"
-                                min="0"
-                                max="99"
+                                placeholder={'1'}
                                 value={item.reps}
                                 onChange={(e) => {
                                   setPlan({
                                     workoutSet: plan.workoutSet.filter(
                                       (single) => {
                                         if (single === item) {
-                                          single.reps = e.target.value;
+                                          if (e.target.value === '') {
+                                            single.reps = e.target.value;
+                                          } else if (Number(e.target.value))
+                                            single.reps = Number(
+                                              e.target.value
+                                            );
                                           return single;
                                         } else {
                                           return single;
