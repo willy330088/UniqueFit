@@ -45,60 +45,63 @@ export default function PlanPopupContent({
 
       if (title === '') {
         errorToast('Please fill in title');
-        return;
       } else if (targetMuscleGroup === '') {
         errorToast('Please choose target muscle group');
-        return;
       } else if (!estimatedTrainingTime) {
         errorToast('Please fill in estimated training time');
-        return;
       } else if (description === '') {
         errorToast('Please fill in description');
-        return;
       } else if (plan.workoutSet.length === 0) {
         errorToast('Please add workouts');
-        return;
-      }
+      } else {
+        plan.workoutSet.every((workout) => {
+          checked = false;
+          if (workout.reps === '' || workout.weight === '') {
+            errorToast('Please fill in weights and reps');
+            return false;
+          } else if (
+            workout.reps < 1 ||
+            workout.reps > 99 ||
+            workout.weight < 1 ||
+            workout.weight > 99
+          ) {
+            errorToast('Weights and reps should be 1 - 99');
+            return false;
+          }
+          checked = true;
+          return true;
+        });
 
-      plan.workoutSet.every((workout) => {
-        checked = false;
-        if (!workout.reps || !workout.weight) {
-          errorToast('Please fill in weights and reps');
-          return false;
+        if (checked) {
+          if (type === 'Create') {
+            const planCreating = loadingToast('Creating Plan...');
+            await createPlan(
+              title,
+              publicity,
+              description,
+              targetMuscleGroup,
+              estimatedTrainingTime,
+              plan
+            );
+            loadingCompletedToast('Created Successfully', planCreating);
+          } else {
+            const planEditing = loadingToast('Editing Plan...');
+            await editPlan(
+              title,
+              publicity,
+              description,
+              targetMuscleGroup,
+              estimatedTrainingTime,
+              plan,
+              originalPlan.id
+            );
+            loadingCompletedToast('Edited Successfully', planEditing);
+          }
+
+          close();
         }
-        checked = true;
-        return true;
-      });
-
-      if (checked) {
-        if (type === 'Create') {
-          const planCreating = loadingToast('Creating Plan...');
-          await createPlan(
-            title,
-            publicity,
-            description,
-            targetMuscleGroup,
-            estimatedTrainingTime,
-            plan
-          );
-          loadingCompletedToast('Created Successfully', planCreating);
-        } else {
-          const planEditing = loadingToast('Editing Plan...');
-          await editPlan(
-            title,
-            publicity,
-            description,
-            targetMuscleGroup,
-            estimatedTrainingTime,
-            plan,
-            originalPlan.id
-          );
-          loadingCompletedToast('Edited Successfully', planEditing);
-        }
-
-        close();
-        setSubmitDisabled(false);
       }
+      setSubmitDisabled(false);
     }
   }
 
