@@ -40,47 +40,43 @@ export default function WorkoutPopupContent({
       setSubmitDisabled(true);
       if (title === '') {
         errorToast('Please fill in title');
-        return;
       } else if (targetMuscleGroup === '') {
         errorToast('Please choose target muscle group');
-        return;
       } else if (description === '') {
         errorToast('Please fill in description');
-        return;
       } else if (changeType === 'Create' && videoFile === '') {
         errorToast('Please upload video');
-        return;
-      }
-
-      const metadata = {
-        contentType: videoFile.type,
-      };
-
-      if (changeType === 'Create') {
-        const workoutCreating = loadingToast('Creating Workout...');
-        await createWorkout(
-          videoFile,
-          metadata,
-          title,
-          description,
-          targetMuscleGroup,
-          type
-        );
-        loadingCompletedToast('Created Successfully', workoutCreating);
       } else {
-        const workoutEditing = loadingToast('Editing Workout...');
-        await editWorkout(
-          videoFile,
-          metadata,
-          title,
-          description,
-          targetMuscleGroup,
-          type,
-          workoutId
-        );
-        loadingCompletedToast('Edited Successfully', workoutEditing);
+        const metadata = {
+          contentType: videoFile.type,
+        };
+
+        if (changeType === 'Create') {
+          const workoutCreating = loadingToast('Creating Workout...');
+          await createWorkout(
+            videoFile,
+            metadata,
+            title,
+            description,
+            targetMuscleGroup,
+            type
+          );
+          loadingCompletedToast('Created Successfully', workoutCreating);
+        } else {
+          const workoutEditing = loadingToast('Editing Workout...');
+          await editWorkout(
+            videoFile,
+            metadata,
+            title,
+            description,
+            targetMuscleGroup,
+            type,
+            workoutId
+          );
+          loadingCompletedToast('Edited Successfully', workoutEditing);
+        }
+        close();
       }
-      close();
       setSubmitDisabled(false);
     }
   }
