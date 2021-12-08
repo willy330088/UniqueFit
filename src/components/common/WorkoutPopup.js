@@ -19,7 +19,7 @@ import {
   removeWorkoutCollection,
   addWorkoutCollection,
 } from '../../utils/firebase';
-import { down, anvil } from '../../utils/animation';
+import { down } from '../../utils/animation';
 import muscleGroups from '../../utils/muscleGroup';
 import LogoDumbbell from '../../images/logo-dumbbell.png';
 
@@ -581,7 +581,6 @@ const StyledPopup = styled(Popup)`
     width: 350px;
     height: 300px;
     overflow-y: scroll;
-    animation: ${anvil} 0.6s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
 
     @media (min-width: 500px) {
       width: 500px;
