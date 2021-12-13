@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { BsThreeDots } from 'react-icons/bs';
 import { HiUserCircle } from 'react-icons/hi';
 
-import { StyledCommentEditSaveBtn } from '../common/GeneralStyle';
+import { StyledCommentEditSaveBtn } from '../Common/GeneralStyle';
 import { deletePlanComment, editPlanComment } from '../../utils/firebase';
 import { successToast } from '../../utils/toast';
 

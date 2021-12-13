@@ -4,23 +4,22 @@ import { useSelector } from 'react-redux';
 import Popup from 'reactjs-popup';
 import { MdAddCircleOutline } from 'react-icons/md';
 
+import usePopup from '../../hooks/usePopup';
 import CreateWorkoutPopup from './CreateWorkoutPopup';
 import WorkoutItem from './WorkoutItem';
-import Header from '../common/Header';
-import Banner from '../common/Banner';
-import Filter from '../common/Filter';
-import SignInPopup from '../common/SignInPopup';
-import FullPageLoading from '../common/FullPageLoading';
+import Header from '../Common/Header';
+import Banner from '../Common/Banner';
+import Filter from '../Common/Filter';
+import SignInPopup from '../Common/SignInPopup';
 import { anvil } from '../../utils/animation';
 
-export default function WorkoutListPage({ currentUser }) {
+export default function WorkoutPage() {
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
   const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
-  const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
-  const [signInOpen, setSignInOpen] = useState(false);
-  const closeSignIn = () => setSignInOpen(false);
+  const currentUser = useSelector((state) => state.currentUser);
   const workouts = useSelector((state) => state.workouts);
+  const [open, setOpen, close] = usePopup();
+  const [signInOpen, setSignInOpen, closeSignIn] = usePopup();
 
   const gymWorkouts = workouts.filter(
     (workout) => workout.type === 'Gymworkout'
@@ -45,7 +44,7 @@ export default function WorkoutListPage({ currentUser }) {
     }
   }
 
-  return currentUser !== undefined ? (
+  return (
     <StyledBody>
       <Header />
       <Banner slogan={'Collect Your Workouts'} />
@@ -89,8 +88,8 @@ export default function WorkoutListPage({ currentUser }) {
             </StyledCreateWorkoutText>
           </StyledCreateWorkoutContainer>
           <SignInPopup open={signInOpen} closeModal={closeSignIn} />
-          <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
-            <CreateWorkoutPopup close={closeModal} />
+          <StyledPopup open={open} closeOnDocumentClick onClose={close}>
+            <CreateWorkoutPopup close={close} />
           </StyledPopup>
           {showWorkoutList().map((workout) => {
             return (
@@ -104,8 +103,6 @@ export default function WorkoutListPage({ currentUser }) {
         </StyledWorkoutContainer>
       </StyledWorkoutListContainer>
     </StyledBody>
-  ) : (
-    <FullPageLoading />
   );
 }
 

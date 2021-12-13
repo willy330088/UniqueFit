@@ -4,8 +4,9 @@ import { ImPlay } from 'react-icons/im';
 import { FaWeightHanging } from 'react-icons/fa';
 import { FaDumbbell } from 'react-icons/fa';
 
-import WorkoutPopup from '../common/WorkoutPopup';
-import { StyledVerticalContainer } from '../common/GeneralStyle';
+import usePopup from '../../hooks/usePopup';
+import WorkoutPopup from '../Common/WorkoutPopup';
+import { StyledVerticalContainer } from '../Common/GeneralStyle';
 
 export default function SpecificPlanWorkoutItem({
   workout,
@@ -18,11 +19,7 @@ export default function SpecificPlanWorkoutItem({
   setSignInOpen,
 }) {
   const [checked, setChecked] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  function closeModal() {
-    setOpen(false);
-  }
+  const [open, setOpen, close] = usePopup();
 
   function toggleChecked() {
     if (checked === true) {
@@ -70,7 +67,7 @@ export default function SpecificPlanWorkoutItem({
       />
       <WorkoutPopup
         workout={workoutSetDetails[index]}
-        close={closeModal}
+        close={close}
         open={open}
         setSignInOpen={setSignInOpen}
       />

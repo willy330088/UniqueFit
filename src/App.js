@@ -5,19 +5,19 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-import LandingPage from './components/landingPage/LandingPage';
-import HomePage from './components/homePage/HomePage';
-import WorkoutListPage from './components/workoutPage/WorkoutListPage';
-import PlanListPage from './components/planPage/PlanListPage';
-import SpecificPlanPage from './components/specificPlanPage/SpecificPlanPage';
-import ProfilePage from './components/profilePage/ProfilePage';
-import NotFoundPage from './components/notFoundPage/NotFoundPage';
-import FullPageLoading from './components/common/FullPageLoading';
-import ScrollToTop from './components/common/ScrollToTop';
+import LandingPage from './components/LandingPage';
+import HomePage from './components/HomePage';
+import WorkoutPage from './components/WorkoutPage';
+import PlanPage from './components/PlanPage';
+import SpecificPlanPage from './components/SpecificPlanPage';
+import ProfilePage from './components/ProfilePage';
+import NotFoundPage from './components/NotFoundPage';
+import FullPageLoading from './components/Common/FullPageLoading';
+import ScrollToTop from './components/Common/ScrollToTop';
 import { StyledToastContainer } from './utils/toast';
 import {
   onUserChanged,
@@ -25,7 +25,6 @@ import {
   getPlansData,
   getUsersData,
 } from './utils/firebase';
-import 'firebase/firestore';
 import {
   getWorkouts,
   getPlans,
@@ -36,30 +35,23 @@ import {
 function App() {
   AOS.init();
   const dispatch = useDispatch();
-  const [currentUser, setCurrentUser] = useState();
+  const currentUser = useSelector((state) => state.currentUser);
 
   useEffect(() => {
     getWorkoutsData((data) => {
       dispatch(getWorkouts(data));
     });
-  }, []);
 
-  useEffect(() => {
     getPlansData((data) => {
       dispatch(getPlans(data));
     });
-  }, []);
 
-  useEffect(() => {
     getUsersData((data) => {
       dispatch(getUsers(data));
     });
-  }, []);
 
-  useEffect(() => {
     onUserChanged((user) => {
       dispatch(getCurrentUser(user));
-      setCurrentUser(user);
     });
   }, []);
 
@@ -71,7 +63,7 @@ function App() {
         <Switch>
           <Route exact path="/">
             {currentUser !== null ? (
-              currentUser !== undefined ? (
+              currentUser !== 'loading' ? (
                 <Redirect to="/home" />
               ) : (
                 <FullPageLoading />
@@ -83,7 +75,7 @@ function App() {
 
           <Route exact path="/profile">
             {currentUser !== null ? (
-              currentUser !== undefined ? (
+              currentUser !== 'loading' ? (
                 <ProfilePage />
               ) : (
                 <FullPageLoading />
@@ -94,16 +86,16 @@ function App() {
           </Route>
 
           <Route exact path="/home">
-            <HomePage currentUser={currentUser} />
+            <HomePage />
           </Route>
           <Route exact path="/workouts">
-            <WorkoutListPage currentUser={currentUser} />
+            <WorkoutPage />
           </Route>
           <Route exact path="/plans">
-            <PlanListPage currentUser={currentUser} />
+            <PlanPage />
           </Route>
           <Route exact path="/plans/:planId">
-            <SpecificPlanPage currentUser={currentUser} />
+            <SpecificPlanPage />
           </Route>
           <Route exact path="/pageNotFound">
             <NotFoundPage />

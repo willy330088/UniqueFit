@@ -1,17 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { ImPlay } from 'react-icons/im';
 
-import WorkoutPopup from '../common/WorkoutPopup';
-import WorkoutItemContent from '../common/WorkoutItemContent';
+import usePopup from '../../hooks/usePopup';
+import WorkoutPopup from '../Common/WorkoutPopup';
+import WorkoutItemContent from '../Common/WorkoutItemContent';
 import muscleGroups from '../../utils/muscleGroup';
 
 export default function ProfileWorkout({ workout }) {
-  const [open, setOpen] = useState(false);
-
-  function closeModal() {
-    setOpen(false);
-  }
+  const [open, setOpen, close] = usePopup();
 
   return (
     <>
@@ -33,7 +30,7 @@ export default function ProfileWorkout({ workout }) {
           <WorkoutItemContent workout={workout} />
         </StyledWorkoutItemDescription>
       </StyledWorkoutItemContainer>
-      <WorkoutPopup workout={workout} close={closeModal} open={open} />
+      <WorkoutPopup workout={workout} close={close} open={open} />
     </>
   );
 }

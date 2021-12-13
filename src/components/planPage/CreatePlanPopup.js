@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import PlanPopupContent from '../common/PlanPopupContent';
+import PlanPopupContent from '../Common/PlanPopupContent';
 
 export default function CreatePlanPopup({ paging, setPaging, close }) {
   const [title, setTitle] = useState('');

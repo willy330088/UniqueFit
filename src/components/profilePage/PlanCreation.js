@@ -5,27 +5,20 @@ import { BsFillPencilFill } from 'react-icons/bs';
 import { FaTrashAlt } from 'react-icons/fa';
 import Popup from 'reactjs-popup';
 
+import usePopup from '../../hooks/usePopup';
 import ProfilePlan from './ProfilePlan';
 import EditPlanPopup from './EditPlanPopup';
-import ConfirmPopup from '../common/ConfirmPopup';
+import ConfirmPopup from '../Common/ConfirmPopup';
 import { deletePlan } from '../../utils/firebase';
 import { successToast, errorToast } from '../../utils/toast';
-import useWindowWidth from '../../utils/getWindowWidth';
+import useWindowWidth from '../../hooks/useWindowWidth';
 
 export default function PlanCreation({ plan }) {
   const [paging, setPaging] = useState(1);
-  const [open, setOpen] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [open, setOpen, close] = usePopup();
+  const [confirmOpen, setConfirmOpen, closeConfirm] = usePopup();
   const users = useSelector((state) => state.users);
   const { width } = useWindowWidth();
-
-  function closeModal() {
-    setOpen(false);
-  }
-
-  function closeConfirm() {
-    setConfirmOpen(false);
-  }
 
   async function deletePlanCreation() {
     await deletePlan(plan.id, users);
@@ -49,14 +42,14 @@ export default function PlanCreation({ plan }) {
         <StyledPopup
           open={open}
           closeOnDocumentClick
-          onClose={closeModal}
+          onClose={close}
           paging={paging}
         >
           <EditPlanPopup
             paging={paging}
             setPaging={setPaging}
             originalPlan={plan}
-            close={closeModal}
+            close={close}
           />
         </StyledPopup>
         <StyledRemoveIcon

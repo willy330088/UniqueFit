@@ -10,7 +10,7 @@ import {
 import {
   StyledGeneralBtn,
   StyledBlurringEffectContainer,
-} from '../common/GeneralStyle';
+} from '../Common/GeneralStyle';
 import { errorToast } from '../../utils/toast';
 import MuscleIcon from '../../images/muscle-icon.png';
 import LogoDumbbell from '../../images/logo-dumbbell.png';

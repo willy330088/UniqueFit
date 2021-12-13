@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import WorkoutPopupContent from '../common/WorkoutPopupContent';
+import WorkoutPopupContent from '../Common/WorkoutPopupContent';
 
 export default function CreateWorkoutPage({ workout, close }) {
   const [title, setTitle] = useState(workout.title);

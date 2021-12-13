@@ -4,38 +4,31 @@ import { useSelector } from 'react-redux';
 import { MdAddCircleOutline } from 'react-icons/md';
 import Popup from 'reactjs-popup';
 
-import Header from '../common/Header';
-import Banner from '../common/Banner';
+import usePopup from '../../hooks/usePopup';
+import Header from '../Common/Header';
+import Banner from '../Common/Banner';
 import CreatePlanPopup from './CreatePlanPopup';
-import SignInPopup from '../common/SignInPopup';
+import SignInPopup from '../Common/SignInPopup';
 import PlanItem from './PlanItem';
-import Filter from '../common/Filter';
-import FullPageLoading from '../common/FullPageLoading';
-import useWindowWidth from '../../utils/getWindowWidth';
+import Filter from '../Common/Filter';
+import useWindowWidth from '../../hooks/useWindowWidth';
 import { errorToast } from '../../utils/toast';
 import PlanBackground from '../../images/plan-background.jpeg';
 
-export default function PlanListPage({ currentUser }) {
+export default function PlanPage() {
   const plans = useSelector((state) => state.plans);
   const workouts = useSelector((state) => state.workouts);
+  const currentUser = useSelector((state) => state.currentUser);
   const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
   const [paging, setPaging] = useState(1);
-  const [open, setOpen] = useState(false);
-  const [signInOpen, setSignInOpen] = useState(false);
+  const [open, setOpen, close] = usePopup();
+  const [signInOpen, setSignInOpen, closeSignIn] = usePopup();
   const { width } = useWindowWidth();
 
   const publicPlans = plans.filter((plan) => plan.public === true);
   const collectedWorkouts = workouts.filter((workout) =>
     workout.collectedBy.includes(currentUser?.uid)
   );
-
-  function closeModal() {
-    setOpen(false);
-  }
-
-  function closeSignIn() {
-    setSignInOpen(false);
-  }
 
   function showPlanList() {
     if (filteredMuscleGroups.length === 0) {
@@ -61,7 +54,7 @@ export default function PlanListPage({ currentUser }) {
     }
   }
 
-  return currentUser !== undefined ? (
+  return (
     <StyledBody>
       <Header />
       <Banner slogan={'Collect Your Plans'} />
@@ -79,13 +72,13 @@ export default function PlanListPage({ currentUser }) {
           <StyledPopup
             open={open}
             closeOnDocumentClick
-            onClose={closeModal}
+            onClose={close}
             paging={paging}
           >
             <CreatePlanPopup
               paging={paging}
               setPaging={setPaging}
-              close={closeModal}
+              close={close}
             />
           </StyledPopup>
           {showPlanList().map((plan) => {
@@ -94,8 +87,6 @@ export default function PlanListPage({ currentUser }) {
         </StyledPlanListContainer>
       </StyledPlanListPageContainer>
     </StyledBody>
-  ) : (
-    <FullPageLoading />
   );
 }
 

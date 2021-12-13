@@ -3,16 +3,18 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { NavLink, useHistory } from 'react-router-dom';
 
+import usePopup from '../../hooks/usePopup';
 import Burger from './Burger';
 import SignInPopup from './SignInPopup';
 import Logo from '../../images/logo.png';
 
 export default function Header() {
   const history = useHistory();
-  const [headerColor, setHeaderColor] = useState('false');
+  const [headerColor, setHeaderColor] = useState(false);
   const currentUser = useSelector((state) => state.currentUser);
-  const [signInOpen, setSignInOpen] = useState(false);
+  const [signInOpen, setSignInOpen, closeSignIn] = usePopup();
   const [open, setOpen] = useState(false);
+
   const activeStyle = {
     color: '#1face1',
     borderBottom: '#1face1 4px solid',
@@ -28,7 +30,6 @@ export default function Header() {
   }
 
   useEffect(() => {
-    changeBackground();
     window.addEventListener('scroll', changeBackground);
     return () => window.removeEventListener('scroll', changeBackground);
   }, []);
@@ -84,12 +85,7 @@ export default function Header() {
           </StyledSignUpLink>
         )}
       </StyledNavBar>
-      <SignInPopup
-        open={signInOpen}
-        closeModal={() => {
-          setSignInOpen(false);
-        }}
-      />
+      <SignInPopup open={signInOpen} closeModal={closeSignIn} />
     </StyledHeader>
   );
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
-import { StyledGeneralBtn } from '../common/GeneralStyle';
+import { StyledGeneralBtn } from '../Common/GeneralStyle';
 import NoResultGif from '../../images/no-result.gif';
 
 export default function NoResult({ type }) {

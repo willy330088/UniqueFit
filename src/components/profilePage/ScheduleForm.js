@@ -9,7 +9,7 @@ import { v4 as uuid } from 'uuid';
 import {
   StyledGeneralBtn,
   StyledHorizontalContainer,
-} from '../common/GeneralStyle';
+} from '../Common/GeneralStyle';
 import { addScheduleEvent } from '../../utils/firebase';
 import { successToast, errorToast } from '../../utils/toast';
 

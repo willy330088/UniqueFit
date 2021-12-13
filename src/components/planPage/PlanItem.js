@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import PlanItemContent from '../common/PlanItemContent';
+import PlanItemContent from '../Common/PlanItemContent';
 import PlanBackground from '../../images/plan-background.jpeg';
 
 export default function PlanItem({ plan }) {
