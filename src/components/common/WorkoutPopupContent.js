@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { AiOutlineRightCircle, AiOutlineLeftCircle } from 'react-icons/ai';
 
-import WorkoutDetailsInput from '../common/WorkoutDetailsInput';
+import WorkoutDetailsInput from './WorkoutDetailsInput';
 import WorkoutVideoInput from './WorkoutVideoInput';
 import { StyledSubmitWorkoutAndPlanBtn } from './GeneralStyle';
 import { createWorkout, editWorkout } from '../../utils/firebase';

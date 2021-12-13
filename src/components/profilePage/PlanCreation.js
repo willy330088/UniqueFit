@@ -7,10 +7,10 @@ import Popup from 'reactjs-popup';
 
 import ProfilePlan from './ProfilePlan';
 import EditPlanPopup from './EditPlanPopup';
-import ConfirmPopup from '../common/ConfirmPopup';
+import ConfirmPopup from '../Common/ConfirmPopup';
 import { deletePlan } from '../../utils/firebase';
 import { successToast, errorToast } from '../../utils/toast';
-import useWindowWidth from '../../utils/getWindowWidth';
+import useWindowWidth from '../../hooks/useWindowWidth';
 
 export default function PlanCreation({ plan }) {
   const [paging, setPaging] = useState(1);

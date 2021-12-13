@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 
-import PlanPopupContent from '../common/PlanPopupContent';
+import PlanPopupContent from '../Common/PlanPopupContent';
 
 export default function EditPlanPopup({
   paging,

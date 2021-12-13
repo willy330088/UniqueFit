@@ -5,7 +5,7 @@ import { BsCameraFill } from 'react-icons/bs';
 import { HiUserCircle } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 
-import { StyledGeneralBtn } from '../common/GeneralStyle';
+import { StyledGeneralBtn } from '../Common/GeneralStyle';
 import {
   uploadUserPhoto,
   updateUserPhotoAndName,

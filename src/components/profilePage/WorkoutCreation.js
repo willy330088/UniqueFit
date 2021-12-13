@@ -7,7 +7,7 @@ import { FaTrashAlt } from 'react-icons/fa';
 
 import EditWorkoutPopup from './EditWorkoutPopup';
 import ProfileWorkout from './ProfileWorkout';
-import ConfirmPopup from '../common/ConfirmPopup';
+import ConfirmPopup from '../Common/ConfirmPopup';
 import { loadingToast, loadingCompletedToast } from '../../utils/toast';
 import { deleteWorkout } from '../../utils/firebase';
 import { anvil } from '../../utils/animation';

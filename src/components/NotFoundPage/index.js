@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
-import { StyledGeneralBtn } from '../common/GeneralStyle';
+import { StyledGeneralBtn } from '../Common/GeneralStyle';
 import NotFoundPageBackground from '../../images/not-found-page-background.jpeg';
 
 export default function NotFoundPage() {

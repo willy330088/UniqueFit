@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import PlanBackground from '../../images/plan-background.jpeg';
-import PlanItemContent from '../common/PlanItemContent';
+import PlanItemContent from '../Common/PlanItemContent';
 
 export default function PlanItem({ plan }) {
   const [hover, setHover] = useState(false);

@@ -6,11 +6,11 @@ import { MdAddCircleOutline } from 'react-icons/md';
 
 import CreateWorkoutPopup from './CreateWorkoutPopup';
 import WorkoutItem from './WorkoutItem';
-import Header from '../common/Header';
-import Banner from '../common/Banner';
-import Filter from '../common/Filter';
-import SignInPopup from '../common/SignInPopup';
-import FullPageLoading from '../common/FullPageLoading';
+import Header from '../Common/Header';
+import Banner from '../Common/Banner';
+import Filter from '../Common/Filter';
+import SignInPopup from '../Common/SignInPopup';
+import FullPageLoading from '../Common/FullPageLoading';
 import { anvil } from '../../utils/animation';
 
 export default function WorkoutListPage({ currentUser }) {

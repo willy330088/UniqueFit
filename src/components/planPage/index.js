@@ -4,14 +4,14 @@ import { useSelector } from 'react-redux';
 import { MdAddCircleOutline } from 'react-icons/md';
 import Popup from 'reactjs-popup';
 
-import Header from '../common/Header';
-import Banner from '../common/Banner';
+import Header from '../Common/Header';
+import Banner from '../Common/Banner';
 import CreatePlanPopup from './CreatePlanPopup';
-import SignInPopup from '../common/SignInPopup';
+import SignInPopup from '../Common/SignInPopup';
 import PlanItem from './PlanItem';
-import Filter from '../common/Filter';
-import FullPageLoading from '../common/FullPageLoading';
-import useWindowWidth from '../../utils/getWindowWidth';
+import Filter from '../Common/Filter';
+import FullPageLoading from '../Common/FullPageLoading';
+import useWindowWidth from '../../hooks/useWindowWidth';
 import { errorToast } from '../../utils/toast';
 import PlanBackground from '../../images/plan-background.jpeg';
 

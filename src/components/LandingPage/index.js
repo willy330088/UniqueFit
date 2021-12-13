@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
-import SignInPopup from '../common/SignInPopup';
+import SignInPopup from '../Common/SignInPopup';
 import LandingPageBackground from '../../images/landing-page-background.jpeg';
 import LogoDumbbell from '../../images/logo-dumbbell.png';
 

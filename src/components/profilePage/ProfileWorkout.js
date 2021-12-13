@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ImPlay } from 'react-icons/im';
 
-import WorkoutPopup from '../common/WorkoutPopup';
-import WorkoutItemContent from '../common/WorkoutItemContent';
+import WorkoutPopup from '../Common/WorkoutPopup';
+import WorkoutItemContent from '../Common/WorkoutItemContent';
 import muscleGroups from '../../utils/muscleGroup';
 
 export default function ProfileWorkout({ workout }) {

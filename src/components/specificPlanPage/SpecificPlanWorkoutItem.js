@@ -4,8 +4,8 @@ import { ImPlay } from 'react-icons/im';
 import { FaWeightHanging } from 'react-icons/fa';
 import { FaDumbbell } from 'react-icons/fa';
 
-import WorkoutPopup from '../common/WorkoutPopup';
-import { StyledVerticalContainer } from '../common/GeneralStyle';
+import WorkoutPopup from '../Common/WorkoutPopup';
+import { StyledVerticalContainer } from '../Common/GeneralStyle';
 
 export default function SpecificPlanWorkoutItem({
   workout,

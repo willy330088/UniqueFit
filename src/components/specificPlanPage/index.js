@@ -8,13 +8,13 @@ import { FaDumbbell } from 'react-icons/fa';
 import { RiMessage2Fill, RiArticleLine } from 'react-icons/ri';
 import { BiTimeFive } from 'react-icons/bi';
 
-import Header from '../common/Header';
-import Banner from '../common/Banner';
+import Header from '../Common/Header';
+import Banner from '../Common/Banner';
 import PlanComment from './PlanComment';
 import SpecificPlanWorkoutItem from './SpecificPlanWorkoutItem';
-import SignInPopup from '../common/SignInPopup';
-import FullPageLoading from '../common/FullPageLoading';
-import { StyledLeaveCommentBtn } from '../common/GeneralStyle';
+import SignInPopup from '../Common/SignInPopup';
+import FullPageLoading from '../Common/FullPageLoading';
+import { StyledLeaveCommentBtn } from '../Common/GeneralStyle';
 import {
   getPlanComment,
   addPlanComment,

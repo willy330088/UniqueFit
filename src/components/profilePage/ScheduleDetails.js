@@ -6,7 +6,7 @@ import moment from 'moment';
 import {
   StyledGeneralBtn,
   StyledVerticalContainer,
-} from '../common/GeneralStyle';
+} from '../Common/GeneralStyle';
 import {
   removeScheduleEvent,
   toggleScheduleEventCompleted,

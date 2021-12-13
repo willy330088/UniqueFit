@@ -12,7 +12,7 @@ import {
   loadingCompletedToast,
 } from '../../utils/toast';
 import { createPlan, editPlan } from '../../utils/firebase';
-import useWindowWidth from '../../utils/getWindowWidth';
+import useWindowWidth from '../../hooks/useWindowWidth';
 
 export default function PlanPopupContent({
   type,
