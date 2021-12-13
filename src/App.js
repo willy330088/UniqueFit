@@ -11,7 +11,7 @@ import 'aos/dist/aos.css';
 
 import LandingPage from './components/LandingPage';
 import HomePage from './components/HomePage';
-import WorkoutListPage from './components/WorkoutPage';
+import WorkoutPage from './components/WorkoutPage';
 import PlanPage from './components/PlanPage';
 import SpecificPlanPage from './components/SpecificPlanPage';
 import ProfilePage from './components/ProfilePage';
@@ -25,7 +25,6 @@ import {
   getPlansData,
   getUsersData,
 } from './utils/firebase';
-import 'firebase/firestore';
 import {
   getWorkouts,
   getPlans,
@@ -91,7 +90,7 @@ function App() {
             <HomePage currentUser={currentUser} />
           </Route>
           <Route exact path="/workouts">
-            <WorkoutListPage currentUser={currentUser} />
+            <WorkoutPage currentUser={currentUser} />
           </Route>
           <Route exact path="/plans">
             <PlanPage currentUser={currentUser} />
