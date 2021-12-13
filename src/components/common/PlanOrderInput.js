@@ -33,6 +33,25 @@ export default function DragAndDrop({ plan, setPlan }) {
     }
   }
 
+  function showMuscleImage(item) {
+    return muscleGroups.filter(
+      (muscleGroup) => muscleGroup.name === item.targetMuscleGroup
+    )[0].src;
+  }
+
+  function setPlanNumValue(e, item, type) {
+    setPlan({
+      workoutSet: plan.workoutSet.reduce((arr, cur) => {
+        if (cur === item) {
+          if (e.target.value === '') {
+            cur[type] = e.target.value;
+          } else if (Number(e.target.value)) cur[type] = Number(e.target.value);
+        }
+        return arr;
+      }, plan.workoutSet),
+    });
+  }
+
   function reorder(list, startIndex, endIndex) {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
@@ -86,10 +105,10 @@ export default function DragAndDrop({ plan, setPlan }) {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <StyledDnDContainer>
-        <Content>
+        <StyledContent>
           <Droppable key={1} droppableId={'workoutSet'}>
             {(provided, snapshot) => (
-              <Container
+              <StyledContainer
                 ref={provided.innerRef}
                 {...provided.droppableProps}
                 isDraggingOver={snapshot.isDraggingOver}
@@ -102,23 +121,17 @@ export default function DragAndDrop({ plan, setPlan }) {
                         index={index}
                       >
                         {(provided, snapshot) => (
-                          <Item
+                          <StyledItem
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             isDragging={snapshot.isDragging}
                           >
-                            <Handle {...provided.dragHandleProps}>
+                            <StyledHandle {...provided.dragHandleProps}>
                               <StyledDragIcon />
-                            </Handle>
+                            </StyledHandle>
                             <StyledExerciseTitle>
                               <StyledMuscleGroupIcon
-                                src={
-                                  muscleGroups.filter(
-                                    (muscleGroup) =>
-                                      muscleGroup.name ===
-                                      item.targetMuscleGroup
-                                  )[0].src
-                                }
+                                src={showMuscleImage(item)}
                               />
                               <StyledExerciseName>
                                 {item.title}
@@ -129,23 +142,7 @@ export default function DragAndDrop({ plan, setPlan }) {
                                 placeholder={'1'}
                                 value={item.weight}
                                 onChange={(e) => {
-                                  setPlan({
-                                    workoutSet: plan.workoutSet.filter(
-                                      (single) => {
-                                        if (single === item) {
-                                          if (e.target.value === '') {
-                                            single.weight = e.target.value;
-                                          } else if (Number(e.target.value))
-                                            single.weight = Number(
-                                              e.target.value
-                                            );
-                                          return single;
-                                        } else {
-                                          return single;
-                                        }
-                                      }
-                                    ),
-                                  });
+                                  setPlanNumValue(e, item, 'weight');
                                 }}
                               />
                               <StyledWeightLabel>kg</StyledWeightLabel>
@@ -153,23 +150,7 @@ export default function DragAndDrop({ plan, setPlan }) {
                                 placeholder={'1'}
                                 value={item.reps}
                                 onChange={(e) => {
-                                  setPlan({
-                                    workoutSet: plan.workoutSet.filter(
-                                      (single) => {
-                                        if (single === item) {
-                                          if (e.target.value === '') {
-                                            single.reps = e.target.value;
-                                          } else if (Number(e.target.value))
-                                            single.reps = Number(
-                                              e.target.value
-                                            );
-                                          return single;
-                                        } else {
-                                          return single;
-                                        }
-                                      }
-                                    ),
-                                  });
+                                  setPlanNumValue(e, item, 'reps');
                                 }}
                               />
                               <StyledWeightLabel>reps</StyledWeightLabel>
@@ -183,21 +164,23 @@ export default function DragAndDrop({ plan, setPlan }) {
                                 });
                               }}
                             />
-                          </Item>
+                          </StyledItem>
                         )}
                       </Draggable>
                     ))
                   : !snapshot.isDraggingOver && (
-                      <Notice>Drag Your Workouts From Collections</Notice>
+                      <StyledNotice>
+                        Drag Your Workouts From Collections
+                      </StyledNotice>
                     )}
                 {provided.placeholder}
-              </Container>
+              </StyledContainer>
             )}
           </Droppable>
-        </Content>
+        </StyledContent>
         <Droppable droppableId="workoutData" isDropDisabled={true}>
           {(provided, snapshot) => (
-            <Kiosk
+            <StyledKiosk
               ref={provided.innerRef}
               {...provided.droppableProps}
               isDraggingOver={snapshot.isDraggingOver}
@@ -231,7 +214,7 @@ export default function DragAndDrop({ plan, setPlan }) {
                   >
                     {(provided, snapshot) => (
                       <>
-                        <Item
+                        <StyledItem
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
@@ -239,35 +222,24 @@ export default function DragAndDrop({ plan, setPlan }) {
                         >
                           <StyledExerciseTitle>
                             <StyledMuscleGroupIcon
-                              src={
-                                muscleGroups.filter(
-                                  (muscleGroup) =>
-                                    muscleGroup.name === item.targetMuscleGroup
-                                )[0].src
-                              }
+                              src={showMuscleImage(item)}
                             />
                             <StyledExerciseName>
                               {item.title}
                             </StyledExerciseName>
                           </StyledExerciseTitle>
-                        </Item>
+                        </StyledItem>
                         {snapshot.isDragging && (
-                          <Clone>
+                          <StyledClone>
                             <StyledExerciseTitle>
                               <StyledMuscleGroupIcon
-                                src={
-                                  muscleGroups.filter(
-                                    (muscleGroup) =>
-                                      muscleGroup.name ===
-                                      item.targetMuscleGroup
-                                  )[0].src
-                                }
+                                src={showMuscleImage(item)}
                               />
                               <StyledExerciseName>
                                 {item.title}
                               </StyledExerciseName>
                             </StyledExerciseTitle>
-                          </Clone>
+                          </StyledClone>
                         )}
                       </>
                     )}
@@ -275,7 +247,7 @@ export default function DragAndDrop({ plan, setPlan }) {
                 );
               })}
               {provided.placeholder}
-            </Kiosk>
+            </StyledKiosk>
           )}
         </Droppable>
       </StyledDnDContainer>
@@ -283,7 +255,7 @@ export default function DragAndDrop({ plan, setPlan }) {
   );
 }
 
-const Content = styled.div`
+const StyledContent = styled.div`
   width: 550px;
   overflow-y: scroll;
 `;
@@ -294,7 +266,7 @@ const StyledDnDContainer = styled.div`
   height: 480px;
 `;
 
-const Item = styled.div`
+const StyledItem = styled.div`
   display: flex;
   height: 70px;
   padding: 0.5rem;
@@ -308,13 +280,13 @@ const Item = styled.div`
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 `;
 
-const Clone = styled(Item)`
+const StyledClone = styled(StyledItem)`
   ~ div {
     transform: none !important;
   }
 `;
 
-const Handle = styled.div`
+const StyledHandle = styled.div`
   display: flex;
   align-items: center;
   align-content: center;
@@ -328,14 +300,14 @@ const Handle = styled.div`
   color: #000;
 `;
 
-const List = styled.div`
+const StyledList = styled.div`
   border: 1px solid #ddd;
   background: #fff;
   padding: 0.5rem 0.5rem 0;
   border-radius: 3px;
 `;
 
-const Kiosk = styled(List)`
+const StyledKiosk = styled(StyledList)`
   width: 350px;
   overflow-y: scroll;
   background: #ddd;
@@ -343,12 +315,12 @@ const Kiosk = styled(List)`
   border-radius: 5px;
 `;
 
-const Container = styled(List)`
+const StyledContainer = styled(StyledList)`
   width: 100%;
   margin: auto;
 `;
 
-const Notice = styled.div`
+const StyledNotice = styled.div`
   display: flex;
   align-items: center;
   align-content: center;

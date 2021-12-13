@@ -10,10 +10,10 @@ import Logo from '../../images/logo.png';
 
 export default function Header() {
   const history = useHistory();
+  const [open, setOpen] = useState(false);
   const [headerColor, setHeaderColor] = useState(false);
   const currentUser = useSelector((state) => state.currentUser);
   const [signInOpen, setSignInOpen, closeSignIn] = usePopup();
-  const [open, setOpen] = useState(false);
 
   const activeStyle = {
     color: '#1face1',
