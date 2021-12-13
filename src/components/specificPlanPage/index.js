@@ -23,11 +23,12 @@ import {
 } from '../../utils/firebase';
 import muscleGroups from '../../utils/muscleGroup';
 
-export default function SpecificPlanPage({ currentUser }) {
+export default function SpecificPlanPage() {
   const { planId } = useParams();
   const plans = useSelector((state) => state.plans);
   const workouts = useSelector((state) => state.workouts);
   const users = useSelector((state) => state.users);
+  const currentUser = useSelector((state) => state.currentUser);
   const [commentContent, setCommentContent] = useState('');
   const [comments, setComments] = useState([]);
   const [completeNum, setCompleteNum] = useState(0);

@@ -11,28 +11,24 @@ import CreatePlanPopup from './CreatePlanPopup';
 import SignInPopup from '../Common/SignInPopup';
 import PlanItem from './PlanItem';
 import Filter from '../Common/Filter';
-import FullPageLoading from '../Common/FullPageLoading';
 import useWindowWidth from '../../hooks/useWindowWidth';
 import { errorToast } from '../../utils/toast';
 import PlanBackground from '../../images/plan-background.jpeg';
 
-export default function PlanPage({ currentUser }) {
+export default function PlanPage() {
   const plans = useSelector((state) => state.plans);
   const workouts = useSelector((state) => state.workouts);
+  const currentUser = useSelector((state) => state.currentUser);
   const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
   const [paging, setPaging] = useState(1);
-  const [signInOpen, setSignInOpen] = useState(false);
   const [open, setOpen, close] = usePopup();
+  const [signInOpen, setSignInOpen, closeSignIn] = usePopup();
   const { width } = useWindowWidth();
 
   const publicPlans = plans.filter((plan) => plan.public === true);
   const collectedWorkouts = workouts.filter((workout) =>
     workout.collectedBy.includes(currentUser?.uid)
   );
-
-  function closeSignIn() {
-    setSignInOpen(false);
-  }
 
   function showPlanList() {
     if (filteredMuscleGroups.length === 0) {
@@ -58,7 +54,7 @@ export default function PlanPage({ currentUser }) {
     }
   }
 
-  return currentUser !== undefined ? (
+  return (
     <StyledBody>
       <Header />
       <Banner slogan={'Collect Your Plans'} />
@@ -91,8 +87,6 @@ export default function PlanPage({ currentUser }) {
         </StyledPlanListContainer>
       </StyledPlanListPageContainer>
     </StyledBody>
-  ) : (
-    <FullPageLoading />
   );
 }
 

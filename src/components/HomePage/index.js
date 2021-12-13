@@ -8,7 +8,7 @@ import HomepageBackground from '../../images/home-page-background.jpeg';
 import GuideBackground from '../../images/guide-background.jpeg';
 
 export default function HomePage({ currentUser }) {
-  return currentUser !== undefined ? (
+  return (
     <>
       <Header />
       <StyledBanner src={HomepageBackground} />
@@ -66,8 +66,6 @@ export default function HomePage({ currentUser }) {
         </StyledMainWordContainer>
       </StyledMainContainer>
     </>
-  ) : (
-    <FullPageLoading />
   );
 }
 

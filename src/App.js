@@ -5,7 +5,7 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -35,7 +35,7 @@ import {
 function App() {
   AOS.init();
   const dispatch = useDispatch();
-  const [currentUser, setCurrentUser] = useState();
+  const currentUser = useSelector((state) => state.currentUser);
 
   useEffect(() => {
     getWorkoutsData((data) => {
@@ -52,7 +52,6 @@ function App() {
 
     onUserChanged((user) => {
       dispatch(getCurrentUser(user));
-      setCurrentUser(user);
     });
   }, []);
 
@@ -64,7 +63,7 @@ function App() {
         <Switch>
           <Route exact path="/">
             {currentUser !== null ? (
-              currentUser !== undefined ? (
+              currentUser !== 'loading' ? (
                 <Redirect to="/home" />
               ) : (
                 <FullPageLoading />
@@ -76,7 +75,7 @@ function App() {
 
           <Route exact path="/profile">
             {currentUser !== null ? (
-              currentUser !== undefined ? (
+              currentUser !== 'loading' ? (
                 <ProfilePage />
               ) : (
                 <FullPageLoading />
@@ -87,16 +86,16 @@ function App() {
           </Route>
 
           <Route exact path="/home">
-            <HomePage currentUser={currentUser} />
+            <HomePage />
           </Route>
           <Route exact path="/workouts">
-            <WorkoutPage currentUser={currentUser} />
+            <WorkoutPage />
           </Route>
           <Route exact path="/plans">
-            <PlanPage currentUser={currentUser} />
+            <PlanPage />
           </Route>
           <Route exact path="/plans/:planId">
-            <SpecificPlanPage currentUser={currentUser} />
+            <SpecificPlanPage />
           </Route>
           <Route exact path="/pageNotFound">
             <NotFoundPage />

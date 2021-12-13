@@ -1,10 +1,10 @@
-const currentUserReducer = (state = null, action) => {
-  switch ((action.type)) {
+const currentUserReducer = (state = 'loading', action) => {
+  switch (action.type) {
     case 'GET_CURRENTUSER':
-      return action.payload
+      return action.payload;
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default currentUserReducer
+export default currentUserReducer;

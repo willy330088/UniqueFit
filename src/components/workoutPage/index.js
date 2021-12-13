@@ -11,16 +11,15 @@ import Header from '../Common/Header';
 import Banner from '../Common/Banner';
 import Filter from '../Common/Filter';
 import SignInPopup from '../Common/SignInPopup';
-import FullPageLoading from '../Common/FullPageLoading';
 import { anvil } from '../../utils/animation';
 
-export default function WorkoutPage({ currentUser }) {
+export default function WorkoutPage() {
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
   const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
-  const [signInOpen, setSignInOpen] = useState(false);
-  const closeSignIn = () => setSignInOpen(false);
+  const currentUser = useSelector((state) => state.currentUser);
   const workouts = useSelector((state) => state.workouts);
   const [open, setOpen, close] = usePopup();
+  const [signInOpen, setSignInOpen, closeSignIn] = usePopup();
 
   const gymWorkouts = workouts.filter(
     (workout) => workout.type === 'Gymworkout'
@@ -45,7 +44,7 @@ export default function WorkoutPage({ currentUser }) {
     }
   }
 
-  return currentUser !== undefined ? (
+  return (
     <StyledBody>
       <Header />
       <Banner slogan={'Collect Your Workouts'} />
@@ -104,8 +103,6 @@ export default function WorkoutPage({ currentUser }) {
         </StyledWorkoutContainer>
       </StyledWorkoutListContainer>
     </StyledBody>
-  ) : (
-    <FullPageLoading />
   );
 }
 
