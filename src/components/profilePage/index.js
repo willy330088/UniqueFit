@@ -6,6 +6,7 @@ import { BsFillPencilFill } from 'react-icons/bs';
 import { HiUserCircle } from 'react-icons/hi';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 
+import usePopup from '../../hooks/usePopup';
 import Header from '../Common/Header';
 import Banner from '../Common/Banner';
 import WorkoutCreation from './WorkoutCreation';
@@ -27,10 +28,8 @@ export default function ProfilePage() {
   const currentUser = useSelector((state) => state.currentUser);
   const [mainContent, setMainContent] = useState('My Workout Creations');
   const [gymWorkoutTypeSelected, setGymWorkoutTypeSelected] = useState(true);
-  const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const closeConfirm = () => setConfirmOpen(false);
+  const [open, setOpen, close] = usePopup();
+  const [confirmOpen, setConfirmOpen, closeConfirm] = usePopup();
   const gymWorkouts = workouts.filter(
     (workout) => workout.type === 'Gymworkout'
   );
@@ -163,7 +162,7 @@ export default function ProfilePage() {
               setOpen(true);
             }}
           />
-          <EditProfilePopup open={open} closeModal={closeModal} />
+          <EditProfilePopup open={open} closeModal={close} />
           <StyledSignOutIcon
             onClick={() => {
               setConfirmOpen(true);

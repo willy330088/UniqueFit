@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import Popup from 'reactjs-popup';
 import { BsFillPencilFill } from 'react-icons/bs';
 import { FaTrashAlt } from 'react-icons/fa';
 
+import usePopup from '../../hooks/usePopup';
 import EditWorkoutPopup from './EditWorkoutPopup';
 import ProfileWorkout from './ProfileWorkout';
 import ConfirmPopup from '../Common/ConfirmPopup';
@@ -13,17 +14,9 @@ import { deleteWorkout } from '../../utils/firebase';
 import { anvil } from '../../utils/animation';
 
 export default function WorkoutCreation({ workout }) {
-  const [open, setOpen] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [open, setOpen, close] = usePopup();
+  const [confirmOpen, setConfirmOpen, closeConfirm] = usePopup();
   const plans = useSelector((state) => state.plans);
-
-  function closeModal() {
-    setOpen(false);
-  }
-
-  function closeConfirm() {
-    setConfirmOpen(false);
-  }
 
   async function deleteWorkoutCreation() {
     const workoutDeleting = loadingToast('Deleting Workout...');
@@ -41,8 +34,8 @@ export default function WorkoutCreation({ workout }) {
             setOpen(true);
           }}
         />
-        <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
-          <EditWorkoutPopup workout={workout} close={closeModal} />
+        <StyledPopup open={open} closeOnDocumentClick onClose={close}>
+          <EditWorkoutPopup workout={workout} close={close} />
         </StyledPopup>
         <StyledRemoveIcon
           onClick={() => {

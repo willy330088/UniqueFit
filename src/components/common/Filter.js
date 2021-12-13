@@ -4,6 +4,7 @@ import { ImCancelCircle } from 'react-icons/im';
 import { FaFilter } from 'react-icons/fa';
 import Popup from 'reactjs-popup';
 
+import usePopup from '../../hooks/usePopup';
 import FrontMuscle from './FrontMuscle';
 import BackMuscle from './BackMuscle';
 import SpinHover from '../../images/spin-icon-hover.png';
@@ -13,13 +14,9 @@ export default function Filter({
   filteredMuscleGroups,
   setFilteredMuscleGroups,
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen, close] = usePopup();
   const [isFront, setIsFront] = useState(true);
   const [popupTitle, setPopupTitle] = useState('');
-
-  function closeModal() {
-    setOpen(false);
-  }
 
   function removeFilter(name) {
     setFilteredMuscleGroups(
@@ -29,7 +26,7 @@ export default function Filter({
 
   return (
     <StyledFilterContainer filteredMuscleGroups={filteredMuscleGroups}>
-      <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
+      <StyledPopup open={open} closeOnDocumentClick onClose={close}>
         <StyledPopupTitle>
           {popupTitle === '' ? 'Select Muscle Groups' : popupTitle}
         </StyledPopupTitle>

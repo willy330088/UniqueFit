@@ -7,6 +7,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import Popup from 'reactjs-popup';
 
+import usePopup from '../../hooks/usePopup';
 import ScheduleForm from './ScheduleForm';
 import ScheduleDetails from './ScheduleDetails';
 import ScheduleRecord from './ScheduleRecord';
@@ -14,7 +15,6 @@ import { anvil } from '../../utils/animation';
 import Calendar from '../../images/add-calendar-icon.png';
 
 export default function ScheduleCalendar() {
-  const [open, setOpen] = useState(false);
   const [selectedModal, setSelectedModal] = useState('');
   const [selectedEvent, setSelectedEvent] = useState();
   const plans = useSelector((state) => state.plans);
@@ -22,6 +22,7 @@ export default function ScheduleCalendar() {
   const userEvents = useSelector((state) => state.users).filter(
     (user) => user.id === currentUser?.uid
   )[0]?.events;
+  const [open, setOpen, close] = usePopup();
   const initialDate = new Date().toISOString();
 
   const events = userEvents?.map((event) => {
@@ -43,10 +44,6 @@ export default function ScheduleCalendar() {
       setSelectedEvent(clickInfo.event);
       setOpen(true);
     }
-  }
-
-  function closeModal() {
-    setOpen(false);
   }
 
   return (
@@ -71,14 +68,11 @@ export default function ScheduleCalendar() {
           },
         }}
       />
-      <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
+      <StyledPopup open={open} closeOnDocumentClick onClose={close}>
         {selectedModal === 'ScheduleForm' ? (
-          <ScheduleForm closeModal={closeModal} />
+          <ScheduleForm closeModal={close} />
         ) : selectedModal === 'ScheduleDetails' ? (
-          <ScheduleDetails
-            selectedEvent={selectedEvent}
-            closeModal={closeModal}
-          />
+          <ScheduleDetails selectedEvent={selectedEvent} closeModal={close} />
         ) : null}
       </StyledPopup>
       <ScheduleRecord />

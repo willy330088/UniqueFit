@@ -42,21 +42,15 @@ function App() {
     getWorkoutsData((data) => {
       dispatch(getWorkouts(data));
     });
-  }, []);
 
-  useEffect(() => {
     getPlansData((data) => {
       dispatch(getPlans(data));
     });
-  }, []);
 
-  useEffect(() => {
     getUsersData((data) => {
       dispatch(getUsers(data));
     });
-  }, []);
 
-  useEffect(() => {
     onUserChanged((user) => {
       dispatch(getCurrentUser(user));
       setCurrentUser(user);

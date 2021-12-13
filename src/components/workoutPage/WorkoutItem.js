@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { ImPlay } from 'react-icons/im';
 
+import usePopup from '../../hooks/usePopup';
 import WorkoutPopup from '../Common/WorkoutPopup';
 import WorkoutItemContent from '../Common/WorkoutItemContent';
 import muscleGroups from '../../utils/muscleGroup';
 
 export default function WorkoutItem({ workout, setSignInOpen }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen, close] = usePopup();
 
   return (
     <>
@@ -31,9 +32,7 @@ export default function WorkoutItem({ workout, setSignInOpen }) {
       </StyledWorkoutItemContainer>
       <WorkoutPopup
         workout={workout}
-        close={() => {
-          setOpen(false);
-        }}
+        close={close}
         open={open}
         setSignInOpen={setSignInOpen}
       />

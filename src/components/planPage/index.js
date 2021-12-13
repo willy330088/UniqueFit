@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { MdAddCircleOutline } from 'react-icons/md';
 import Popup from 'reactjs-popup';
 
+import usePopup from '../../hooks/usePopup';
 import Header from '../Common/Header';
 import Banner from '../Common/Banner';
 import CreatePlanPopup from './CreatePlanPopup';
@@ -15,23 +16,19 @@ import useWindowWidth from '../../hooks/useWindowWidth';
 import { errorToast } from '../../utils/toast';
 import PlanBackground from '../../images/plan-background.jpeg';
 
-export default function PlanListPage({ currentUser }) {
+export default function PlanPage({ currentUser }) {
   const plans = useSelector((state) => state.plans);
   const workouts = useSelector((state) => state.workouts);
   const [filteredMuscleGroups, setFilteredMuscleGroups] = useState([]);
   const [paging, setPaging] = useState(1);
-  const [open, setOpen] = useState(false);
   const [signInOpen, setSignInOpen] = useState(false);
+  const [open, setOpen, close] = usePopup();
   const { width } = useWindowWidth();
 
   const publicPlans = plans.filter((plan) => plan.public === true);
   const collectedWorkouts = workouts.filter((workout) =>
     workout.collectedBy.includes(currentUser?.uid)
   );
-
-  function closeModal() {
-    setOpen(false);
-  }
 
   function closeSignIn() {
     setSignInOpen(false);
@@ -79,13 +76,13 @@ export default function PlanListPage({ currentUser }) {
           <StyledPopup
             open={open}
             closeOnDocumentClick
-            onClose={closeModal}
+            onClose={close}
             paging={paging}
           >
             <CreatePlanPopup
               paging={paging}
               setPaging={setPaging}
-              close={closeModal}
+              close={close}
             />
           </StyledPopup>
           {showPlanList().map((plan) => {

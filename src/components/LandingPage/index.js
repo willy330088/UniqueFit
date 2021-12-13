@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
+import usePopup from '../../hooks/usePopup';
 import SignInPopup from '../Common/SignInPopup';
 import LandingPageBackground from '../../images/landing-page-background.jpeg';
 import LogoDumbbell from '../../images/logo-dumbbell.png';
 
 export default function LandingPage() {
   const history = useHistory();
-  const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
+  const [open, setOpen, close] = usePopup();
 
   return (
     <StyledLandingPageContainer>
@@ -43,7 +43,7 @@ export default function LandingPage() {
           Guest
         </StyledGuestBtn>
       </StyledBtnContainer>
-      <SignInPopup open={open} closeModal={closeModal} />
+      <SignInPopup open={open} closeModal={close} />
     </StyledLandingPageContainer>
   );
 }
