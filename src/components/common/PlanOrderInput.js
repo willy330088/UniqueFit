@@ -91,6 +91,7 @@ export default function DragAndDrop({ plan, setPlan }) {
             {(provided, snapshot) => (
               <Container
                 ref={provided.innerRef}
+                {...provided.droppableProps}
                 isDraggingOver={snapshot.isDraggingOver}
               >
                 {plan.workoutSet.length
@@ -198,6 +199,7 @@ export default function DragAndDrop({ plan, setPlan }) {
           {(provided, snapshot) => (
             <Kiosk
               ref={provided.innerRef}
+              {...provided.droppableProps}
               isDraggingOver={snapshot.isDraggingOver}
             >
               <StyledCollectionTitle>Collections</StyledCollectionTitle>
