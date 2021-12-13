@@ -33,6 +33,25 @@ export default function DragAndDrop({ plan, setPlan }) {
     }
   }
 
+  function showMuscleImage(item) {
+    return muscleGroups.filter(
+      (muscleGroup) => muscleGroup.name === item.targetMuscleGroup
+    )[0].src;
+  }
+
+  function setPlanNumValue(e, item, type) {
+    setPlan({
+      workoutSet: plan.workoutSet.reduce((arr, cur) => {
+        if (cur === item) {
+          if (e.target.value === '') {
+            cur[type] = e.target.value;
+          } else if (Number(e.target.value)) cur[type] = Number(e.target.value);
+        }
+        return arr;
+      }, plan.workoutSet),
+    });
+  }
+
   function reorder(list, startIndex, endIndex) {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
@@ -112,13 +131,7 @@ export default function DragAndDrop({ plan, setPlan }) {
                             </Handle>
                             <StyledExerciseTitle>
                               <StyledMuscleGroupIcon
-                                src={
-                                  muscleGroups.filter(
-                                    (muscleGroup) =>
-                                      muscleGroup.name ===
-                                      item.targetMuscleGroup
-                                  )[0].src
-                                }
+                                src={showMuscleImage(item)}
                               />
                               <StyledExerciseName>
                                 {item.title}
@@ -129,23 +142,7 @@ export default function DragAndDrop({ plan, setPlan }) {
                                 placeholder={'1'}
                                 value={item.weight}
                                 onChange={(e) => {
-                                  setPlan({
-                                    workoutSet: plan.workoutSet.filter(
-                                      (single) => {
-                                        if (single === item) {
-                                          if (e.target.value === '') {
-                                            single.weight = e.target.value;
-                                          } else if (Number(e.target.value))
-                                            single.weight = Number(
-                                              e.target.value
-                                            );
-                                          return single;
-                                        } else {
-                                          return single;
-                                        }
-                                      }
-                                    ),
-                                  });
+                                  setPlanNumValue(e, item, 'weight');
                                 }}
                               />
                               <StyledWeightLabel>kg</StyledWeightLabel>
@@ -153,23 +150,7 @@ export default function DragAndDrop({ plan, setPlan }) {
                                 placeholder={'1'}
                                 value={item.reps}
                                 onChange={(e) => {
-                                  setPlan({
-                                    workoutSet: plan.workoutSet.filter(
-                                      (single) => {
-                                        if (single === item) {
-                                          if (e.target.value === '') {
-                                            single.reps = e.target.value;
-                                          } else if (Number(e.target.value))
-                                            single.reps = Number(
-                                              e.target.value
-                                            );
-                                          return single;
-                                        } else {
-                                          return single;
-                                        }
-                                      }
-                                    ),
-                                  });
+                                  setPlanNumValue(e, item, 'reps');
                                 }}
                               />
                               <StyledWeightLabel>reps</StyledWeightLabel>
@@ -239,12 +220,7 @@ export default function DragAndDrop({ plan, setPlan }) {
                         >
                           <StyledExerciseTitle>
                             <StyledMuscleGroupIcon
-                              src={
-                                muscleGroups.filter(
-                                  (muscleGroup) =>
-                                    muscleGroup.name === item.targetMuscleGroup
-                                )[0].src
-                              }
+                              src={showMuscleImage(item)}
                             />
                             <StyledExerciseName>
                               {item.title}
@@ -255,13 +231,7 @@ export default function DragAndDrop({ plan, setPlan }) {
                           <Clone>
                             <StyledExerciseTitle>
                               <StyledMuscleGroupIcon
-                                src={
-                                  muscleGroups.filter(
-                                    (muscleGroup) =>
-                                      muscleGroup.name ===
-                                      item.targetMuscleGroup
-                                  )[0].src
-                                }
+                                src={showMuscleImage(item)}
                               />
                               <StyledExerciseName>
                                 {item.title}
