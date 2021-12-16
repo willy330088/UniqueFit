@@ -17,7 +17,6 @@ const SidebarData = [
   },
   {
     title: 'My Plans',
-    state: 'myplans',
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
 

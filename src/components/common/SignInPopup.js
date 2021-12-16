@@ -24,8 +24,8 @@ export default function SignInPopup({ open, closeModal }) {
   const location = useLocation();
   const [isSigningIn, setIsSigningIn] = useState(true);
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('uniquefit@uniquefit.com');
+  const [password, setPassword] = useState('uniquefit123');
   const [errorMessage, setErrorMessage] = useState('');
 
   function signInComplete() {
@@ -98,10 +98,12 @@ export default function SignInPopup({ open, closeModal }) {
             <StyledSignInTitle>Sign In</StyledSignInTitle>
             <StyledInput
               placeholder={'Email'}
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <StyledInput
               placeholder={'Password'}
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
               type={'password'}
             />
